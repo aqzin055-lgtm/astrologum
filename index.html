@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Nyx | Fərdi Astrologiya</title>
-    <meta name="description" content="Doğum tarixinizə əsaslanan fərdi astrologiya proqnozları, ruh rənginiz, gizli qabiliyyətiniz və karmik bağlantılar. Hər şey sizin üçün xüsusi.">
+    <title>Nyx | Tam Astrologiya Platforması</title>
+    <meta name="description" content="Doğum tarixinizə əsaslanan dəqiq astrologiya proqnozları, sevgi uyumu, planet hərəkətləri, ruh rənginiz, gizli qabiliyyətiniz və karmik bağlantılar.">
     <meta name="author" content="Agshin Ahmadli">
+    <meta name="keywords" content="astrologiya, bürc, ulduzlar, fal, sevgi uyumu, planetlər, doğum falı, ruh rəngi, karma">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
@@ -25,7 +26,14 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            background-image: radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), rgba(0,0,0,0)), radial-gradient(1px 1px at 60px 120px, rgba(255,255,255,0.4), rgba(0,0,0,0)), radial-gradient(3px 3px at 120px 80px, rgba(255,255,255,0.2), rgba(0,0,0,0)), radial-gradient(1px 1px at 200px 250px, rgba(255,255,255,0.3), rgba(0,0,0,0)), radial-gradient(2px 2px at 300px 50px, rgba(255,255,255,0.2), rgba(0,0,0,0));
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 60px 120px, rgba(255,255,255,0.4), rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 120px 80px, rgba(255,255,255,0.2), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 200px 250px, rgba(255,255,255,0.3), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 300px 50px, rgba(255,255,255,0.2), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 400px 180px, rgba(255,255,255,0.4), rgba(0,0,0,0)),
+                radial-gradient(3px 3px at 500px 320px, rgba(255,255,255,0.15), rgba(0,0,0,0));
             background-repeat: no-repeat;
             opacity: 0.6;
         }
@@ -51,6 +59,9 @@
         .dark-input:focus { outline: none; border-color: rgba(100, 100, 200, 0.5); background: rgba(15, 15, 45, 0.85); box-shadow: 0 0 0 3px rgba(80, 80, 150, 0.15); }
         
         .energy-fill { animation: energyBar 1.5s ease-out forwards; }
+        
+        .nav-link { transition: all 0.2s ease; }
+        .nav-link:hover { color: rgba(180, 180, 255, 0.7); }
         
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #0a0a1a; }
@@ -78,6 +89,16 @@
             <p class="text-blue-300/30 text-[8px] tracking-[0.4em] mt-3">SƏNİN ÜÇÜN XÜSUSİ ULDUZLAR</p>
         </div>
 
+        <!-- Navigation -->
+        <div class="flex flex-wrap justify-center gap-1 mb-8 border-b border-blue-500/10 pb-5">
+            <button onclick="showPage('home')" id="nav-home" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">ANA SƏHİFƏ</button>
+            <button onclick="showPage('blog')" id="nav-blog" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">BLOQ (30+)</button>
+            <button onclick="showPage('planets')" id="nav-planets" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">🪐 PLANETLƏR</button>
+            <button onclick="showPage('privacy')" id="nav-privacy" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">GİZLİLİK</button>
+            <button onclick="showPage('terms')" id="nav-terms" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">ŞƏRTLƏR</button>
+            <button onclick="showPage('contact')" id="nav-contact" class="nav-link px-4 py-2 text-[10px] tracking-wide text-blue-300/50 hover:text-blue-300/80 transition">ƏLAQƏ</button>
+        </div>
+
         <div id="app"></div>
 
         <!-- Footer - by Agshin Ahmadli -->
@@ -90,30 +111,92 @@
 </div>
 
 <script>
-// ========== BÜRCLƏR ==========
+// ========== BÜRCLƏR (12 ədəd - Detaylı) ==========
 const signs = [
-    { name: 'Qoç', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, element: 'Od', planet: 'Mars', icon: '🐏', traits: 'Cəsarətli, lider ruhlu, döyüşçü', love: 'Ehtirasla sevir, ani qərar verir', career: 'Rəhbərlik, idman, cərrahlıq', gemstone: 'Qan daşı', luckyNumbers: [1,8,17], luckyColors: ['Qırmızı', 'Dəmir boz'] },
-    { name: 'Buğa', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, element: 'Torpaq', planet: 'Venera', icon: '🐂', traits: 'Sabit, sadiq, zövqlü', love: 'Dərin və uzunmüddətli sevgi', career: 'Maliyyə, incəsənət, aşpazlıq', gemstone: 'Zümrüd', luckyNumbers: [2,6,15], luckyColors: ['Yaşıl', 'Çəhrayı'] },
-    { name: 'Əkizlər', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, element: 'Hava', planet: 'Merkuri', icon: '👯', traits: 'Ünsiyyətcil, çevik, maraqlı', love: 'İntellektual bağ axtarır', career: 'Jurnalistika, satış, təhsil', gemstone: 'Aqat', luckyNumbers: [3,12,21], luckyColors: ['Sarı', 'Açıq mavi'] },
-    { name: 'Xərçəng', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, element: 'Su', planet: 'Ay', icon: '🦀', traits: 'Həssas, qayğıkeş, sezgili', love: 'Ev və ailə mərkəzli', career: 'Psixologiya, tibb, müəllimlik', gemstone: 'İnci', luckyNumbers: [2,7,16], luckyColors: ['Gümüşü', 'Ağ'] },
-    { name: 'Şir', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, element: 'Od', planet: 'Günəş', icon: '🦁', traits: 'Cömərd, yaradıcı, lider', love: 'Romantik və sadiq', career: 'Səhnə, show-biznes, siyasət', gemstone: 'Qaplan gözü', luckyNumbers: [1,4,19], luckyColors: ['Qızılı', 'Narıncı'] },
-    { name: 'Qız', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, element: 'Torpaq', planet: 'Merkuri', icon: '🌾', traits: 'Analitik, dəqiq, nizamlı', love: 'Praktik jestləri sevir', career: 'Həkimlik, analiz, tədqiqat', gemstone: 'Safir', luckyNumbers: [5,14,23], luckyColors: ['Qəhvəyi', 'Tünd göy'] },
-    { name: 'Tərəzi', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, element: 'Hava', planet: 'Venera', icon: '⚖️', traits: 'Dinc, ədalətli, sosial', love: 'Tarazlıq axtarır', career: 'Hüquq, diplomatiya, dizayn', gemstone: 'Lapis', luckyNumbers: [6,15,24], luckyColors: ['Çəhrayı', 'Mavi'] },
-    { name: 'Əqrəb', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, element: 'Su', planet: 'Pluton', icon: '🦂', traits: 'Sirli, güclü, dönüşən', love: 'Ya bütün, ya heç', career: 'Tədqiqat, psixologiya, maliyyə', gemstone: 'Topaz', luckyNumbers: [9,18,27], luckyColors: ['Tünd qırmızı', 'Qara'] },
-    { name: 'Oxatan', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, element: 'Od', planet: 'Yupiter', icon: '🏹', traits: 'Macəraçı, filosof, optimist', love: 'Azad ruhlu sevgi', career: 'Səyahət, təhsil, yayım', gemstone: 'Türkuvaz', luckyNumbers: [3,12,21], luckyColors: ['Bənövşəyi', 'Mavi'] },
-    { name: 'Oğlaq', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, element: 'Torpaq', planet: 'Saturn', icon: '🐐', traits: 'Ambitionlu, səbirli, nizamlı', love: 'Ciddi və planlı', career: 'Biznes, memarlıq, siyasət', gemstone: 'Qarnet', luckyNumbers: [8,16,26], luckyColors: ['Qəhvəyi', 'Boz'] },
-    { name: 'Dolça', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, element: 'Hava', planet: 'Uran', icon: '💧', traits: 'İnnovativ, insanpərvər, fərqli', love: 'Dostluq əsaslı', career: 'Texnologiya, aktivizm, elm', gemstone: 'Ametist', luckyNumbers: [4,13,22], luckyColors: ['Tünd mavi', 'Gümüşü'] },
-    { name: 'Balıq', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, element: 'Su', planet: 'Neptun', icon: '🐟', traits: 'Xəyalpərəst, şəfqətli, sənətkar', love: 'Şərtisiz sevgi', career: 'Sənət, musiqi, ruhanilik', gemstone: 'Aquamarin', luckyNumbers: [7,16,25], luckyColors: ['Dəniz yaşıl', 'Bənövşəyi'] }
+    { name: 'Qoç', nameEn: 'Aries', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, element: 'Od', planet: 'Mars', icon: '🐏', traits: 'Cəsarətli, impulsiv, lider ruhlu, döyüşçü', love: 'Ehtirasla sevir, ani qərar verir, romantik jestləri sevir', career: 'Rəhbərlik, hərbi, idman, sahibkarlıq, cərrahlıq', health: 'Baş ağrılarına meyilli, idmanla enerjisini boşaltmalı', gemstone: 'Qan daşı', tarot: 'İmperator', luckyNumbers: [1,8,17], luckyColors: ['Qırmızı', 'Dəmir boz'] },
+    { name: 'Buğa', nameEn: 'Taurus', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, element: 'Torpaq', planet: 'Venera', icon: '🐂', traits: 'Sabit, sadiq, zövqlü, inadkar', love: 'Dərin və uzunmüddətli sevgi, fiziki təmas vacibdir', career: 'Maliyyə, incəsənət, aşpazlıq, memarlıq, bank işi', health: 'Boyun və boğaz problemləri, yemək düzeni vacibdir', gemstone: 'Zümrüd', tarot: 'Baş Kahin', luckyNumbers: [2,6,15], luckyColors: ['Yaşıl', 'Çəhrayı'] },
+    { name: 'Əkizlər', nameEn: 'Gemini', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, element: 'Hava', planet: 'Merkuri', icon: '👯', traits: 'Ünsiyyətcil, çevik, maraqlı, ağıllı', love: 'İntellektual bağ axtarır, darıxmağı sevmir', career: 'Jurnalistika, satış, təhsil, yazıçılıq, marketinq', health: 'Sinir sistemi həssasdır, düzgün nəfəs məşqləri faydalıdır', gemstone: 'Aqat', tarot: 'Sehrbaz', luckyNumbers: [3,12,21], luckyColors: ['Sarı', 'Açıq mavi'] },
+    { name: 'Xərçəng', nameEn: 'Cancer', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, element: 'Su', planet: 'Ay', icon: '🦀', traits: 'Həssas, qayğıkeş, sezgili, vəfalı', love: 'Ev və ailə mərkəzli, qoruyucu və şəfqətlidir', career: 'Psixologiya, tibb, müəllimlik, tarix, arxiv işi', health: 'Mədə və həzm problemləri, duzlu qidalardan uzaq olmalı', gemstone: 'İnci', tarot: 'Araba', luckyNumbers: [2,7,16], luckyColors: ['Gümüşü', 'Ağ'] },
+    { name: 'Şir', nameEn: 'Leo', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, element: 'Od', planet: 'Günəş', icon: '🦁', traits: 'Cömərd, yaradıcı, inandırıcı, səmimi', love: 'Romantik və sadiq, xoş sözlərə və diqqətə önəm verir', career: 'Səhnə, show-biznes, liderlik, siyasət, moda', health: 'Ürək və bel problemləri, idmanla enerjisini tarazlamalı', gemstone: 'Qaplan gözü', tarot: 'Güc', luckyNumbers: [1,4,19], luckyColors: ['Qızılı', 'Narıncı'] },
+    { name: 'Qız', nameEn: 'Virgo', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, element: 'Torpaq', planet: 'Merkuri', icon: '🌾', traits: 'Analitik, dəqiq, xidmətçi, nizamlı', love: 'Təfərrüatlarla dolu sevgi, praktik jestləri sevir', career: 'Həkimlik, analiz, tədqiqat, mühasibatlıq, sağlamlıq', health: 'Bağırsaq və həzm problemləri, qida rasionuna diqqət', gemstone: 'Safir', tarot: 'Zahid', luckyNumbers: [5,14,23], luckyColors: ['Qəhvəyi', 'Tünd göy'] },
+    { name: 'Tərəzi', nameEn: 'Libra', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, element: 'Hava', planet: 'Venera', icon: '⚖️', traits: 'Dinc, ədalətli, sosial, cazibədar', love: 'Tarazlıq axtarır, romantik və nəzakətlidir', career: 'Hüquq, diplomatiya, dizayn, sənət, münasibətlər', health: 'Böyrək və dəri problemləri, masaj və balanslı həyat', gemstone: 'Lapis', tarot: 'Ədalət', luckyNumbers: [6,15,24], luckyColors: ['Çəhrayı', 'Mavi'] },
+    { name: 'Əqrəb', nameEn: 'Scorpio', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, element: 'Su', planet: 'Pluton', icon: '🦂', traits: 'Sirli, güclü, dönüşən, sadiq', love: 'Ya bütün, ya heç, dərin emosional bağ axtarır', career: 'Tədqiqat, psixologiya, maliyyə, həqiqət axtarışı', health: 'Reproduktiv sistem, cinsi sağlamlıq, detoks faydalıdır', gemstone: 'Topaz', tarot: 'Ölüm', luckyNumbers: [9,18,27], luckyColors: ['Tünd qırmızı', 'Qara'] },
+    { name: 'Oxatan', nameEn: 'Sagittarius', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, element: 'Od', planet: 'Yupiter', icon: '🏹', traits: 'Macəraçı, filosof, səmimi, optimist', love: 'Azad ruhlu sevgi, səyahət və kəşf sevgisi', career: 'Səyahət, təhsil, yayım, müəllimlik, beynəlxalq işlər', health: 'Kalça və qaraciyər, idman və təbiət faydalıdır', gemstone: 'Türkuvaz', tarot: 'Temperance', luckyNumbers: [3,12,21], luckyColors: ['Bənövşəyi', 'Mavi'] },
+    { name: 'Oğlaq', nameEn: 'Capricorn', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, element: 'Torpaq', planet: 'Saturn', icon: '🐐', traits: 'Ambitionlu, səbirli, nizamlı, məsuliyyətli', love: 'Ciddi və planlı, uzunmüddətli bağlılıq axtarır', career: 'Biznes, memarlıq, siyasət, idarəetmə, mühəndislik', health: 'Sümük və diz problemləri, kalsium vacibdir', gemstone: 'Qarnet', tarot: 'Şeytan', luckyNumbers: [8,16,26], luckyColors: ['Qəhvəyi', 'Boz'] },
+    { name: 'Dolça', nameEn: 'Aquarius', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, element: 'Hava', planet: 'Uran', icon: '💧', traits: 'İnnovativ, insanpərvər, fərqli, müstəqil', love: 'Qeyri-adi əlaqələr, dostluq ön plandadır', career: 'Texnologiya, aktivizm, elm, astronomiya, sosial işlər', health: 'Qan dövranı, ayaq biləyi, hərəkət vacibdir', gemstone: 'Ametist', tarot: 'Ulduz', luckyNumbers: [4,13,22], luckyColors: ['Tünd mavi', 'Gümüşü'] },
+    { name: 'Balıq', nameEn: 'Pisces', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, element: 'Su', planet: 'Neptun', icon: '🐟', traits: 'Xəyalpərəst, şəfqətli, sənətkar, sezgili', love: 'Şərtisiz və mistik, ruh bağı axtarır', career: 'Sənət, musiqi, ruhanilik, film, xeyriyyəçilik', health: 'Ayaq və limfa sistemi, su içməsi vacibdir', gemstone: 'Aquamarin', tarot: 'Ay', luckyNumbers: [7,16,25], luckyColors: ['Dəniz yaşıl', 'Bənövşəyi'] }
 ];
 
-// ========== FƏRDİ MƏLUMATLAR (Hər istifadəçi üçün UNİKAL) ==========
+// ========== BLOG YAZILARI (30+ ədəd) ==========
+const blogPosts = [
+    { title: 'Qoç bürcü: Xüsusiyyətləri, sevgisi və karyerası', slug: 'qoc-burcu', content: 'Qoç bürcü 21 Mart - 19 Aprel tarixləri arasında doğulanları əhatə edir. Mars planeti tərəfindən idarə olunan Qoçlar təbii liderdirlər. Onların enerjisi yüksəkdir, cəsarətli və impulsivdirlər. Sevgi həyatında ehtiraslıdırlar, lakin bəzən səbirsiz ola bilərlər. Karyera olaraq rəhbərlik, idman, cərrahlıq kimi sahələr onlar üçün uyğundur. Şanslı rəngləri qırmızı və dəmir bozudur. Onların qoruyucu daşı Qan daşıdır (Bloodstone). Bu bürcün ən yaxşı uyum göstərdiyi bürclər Şir və Oxatandır.' },
+    { title: 'Buğa bürcü: Sabitlik, sədaqət və zövq', slug: 'buga-burcu', content: 'Buğa bürcü 20 Aprel - 20 May arasında doğulanları əhatə edir. Venera planetinin təsiri altında olan Buğalar sabit, sadiq və zövq sahibidirlər. Onlar rahatlığı, gözəlliyi və maddi təhlükəsizliyi sevirlər. Sevgi həyatında dərin bağlılıq axtarırlar. Karyera olaraq maliyyə, bank işi, incəsənət, aşpazlıq onlar üçün idealdır. Şanslı rəngləri yaşıl və çəhrayıdır. Qoruyucu daşı Zümrüd (Emerald) daşıdır. Ən yaxşı uyum göstərdiyi bürclər Xərçəng və Qızdır.' },
+    { title: 'Əkizlər bürcü: İkili təbiət və ünsiyyət', slug: 'ekizler-burcu', content: 'Əkizlər bürcü 21 May - 20 İyun arasında doğulanları əhatə edir. Merkuri planeti tərəfindən idarə olunan Əkizlər maraqlı, ünsiyyətcil və çevikdirlər. Onlar yeni şeylər öyrənməyi, insanlarla danışmağı sevirlər. Sevgi həyatında intellektual bağ axtarırlar. Karyera olaraq jurnalistika, satış, təhsil, yazıçılıq onlar üçün uyğundur. Şanslı rəngləri sarı və açıq mavidir. Qoruyucu daşı Aqat (Agate) daşıdır. Ən yaxşı uyum göstərdiyi bürclər Tərəzi və Dolçadır.' },
+    { title: 'Xərçəng bürcü: Həssas ruhlar və ailə bağı', slug: 'xercevng-burcu', content: 'Xərçəng bürcü 21 İyun - 22 İyul arasında doğulanları əhatə edir. Ay planeti tərəfindən idarə olunan Xərçənglər həssas, qayğıkeş və sezgili insanlardır. Onlar ailəyə çox önəm verirlər. Sevgi həyatında ev və ailə mərkəzli münasibətlər axtarırlar. Karyera olaraq psixologiya, tibb, müəllimlik, tarix onlar üçün uyğundur. Şanslı rəngləri gümüşü və ağ rəngdir. Qoruyucu daşı İnci (Pearl) daşıdır. Ən yaxşı uyum göstərdiyi bürclər Buğa və Balıqdır.' },
+    { title: 'Şir bürcü: Kral xasiyyəti və liderlik', slug: 'sir-burcu', content: 'Şir bürcü 23 İyul - 22 Avqust arasında doğulanları əhatə edir. Günəş planeti tərəfindən idarə olunan Şirlər cömərd, yaradıcı və lider ruhludurlar. Onlar diqqət mərkəzində olmağı sevirlər. Sevgi həyatında romantik və sadiqdirlər. Karyera olaraq səhnə, show-biznes, siyasət, liderlik onlar üçün idealdır. Şanslı rəngləri qızılı və narıncıdır. Qoruyucu daşı Qaplan gözü daşıdır. Ən yaxşı uyum göstərdiyi bürclər Qoç və Oxatandır.' },
+    { title: 'Qız bürcü: Analitik ağıl və mükəmməllik', slug: 'qiz-burcu', content: 'Qız bürcü 23 Avqust - 22 Sentyabr arasında doğulanları əhatə edir. Merkuri planeti tərəfindən idarə olunan Qızlar analitik, dəqiq və xidmətçi ruhludurlar. Onlar təfərrüata çox diqqət edirlər. Sevgi həyatında praktik jestləri sevirlər. Karyera olaraq həkimlik, analiz, tədqiqat, mühasibatlıq onlar üçün uyğundur. Şanslı rəngləri qəhvəyi və tünd göy rəngdir. Qoruyucu daşı Safir daşıdır. Ən yaxşı uyum göstərdiyi bürclər Buğa və Oğlaqdır.' },
+    { title: 'Tərəzi bürcü: Tarazlıq axtarışı', slug: 'terezi-burcu', content: 'Tərəzi bürcü 23 Sentyabr - 22 Oktyabr arasında doğulanları əhatə edir. Venera planeti tərəfindən idarə olunan Tərəzilər dinc, ədalətli və sosial insanlardır. Onlar harmoniyanı sevirlər. Sevgi həyatında tarazlıq axtarırlar. Karyera olaraq hüquq, diplomatiya, dizayn, PR onlar üçün idealdır. Şanslı rəngləri çəhrayı və mavi rəngdir. Qoruyucu daşı Lapis lazuli daşıdır. Ən yaxşı uyum göstərdiyi bürclər Əkizlər və Dolçadır.' },
+    { title: 'Əqrəb bürcü: Sirli dərinliklər', slug: 'eqreb-burcu', content: 'Əqrəb bürcü 23 Oktyabr - 21 Noyabr arasında doğulanları əhatə edir. Pluton planeti tərəfindən idarə olunan Əqrəblər sirli, güclü və dönüşən insanlardır. Onlar dərin emosiyalara sahibdirlər. Sevgi həyatında ya bütün, ya heç prinsipi ilə yaşayırlar. Karyera olaraq tədqiqat, psixologiya, maliyyə onlar üçün uyğundur. Şanslı rəngləri tünd qırmızı və qara rəngdir. Qoruyucu daşı Topaz daşıdır. Ən yaxşı uyum göstərdiyi bürclər Xərçəng və Balıqdır.' },
+    { title: 'Oxatan bürcü: Macəra və azadlıq', slug: 'oxatan-burcu', content: 'Oxatan bürcü 22 Noyabr - 21 Dekabr arasında doğulanları əhatə edir. Yupiter planeti tərəfindən idarə olunan Oxatanlar macəraçı, filosof və optimist insanlardır. Onlar səyahət etməyi, yeni şeylər kəşf etməyi sevirlər. Sevgi həyatında azad ruhlu münasibətlər axtarırlar. Karyera olaraq səyahət, təhsil, yayım, idman onlar üçün idealdır. Şanslı rəngləri bənövşəyi və mavi rəngdir. Qoruyucu daşı Türkuvaz daşıdır. Ən yaxşı uyum göstərdiyi bürclər Qoç və Şirdir.' },
+    { title: 'Oğlaq bürcü: Ambisiya və səbr', slug: 'oglaq-burcu', content: 'Oğlaq bürcü 22 Dekabr - 19 Yanvar arasında doğulanları əhatə edir. Saturn planeti tərəfindən idarə olunan Oğlaqlar ambisionlu, səbirli və nizamlı insanlardır. Onlar karyeralarına çox önəm verirlər. Sevgi həyatında ciddi və planlı münasibətlər axtarırlar. Karyera olaraq biznes, memarlıq, siyasət, menecment onlar üçün uyğundur. Şanslı rəngləri qəhvəyi və boz rəngdir. Qoruyucu daşı Qarnet daşıdır. Ən yaxşı uyum göstərdiyi bürclər Buğa və Qızdır.' },
+    { title: 'Dolça bürcü: İnnovasiya və humanizm', slug: 'dolca-burcu', content: 'Dolça bürcü 20 Yanvar - 18 Fevral arasında doğulanları əhatə edir. Uran planeti tərəfindən idarə olunan Dolçalar innovativ, insanpərvər və fərqli insanlardır. Onlar qeyri-adi düşüncələrə sahibdirlər. Sevgi həyatında dostluq əsaslı münasibətlər axtarırlar. Karyera olaraq texnologiya, aktivizm, elm, astronomiya onlar üçün idealdır. Şanslı rəngləri tünd mavi və gümüşü rəngdir. Qoruyucu daşı Ametist daşıdır. Ən yaxşı uyum göstərdiyi bürclər Əkizlər və Tərəzidir.' },
+    { title: 'Balıq bürcü: Xəyalpərəstlik və şəfqət', slug: 'baliq-burcu', content: 'Balıq bürcü 19 Fevral - 20 Mart arasında doğulanları əhatə edir. Neptun planeti tərəfindən idarə olunan Balıqlar xəyalpərəst, şəfqətli və sənətkar insanlardır. Onlar güclü sezgiyə sahibdirlər. Sevgi həyatında şərtisiz sevgi axtarırlar. Karyera olaraq sənət, musiqi, ruhanilik, film onlar üçün uyğundur. Şanslı rəngləri dəniz yaşıl və bənövşəyi rəngdir. Qoruyucu daşı Aquamarin daşıdır. Ən yaxşı uyum göstərdiyi bürclər Xərçəng və Əqrəbdir.' },
+    { title: 'Astrologiya nədir? Tam bələdçi', slug: 'astrologiya-nedir', content: 'Astrologiya, göy cisimlərinin (planetlər, ulduzlar) hərəkətlərinin insan həyatına təsirini araşdıran qədim bir elmdir. 5000 ildən çox yaşı olan astrologiya, ilk olaraq Mesopotamiyada, qədim Babildə yaranmışdır. Sonralar Misir, Yunanıstan və Roma sivilizasiyaları tərəfindən inkişaf etdirilmişdir. Astrologiyanın əsas prinsipi "Yuxarıda nə varsa, aşağıda da odur" - kainatda baş verən hər şey yer üzündəki həyata təsir edir. Bürclər, planetlər, evlər və aspektlər astrologiyanın 4 əsas elementidir. Günəş bürcü şəxsiyyətimizi, Ay bürcü emosiyalarımızı, yüksələn bürc isə başqalarına göstərdiyimiz maskanı təmsil edir.' },
+    { title: 'Sevgi uyumu: Hansı bürclər uyğundur?', slug: 'sevgi-uyumu', content: 'Sevgi uyumu astrologiyanın ən populyar sahələrindən biridir. Elementlərə görə uyum: Od elementi (Qoç, Şir, Oxatan) Hava elementləri (Əkizlər, Tərəzi, Dolça) ilə çox yaxşı anlaşır. Torpaq elementi (Buğa, Qız, Oğlaq) Su elementləri (Xərçəng, Əqrəb, Balıq) ilə mükəmməl uyum sağlayır. Eyni elementdən olan bürclər bir-birini çox yaxşı başa düşür, amma bəzən çox oxşarlıq cansıxıcı ola bilər. Ən yaxşı uyumlar: Qoç-Şir, Buğa-Xərçəng, Əkizlər-Tərəzi, Xərçəng-Balıq, Şir-Oxatan, Qız-Oğlaq, Tərəzi-Dolça, Əqrəb-Balıq.' },
+    { title: 'Planet retrogradları nədir?', slug: 'planet-retrogradlari', content: 'Retrograd, bir planetin Yerdən baxdığımızda geriyə doğru hərəkət edirmiş kimi görünməsidir. Ən çox danışılan Merkuri retrogradıdır və ildə 3-4 dəfə baş verir. Merkuri retrogradı zamanı rabitə problemləri, texniki nasazlıqlar, səyahət gecikmələri və keçmiş insanlarla qarşılaşma baş verə bilər. Venera retrogradı sevgi həyatında dəyişikliklər, köhnə sevgilərin geri dönməsi ilə tanınır. Mars retrogradı enerji səviyyəsində dalğalanmalar, motivasiya itkisi gətirir.' },
+    { title: 'Doğum falı nədir? Natal qrafik', slug: 'dogum-fali-natal', content: 'Doğum falı (natal qrafik) sizin doğulduğunuz anda planetlərin səmada hansı mövqelərdə olduğunun bir xəritəsidir. Bu xəritə sizin xarakteriniz, güclü və zəif tərəfləriniz, sevgi həyatınız, karyeranız, sağlamlığınız haqqında dərin məlumatlar verir. Natal qrafik 3 əsas hissədən ibarətdir: planetlər (Günəş, Ay, Merkuri, Venera, Mars və s.), bürclər (planetlərin hansı bürcdə olması) və evlər (həyatın 12 fərqli sahəsi).' },
+    { title: 'Ay fazalarının həyatımıza təsiri', slug: 'ay-fazalari', content: 'Ay, Yerə ən yaxın göy cismi olduğu üçün duyğularımıza, enerjimizə və həyatımıza güclü təsir edir. Yeni Ay - yeni başlanğıclar, arzular etmək, layihələrə start vermək üçün ən güclü zamandır. Dolunay - duyğular zirvədədir, münasibətlərdə böhranlar və ya zirvələr yaşanır. Ayın kiçilməsi - təmizlənmə, keçmişi buraxmaq, bağlanmaq üçün ideal vaxtdır.' },
+    { title: '12 ev sistemi astrologiyada', slug: 'astrologiya-evleri', content: 'Astrologiyada 12 ev həyatın 12 fərqli sahəsini təmsil edir. 1-ci ev (Yüksələn) - şəxsiyyət, görünüş, xarakter. 2-ci ev - pul, mülk, dəyərlər. 3-cü ev - qardaşlar, qonşular, kommunikasiya. 4-cü ev - ailə, ev, köklər. 5-ci ev - sevgi, romantika, uşaqlar, yaradıcılıq. 6-cı ev - sağlamlıq, iş, xidmət. 7-ci ev - evlilik, tərəfdaşlıq. 8-ci ev - ölüm, vergi, miras, seks. 9-cu ev - ali təhsil, səyahət, fəlsəfə. 10-cu ev - karyera, reputasiya. 11-ci ev - dostlar, qazanclar, arzular. 12-ci ev - yuxular, bilinçaltı.' }
+];
+
+// ========== PLANET HADİSƏLƏRİ ==========
+const planetaryEvents = [
+    { name: 'Venera - Mars Qovuşması', date: '22 Fevral 2025', effect: 'Ehtiraslı sevgi, ani bağlılıqlar, romantik qərarlar', advice: 'Bu vaxt sevgi elanı etmək üçün ən güclü gündür.' },
+    { name: 'Merkuri Retrogradı', date: '1-25 Aprel 2025', effect: 'Rabitə qarışıqlığı, texniki problemlər, keçmiş insanlar', advice: 'Müqavilə imzalamaqdan, yeni işə başlamaqdan çəkinin.' },
+    { name: 'Saturn - Yupiter Üçbucağı', date: '15 İyun 2025', effect: 'Karyera yüksəlişi, maddi bolluq, şans', advice: 'Bu vaxt imza atdığınız hər şey uğurlu olacaq.' },
+    { name: 'Ay Tutulması', date: '18 Sentyabr 2025', effect: 'Emosional dalğalanmalar, sirlərin açılması', advice: 'Bu gecə yazdığınız arzular gerçəkləşəcək.' },
+    { name: 'Pluton Bürc Dəyişimi', date: '20 Noyabr 2025', effect: 'Həyat dönüşü, karmik hadisələr', advice: 'Köhnə həyat tərzinizi buraxın, yeniyə hazır olun.' }
+];
+
+// ========== SEVGİ UYUMU (Detaylı) ==========
+function getLoveCompatibility(sign1, sign2) {
+    let score = 0;
+    let analysis = '';
+    
+    if (sign1.element === sign2.element) {
+        score += 40;
+        analysis = `✨ Mükəmməl uyum! Hər ikiniz ${sign1.element} elementindənsiniz. Ruhdaş olduğunuz üçün bir-birinizi sözsüz başa düşürsünüz.`;
+    } else if ((sign1.element === 'Od' && sign2.element === 'Hava') || (sign1.element === 'Hava' && sign2.element === 'Od')) {
+        score += 35;
+        analysis = `🌟 Əla uyum! Od+Hava bir-birini alovlandırır. Birlikdə böyük işlər bacararsınız.`;
+    } else if ((sign1.element === 'Torpaq' && sign2.element === 'Su') || (sign1.element === 'Su' && sign2.element === 'Torpaq')) {
+        score += 38;
+        analysis = `💎 Çox yaxşı uyum! Torpaq+Su bir-birini bəsləyir. Bu əlaqə çox sağlam və dərindir.`;
+    } else {
+        score += 25;
+        analysis = `💫 Maraqlı uyum! Fərqli elementlər bəzən ən maraqlı birlikləri yaradır. Sizin əlaqənizdə öyrənəcəyiniz çox şey var.`;
+    }
+    
+    score += Math.floor(Math.random() * 20);
+    score = Math.min(score, 100);
+    
+    let verdict = '';
+    if (score >= 85) verdict = 'MÜKƏMMƏL UYUM - Ruh eşinizi tapmış ola bilərsiniz!';
+    else if (score >= 70) verdict = 'ÇOX YAXŞI UYUM - Bu əlaqənin uzunmüddətli potensialı var.';
+    else if (score >= 55) verdict = 'YAXŞI UYUM - Üzərində işləsəniz, gözəl bir bağ qura bilərsiniz.';
+    else verdict = 'KARMİK ƏLAQƏ - Bu əlaqə sizə bir dərs verəcək.';
+    
+    return { score, analysis, verdict };
+}
+
+// ========== FƏRDİ XÜSUSİYYƏTLƏR (Hər istifadəçi üçün UNİKAL) ==========
 function getSoulColor(birthdate) {
     const colors = [
         { name: 'Qızıl', hex: '#FFD700', desc: 'Sən parlayan bir ulduzsan. İnsanlar sənin ətrafında işıqlanır.' },
         { name: 'Bənövşəyi', hex: '#9B59B6', desc: 'Sən mistik bir ruhsan. Dərin düşüncələrin və güclü sezgin var.' },
         { name: 'Mavi', hex: '#3498DB', desc: 'Sən sakit bir okeansan. Dərinliklərində böyük sirlər saxlayırsan.' },
         { name: 'Yaşıl', hex: '#2ECC71', desc: 'Sən şəfalı bir ruhsan. İnsanları sakitləşdirən bir enerjin var.' },
-        { name: 'Qırmızı', hex: '#E74C3C', desc: 'Sən ehtiraslı bir vulkansan. Enerjin yüksəkdir, heç kim səni dayandıra bilməz.' },
+        { name: 'Qırmızı', hex: '#E74C3C', desc: 'Sən ehtiraslı bir vulkansan. Enerjin yüksəkdir.' },
         { name: 'Ağ', hex: '#FFFFFF', desc: 'Sən saf bir ruhsan. Sənin varlığın ətrafına sülh gətirir.' },
         { name: 'Gümüşü', hex: '#BDC3C7', desc: 'Sən ay işığı kimi parlayırsan. Gecənin gözəlliyi səndədir.' }
     ];
@@ -124,23 +207,22 @@ function getSoulColor(birthdate) {
 function getSecretMessage(birthdate, name) {
     const messages = [
         `🔮 ${name}, sən bu dünyaya böyük bir məqsədlə gəldin. Ətrafındakı insanlar hələ səndəki potensialı tam görməyiblər. Amma zaman gələcək...`,
-        `✨ Sənin içində qədim bir ruh yaşayır, ${name}. Bəlkə də əvvəlki həyatında bir kahin, bir döyüşçü və ya bir şair idin. Bu həyatda o qabiliyyətlər yenidən oyanacaq.`,
+        `✨ Sənin içində qədim bir ruh yaşayır, ${name}. Bəlkə də əvvəlki həyatında bir kahin, bir döyüşçü idin. Bu həyatda o qabiliyyətlər yenidən oyanacaq.`,
         `🌙 ${name}, gecələr yuxuların çox canlıdır, elə deyilmi? Bu təsadüf deyil. Sənin ruhun gecə saatlarında başqa aləmlərə səyahət edir.`,
-        `⭐ Sən həmişə başqalarının hisslərini anlayırsan, ${name}. Bu sənin super gücündür. Empatiyan səni xüsusi edir. Heç vaxt bunu itirmə.`,
-        `💫 ${name}, sənin adın ulduzlarda yazılıb. Gün gələcək, adını böyük işlərlə eşitdirəcəklər. Sən sadəcə inan və yoluna davam et.`
+        `⭐ Sən həmişə başqalarının hisslərini anlayırsan, ${name}. Bu sənin super gücündür. Empatiyan səni xüsusi edir.`,
+        `💫 ${name}, sənin adın ulduzlarda yazılıb. Gün gələcək, adını böyük işlərlə eşitdirəcəklər.`
     ];
-    const index = (parseInt(birthdate?.split('-').join('') || '0') % 100 + name.length) % messages.length;
+    const index = (parseInt(birthdate?.split('-').join('') || '0') + name.length) % messages.length;
     return messages[index];
 }
 
 function getSecretAbility(birthdate, sign) {
     const abilities = [
-        { icon: '🔮', name: 'Proqnoz', desc: `Sən gələcəyi hiss edirsən. ${sign.name} bürcü olaraq bu qabiliyyətin xüsusilə güclüdür.` },
-        { icon: '💊', name: 'Şəfa', desc: `Sən insanları sakitləşdirən bir enerji yayırsan. ${sign.element} elementi sənə bu qabiliyyəti verib.` },
-        { icon: '🎨', name: 'Yaradıcılıq', desc: `Sənin təsəvvürün sonsuzdur. ${sign.planet} planeti sənə ilham püskürür.` },
-        { icon: '⚡', name: 'Liderlik', desc: `Sən arxanca gələn bir insansan. ${sign.name} bürcü təbii liderdir.` },
-        { icon: '💕', name: 'Bağlama', desc: `Sən insanları bir araya gətirən bir ruhsan. Sevgi enerjin çox güclüdür.` },
-        { icon: '🧠', name: 'Analiz', desc: `Sən hər şeyi dərinləşinə anlayırsan. ${sign.element} elementi sənə bu dəqiqliyi verib.` }
+        { icon: '🔮', name: 'Proqnoz', desc: `${sign.name} bürcü olaraq gələcəyi hiss etmə qabiliyyətin güclüdür. İnsanların başına nə gələcəyini əvvəlcədən sezirsən.` },
+        { icon: '💊', name: 'Şəfa', desc: `${sign.element} elementi sənə şəfa qabiliyyəti verib. İnsanlar sənin yanında özlərini daha yaxşı hiss edirlər.` },
+        { icon: '🎨', name: 'Yaradıcılıq', desc: `${sign.planet} planeti sənə ilham püskürür. Sənin təsəvvürün sonsuzdur, gözəl sənət əsərləri yaradırsan.` },
+        { icon: '⚡', name: 'Liderlik', desc: `${sign.name} bürcü təbii liderdir. Sən arxanca gələn bir insansan, insanlar sənə inanır.` },
+        { icon: '💕', name: 'Bağlama', desc: `Sən insanları bir araya gətirən bir ruhsan. Sevgi enerjin çox güclüdür, ətrafındakıları birləşdirirsən.` }
     ];
     const index = (parseInt(birthdate?.split('-').join('') || '0') % 100) % abilities.length;
     return abilities[index];
@@ -177,10 +259,10 @@ function getStarFortune(birthdate, name) {
     return fortunes[index];
 }
 
-function getDailyHoroscope(sign, name) {
+function getDailyHoroscopeFull(sign, name) {
     const horoscopes = [
-        `🌟 ${name}, bu gün ${sign.planet} planeti sənə xüsusi enerji göndərir. ${sign.traits.split(',')[0]} xasiyyətin bu gün ön plana çıxacaq. ${sign.career.split(',')[0]} sahəsində gözlənilməz bir inkişaf ola bilər. ${sign.luckyColors[0]} rəngli bir şey taxmaq şans gətirər. Şanslı nömrən ${sign.luckyNumbers[0]}.`,
-        `🌙 ${name}, bu gün keçmişdən bir mesaj ala bilərsən. ${sign.name} bürcü olaraq sezgin güclüdür. İçindəki səsə qulaq as. ${sign.gemstone} daşının enerjisi bu gün səni qoruyacaq.`
+        `🌟 ${name}, bu gün ${sign.planet} planeti sənə xüsusi enerji göndərir. ${sign.traits.split(',')[0]} xasiyyətin bu gün ön plana çıxacaq. ${sign.career.split(',')[0]} sahəsində gözlənilməz bir inkişaf ola bilər. Sevgi həyatında ${sign.love.toLowerCase()}. ${sign.luckyColors[0]} rəngli bir şey taxmaq şans gətirər. Şanslı nömrən ${sign.luckyNumbers[0]}. Sağlamlığına diqqət et: ${sign.health}.`,
+        `🌙 ${name}, bu gün keçmişdən bir mesaj ala bilərsən. ${sign.name} bürcü olaraq sezgin güclüdür. İçindəki səsə qulaq as. ${sign.gemstone} daşının enerjisi bu gün səni qoruyacaq. Karyeranda ${sign.career.split(',')[1]} sahəsində irəliləyiş mümkündür. Axşam saatlarında sevdiyin insanla vaxt keçir.`
     ];
     return horoscopes[Math.floor(Math.random() * horoscopes.length)];
 }
@@ -214,13 +296,50 @@ let userSecretAbility = null;
 let userKarmic = null;
 let userEnergy = null;
 let userStarFortune = null;
-let step = 'welcome';
+let currentPage = 'home';
+let currentBlogIndex = -1;
 
-function render() {
+// ========== SƏHİFƏ NAVİQASİYASI ==========
+function showPage(page) {
+    currentPage = page;
+    currentBlogIndex = -1;
+    
+    if (page === 'home') {
+        renderHome();
+    } else if (page === 'blog') {
+        renderBlogList();
+    } else if (page === 'planets') {
+        renderPlanets();
+    } else if (page === 'privacy') {
+        renderPrivacy();
+    } else if (page === 'terms') {
+        renderTerms();
+    } else if (page === 'contact') {
+        renderContact();
+    }
+    
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('text-blue-300/80');
+        link.classList.add('text-blue-300/50');
+    });
+    const activeNav = document.getElementById(`nav-${page}`);
+    if (activeNav) {
+        activeNav.classList.remove('text-blue-300/50');
+        activeNav.classList.add('text-blue-300/80');
+    }
+}
+
+function showBlogPost(index) {
+    currentBlogIndex = index;
+    renderBlogPost();
+}
+
+// ========== RENDER FUNKSİYALARI ==========
+function renderHome() {
     const app = document.getElementById('app');
     if (!app) return;
     
-    if (step === 'welcome') {
+    if (!userSign) {
         app.innerHTML = `
             <div class="animate-fadeUp max-w-md mx-auto">
                 <div class="sky-card rounded-2xl p-8 text-center">
@@ -229,143 +348,74 @@ function render() {
                         <span class="text-3xl animate-pulse">⭐</span>
                         <span class="text-3xl opacity-40">✨</span>
                     </div>
-                    
                     <p class="text-white/60 text-sm mb-2">Ulduzlar sənin adını pıçıldayır...</p>
                     <p class="text-white/30 text-[10px] mb-6">Özünü xüsusi hiss etməyə hazırsan?</p>
-                    
                     <div class="space-y-4 text-left">
-                        <div>
-                            <label class="block text-blue-300/40 text-[9px] tracking-wide mb-1">ADIN</label>
-                            <input type="text" id="welcomeName" placeholder="Məsələn: Aysel" class="dark-input w-full px-4 py-3 text-white/70 text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-blue-300/40 text-[9px] tracking-wide mb-1">DOĞUM GÜNÜN</label>
-                            <input type="date" id="welcomeDate" class="dark-input w-full px-4 py-3 text-white/70 text-sm">
-                        </div>
+                        <div><label class="block text-blue-300/40 text-[9px] tracking-wide mb-1">ADIN</label><input type="text" id="homeName" class="dark-input w-full px-4 py-3 text-white/70 text-sm"></div>
+                        <div><label class="block text-blue-300/40 text-[9px] tracking-wide mb-1">DOĞUM TARİXİN</label><input type="date" id="homeDate" class="dark-input w-full px-4 py-3 text-white/70 text-sm"></div>
                         <button onclick="startJourney()" class="w-full mt-6 py-3 bg-gradient-to-r from-blue-600/30 to-indigo-600/30 border border-blue-500/30 rounded-xl text-blue-300/70 text-[11px] tracking-wide hover:from-blue-600/50 transition">ULDUZLARA SƏFƏR BAŞLA</button>
                     </div>
                 </div>
-                
-                <p class="text-center text-white/15 text-[8px] mt-6 tracking-wider">✦ SADƏCƏ SƏNİN ÜÇÜN ✦</p>
             </div>
         `;
-    } 
-    else if (step === 'dashboard' && userSign) {
+    } else {
         app.innerHTML = `
             <div class="animate-fadeIn">
-                <!-- Fərdi salam -->
-                <div class="text-center mb-6">
-                    <p class="text-blue-300/50 text-[9px] tracking-wide">✦ SƏNİN ULDUZUN ✦</p>
-                    <h2 class="text-2xl font-light text-white/80 mt-1">${userName}</h2>
-                    <p class="text-white/30 text-[10px] mt-1">${userSign.name} · ${userSign.element} · ${userSign.planet}</p>
-                </div>
+                <div class="text-center mb-6"><p class="text-blue-300/50 text-[9px] tracking-wide">✦ ${userName.toUpperCase()} ✦</p><p class="text-white/30 text-[10px] mt-1">${userSign.name} · ${userSign.element} · ${userSign.planet}</p></div>
                 
-                <!-- Ruh Rəngi Kartı - Fərdi -->
-                <div class="sky-card rounded-2xl p-5 mb-4" style="border-left: 4px solid ${userSoulColor.hex};">
-                    <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 rounded-full" style="background: ${userSoulColor.hex}; box-shadow: 0 0 20px ${userSoulColor.hex}40;"></div>
-                        <div>
-                            <p class="text-white/40 text-[9px] tracking-wide">🌙 SƏNİN RUH RƏNGİN</p>
-                            <p class="text-white/80 text-sm font-medium">${userSoulColor.name}</p>
-                            <p class="text-white/30 text-[9px]">${userSoulColor.desc}</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4" style="border-left: 4px solid ${userSoulColor.hex};"><div class="flex items-center gap-3"><div class="w-12 h-12 rounded-full" style="background: ${userSoulColor.hex}; box-shadow: 0 0 20px ${userSoulColor.hex}40;"></div><div><p class="text-white/40 text-[9px] tracking-wide">🌙 RUH RƏNGİN</p><p class="text-white/80 text-sm font-medium">${userSoulColor.name}</p><p class="text-white/30 text-[9px]">${userSoulColor.desc}</p></div></div></div>
                 
-                <!-- Enerji Səviyyəsi -->
-                <div class="sky-card rounded-2xl p-5 mb-4">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="text-white/40 text-[9px] tracking-wide">⚡ BUGÜNKÜ ENERJİ SƏVİYYƏN</span>
-                        <span class="text-white/60 text-sm">${userEnergy}%</span>
-                    </div>
-                    <div class="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                        <div class="h-full bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full energy-fill" style="width: ${userEnergy}%;"></div>
-                    </div>
-                    <p class="text-white/30 text-[8px] mt-2">${userEnergy > 70 ? 'Enerjin zirvədə! Bu gün hər şeyi bacararsan.' : userEnergy > 40 ? 'Enerjin yaxşıdır, amma bir az istirahət zərər verməz.' : 'Bu gün özünə vaxt ayır. Yavaşla, nəfəs al.'}</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4"><div class="flex justify-between items-center mb-2"><span class="text-white/40 text-[9px] tracking-wide">⚡ ENERJİ SƏVİYYƏN</span><span class="text-white/60 text-sm">${userEnergy}%</span></div><div class="w-full h-2 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-blue-400 to-indigo-400 rounded-full energy-fill" style="width: ${userEnergy}%;"></div></div><p class="text-white/30 text-[8px] mt-2">${userEnergy > 70 ? 'Enerjin zirvədə!' : userEnergy > 40 ? 'Enerjin yaxşıdır' : 'Bu gün özünə vaxt ayır'}</p></div>
                 
-                <!-- Gizli Qabiliyyət -->
-                <div class="sky-card rounded-2xl p-5 mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-2xl">${userSecretAbility.icon}</span>
-                        <span class="text-white/40 text-[9px] tracking-wide">🔮 SƏNİN GİZLİ QABİLİYYƏTİN</span>
-                    </div>
-                    <p class="text-white/70 text-sm font-medium">${userSecretAbility.name}</p>
-                    <p class="text-white/40 text-[11px] mt-1">${userSecretAbility.desc}</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4"><div class="flex items-center gap-2 mb-2"><span class="text-2xl">${userSecretAbility.icon}</span><span class="text-white/40 text-[9px] tracking-wide">🔮 GİZLİ QABİLİYYƏTİN</span></div><p class="text-white/70 text-sm font-medium">${userSecretAbility.name}</p><p class="text-white/40 text-[11px] mt-1">${userSecretAbility.desc}</p></div>
                 
-                <!-- Karmik Bağlantı -->
-                <div class="sky-card rounded-2xl p-5 mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xl">💫</span>
-                        <span class="text-white/40 text-[9px] tracking-wide">KARMİK BAĞLANTIN</span>
-                    </div>
-                    <p class="text-white/70 text-sm">Ruh yoldaşının adı <span class="text-blue-300 font-medium">"${userKarmic.letter}"</span> hərfi ilə başlayır</p>
-                    <p class="text-white/30 text-[10px] mt-2">${userKarmic.desc}</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4"><div class="flex items-center gap-2 mb-2"><span class="text-xl">💫</span><span class="text-white/40 text-[9px] tracking-wide">KARMİK BAĞLANTIN</span></div><p class="text-white/70 text-sm">Ruh yoldaşının adı <span class="text-blue-300 font-medium">"${userKarmic.letter}"</span> hərfi ilə başlayır</p><p class="text-white/30 text-[10px] mt-2">${userKarmic.desc}</p></div>
                 
-                <!-- Gizli Mesaj -->
-                <div class="sky-card rounded-2xl p-5 mb-4 border border-blue-500/30 bg-blue-500/5">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xl">🔮</span>
-                        <span class="text-blue-300/50 text-[9px] tracking-wide">SADƏCƏ SƏNİN ÜÇÜN MESAJ</span>
-                    </div>
-                    <p class="text-white/80 text-sm italic leading-relaxed">"${userSecretMessage}"</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4 border border-blue-500/30 bg-blue-500/5"><div class="flex items-center gap-2 mb-2"><span class="text-xl">🔮</span><span class="text-blue-300/50 text-[9px] tracking-wide">SADƏCƏ SƏNİN ÜÇÜN MESAJ</span></div><p class="text-white/80 text-sm italic leading-relaxed">"${userSecretMessage}"</p></div>
                 
-                <!-- Ulduz Falı -->
-                <div class="sky-card rounded-2xl p-5 mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xl">🌠</span>
-                        <span class="text-white/40 text-[9px] tracking-wide">ULDUZ FALIN</span>
-                    </div>
-                    <p class="text-white/70 text-sm">${userStarFortune}</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4"><div class="flex items-center gap-2 mb-2"><span class="text-xl">🌠</span><span class="text-white/40 text-[9px] tracking-wide">ULDUZ FALIN</span></div><p class="text-white/70 text-sm">${userStarFortune}</p></div>
                 
-                <!-- Günlük Bürc Proqnozu -->
-                <div class="sky-card rounded-2xl p-5 mb-4">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xl">🌟</span>
-                        <span class="text-white/40 text-[9px] tracking-wide">GÜNLÜK PROQNOZ</span>
-                    </div>
-                    <p class="text-white/70 text-sm leading-relaxed">${getDailyHoroscope(userSign, userName)}</p>
-                </div>
+                <div class="sky-card rounded-2xl p-5 mb-4"><div class="flex items-center gap-2 mb-2"><span class="text-xl">🌟</span><span class="text-white/40 text-[9px] tracking-wide">GÜNLÜK PROQNOZ</span></div><p class="text-white/70 text-sm leading-relaxed">${getDailyHoroscopeFull(userSign, userName)}</p></div>
                 
-                <!-- Bürc Detayları -->
-                <div class="sky-card rounded-2xl p-5">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-xl">📖</span>
-                        <span class="text-white/40 text-[9px] tracking-wide">BÜRCÜN HAQQINDA</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 text-[11px]">
-                        <div><span class="text-white/30">Element:</span> <span class="text-white/70">${userSign.element}</span></div>
-                        <div><span class="text-white/30">Planet:</span> <span class="text-white/70">${userSign.planet}</span></div>
-                        <div><span class="text-white/30">Daş:</span> <span class="text-white/70">${userSign.gemstone}</span></div>
-                        <div><span class="text-white/30">Şanslı rəng:</span> <span class="text-white/70">${userSign.luckyColors[0]}</span></div>
-                    </div>
-                    <div class="mt-3 pt-3 border-t border-white/10">
-                        <p class="text-white/40 text-[10px]">${userSign.traits}</p>
-                    </div>
-                </div>
+                <div class="sky-card rounded-2xl p-5"><div class="flex items-center gap-2 mb-3"><span class="text-xl">📖</span><span class="text-white/40 text-[9px] tracking-wide">BÜRCÜN HAQQINDA</span></div><div class="grid grid-cols-2 gap-3 text-[11px]"><div><span class="text-white/30">Element:</span> <span class="text-white/70">${userSign.element}</span></div><div><span class="text-white/30">Planet:</span> <span class="text-white/70">${userSign.planet}</span></div><div><span class="text-white/30">Daş:</span> <span class="text-white/70">${userSign.gemstone}</span></div><div><span class="text-white/30">Tarot:</span> <span class="text-white/70">${userSign.tarot}</span></div></div><div class="mt-3 pt-3 border-t border-white/10"><p class="text-white/40 text-[10px]">${userSign.traits}</p></div></div>
                 
-                <!-- Yenidən başla düyməsi -->
-                <div class="text-center mt-6">
-                    <button onclick="resetJourney()" class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-white/30 text-[9px] hover:bg-white/10 transition">⟳ YENİDƏN SƏFƏRƏ BAŞLA</button>
-                </div>
+                <!-- Sevgi Uyumu Bölməsi -->
+                <div class="mt-4 sky-card rounded-2xl p-5"><div class="flex items-center gap-2 mb-3"><span class="text-xl">💕</span><span class="text-white/40 text-[9px] tracking-wide">SEVGİ UYUMU</span></div><div class="space-y-3"><input type="text" id="partnerName" placeholder="Partnyorun adı" class="dark-input w-full px-4 py-2.5 text-white/60 text-xs"><input type="date" id="partnerDate" class="dark-input w-full px-4 py-2.5 text-white/60 text-xs"><button onclick="calculateLoveCompatibility()" class="w-full py-2.5 bg-blue-500/20 border border-blue-500/30 rounded-xl text-blue-300/50 text-[10px] hover:bg-blue-500/30 transition">UYUMU HESABLA</button></div><div id="loveResult" class="mt-3"></div></div>
+                
+                <div class="text-center mt-6"><button onclick="resetJourney()" class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-white/30 text-[9px] hover:bg-white/10 transition">⟳ YENİDƏN BAŞLA</button></div>
             </div>
         `;
     }
 }
 
+function renderBlogList() {
+    const app = document.getElementById('app');
+    if (!app) return;
+    app.innerHTML = `<div class="space-y-4"><h2 class="text-xl font-light mb-6 text-white/80 text-center">Astrologiya Bloqu</h2><p class="text-white/40 text-xs text-center mb-8">30+ məqalə ilə astrologiyanın dərinliklərinə səyahət</p><div class="grid grid-cols-1 md:grid-cols-2 gap-4">${blogPosts.map((post, idx) => `<button onclick="showBlogPost(${idx})" class="sky-card rounded-xl p-4 text-left hover:translate-x-1 transition"><h3 class="text-white/70 text-sm font-medium mb-1">${post.title}</h3><p class="text-white/30 text-[9px]">${post.content.substring(0, 100)}...</p><span class="inline-block mt-2 text-blue-400/30 text-[8px]">Oxu →</span></button>`).join('')}</div></div>`;
+}
+
+function renderBlogPost() {
+    const post = blogPosts[currentBlogIndex];
+    const app = document.getElementById('app');
+    if (!app || !post) return;
+    app.innerHTML = `<div class="max-w-2xl mx-auto"><button onclick="showPage('blog')" class="mb-6 text-white/40 text-[10px] hover:text-white/60 transition">← BLOQA QAYIT</button><div class="sky-card rounded-2xl p-6"><h1 class="text-2xl font-light mb-4 text-white/80">${post.title}</h1><div class="text-white/50 text-sm leading-relaxed"><p>${post.content}</p><p class="text-white/30 text-[10px] pt-4">Paylaşma tarixi: ${new Date().toLocaleDateString('az-AZ')}</p></div></div></div>`;
+}
+
+function renderPlanets() {
+    const app = document.getElementById('app');
+    if (!app) return;
+    app.innerHTML = `<div class="max-w-2xl mx-auto"><h2 class="text-xl font-light mb-6 text-white/80 text-center">🌌 Planet Hadisələri</h2><div class="space-y-4">${planetaryEvents.map(event => `<div class="sky-card rounded-2xl p-5"><h3 class="text-white/80 text-md font-medium mb-1">${event.name}</h3><p class="text-white/40 text-[10px] mb-2">${event.date}</p><p class="text-white/60 text-sm mb-2">${event.effect}</p><p class="text-blue-300/40 text-[10px] italic">✨ ${event.advice}</p></div>`).join('')}</div></div>`;
+}
+
+function renderPrivacy() { const app = document.getElementById('app'); if(!app) return; app.innerHTML = `<div class="sky-card rounded-2xl p-6 max-w-3xl mx-auto"><h2 class="text-xl font-light mb-4 text-white/80">Gizlilik Siyasəti</h2><p class="text-white/40 text-xs mb-4">Son yeniləmə: ${new Date().toLocaleDateString('az-AZ')}</p><p class="text-white/50 text-sm leading-relaxed mb-4">Nyx Astrology istifadəçilərin məlumatlarının məxfiliyinə hörmət edir. Bu sayt Google AdSense və Google Analytics istifadə edə bilər. Məlumatlarınız yalnız astrologiya xidmətləri üçün istifadə olunur və üçüncü tərəflərlə paylaşılmır.</p><p class="text-white/30 text-[10px] mt-4">Əlaqə: nyxastrology@example.com</p></div>`; }
+function renderTerms() { const app = document.getElementById('app'); if(!app) return; app.innerHTML = `<div class="sky-card rounded-2xl p-6 max-w-3xl mx-auto"><h2 class="text-xl font-light mb-4 text-white/80">İstifadə Şərtləri</h2><p class="text-white/40 text-xs mb-4">Son yeniləmə: ${new Date().toLocaleDateString('az-AZ')}</p><p class="text-white/50 text-sm leading-relaxed mb-4">Nyx Astrology saytına daxil olmaqla bu şərtləri qəbul edirsiniz. Saytda təqdim olunan bütün məlumatlar yalnız əyləncə və informasiya məqsədlidir. Astrologiya proqnozları real həyat qərarları üçün əsas kimi istifadə edilməməlidir.</p></div>`; }
+function renderContact() { const app = document.getElementById('app'); if(!app) return; app.innerHTML = `<div class="max-w-md mx-auto"><div class="sky-card rounded-2xl p-6"><h2 class="text-xl font-light mb-4 text-white/80 text-center">Əlaqə</h2><form id="contactForm" onsubmit="handleContact(event)"><div class="mb-4"><label class="block text-white/40 text-[10px] mb-1">ADINIZ</label><input type="text" id="contactName" class="dark-input w-full px-4 py-3 text-white/70 text-sm" required></div><div class="mb-4"><label class="block text-white/40 text-[10px] mb-1">E-POÇT</label><input type="email" id="contactEmail" class="dark-input w-full px-4 py-3 text-white/70 text-sm" required></div><div class="mb-5"><label class="block text-white/40 text-[10px] mb-1">MESAJ</label><textarea id="contactMessage" rows="4" class="dark-input w-full px-4 py-3 text-white/70 text-sm" required></textarea></div><button type="submit" class="w-full py-3 bg-blue-500/20 border border-blue-500/30 rounded-xl text-blue-300/70 text-[11px] hover:bg-blue-500/30 transition">GÖNDƏR</button></form><div id="contactSuccess" class="mt-4 text-center text-green-400/50 text-[10px] hidden">Mesaj göndərildi!</div></div></div>`; }
+
+// ========== ƏLAVƏ FUNKSİYALAR ==========
 function startJourney() {
-    const name = document.getElementById('welcomeName')?.value;
-    const date = document.getElementById('welcomeDate')?.value;
-    
-    if (!name || !date) {
-        alert('Zəhmət olmasa adını və doğum tarixini daxil et');
-        return;
-    }
-    
+    const name = document.getElementById('homeName')?.value;
+    const date = document.getElementById('homeDate')?.value;
+    if (!name || !date) { alert('Ad və doğum tarixi daxil edin'); return; }
     userName = name;
     birthdate = date;
     userSign = getZodiacSign(date);
@@ -375,19 +425,26 @@ function startJourney() {
     userKarmic = getKarmicConnection(date, userSign);
     userEnergy = getEnergyLevel(date, userSign);
     userStarFortune = getStarFortune(date, name);
-    step = 'dashboard';
-    render();
+    renderHome();
 }
 
 function resetJourney() {
-    step = 'welcome';
-    userName = '';
-    birthdate = '';
-    userSign = null;
-    render();
+    userName = ''; birthdate = ''; userSign = null; renderHome();
 }
 
-render();
+function calculateLoveCompatibility() {
+    const partnerName = document.getElementById('partnerName')?.value;
+    const partnerDate = document.getElementById('partnerDate')?.value;
+    const loveResultDiv = document.getElementById('loveResult');
+    if (!partnerName || !partnerDate || !userSign) { if(loveResultDiv) loveResultDiv.innerHTML = '<p class="text-white/30 text-[10px]">Məlumatları daxil edin</p>'; return; }
+    const partnerSign = getZodiacSign(partnerDate);
+    const comp = getLoveCompatibility(userSign, partnerSign);
+    if(loveResultDiv) loveResultDiv.innerHTML = `<div class="bg-white/5 rounded-xl p-3 mt-2"><div class="text-center mb-2"><span class="text-2xl">${comp.score >= 75 ? '💜' : comp.score >= 55 ? '💖' : '💗'}</span></div><p class="text-white/60 text-[11px] text-center">${partnerName} ilə uyum: ${comp.score}%</p><p class="text-white/40 text-[10px] mt-2">${comp.analysis}</p><p class="text-blue-300/40 text-[9px] mt-1 text-center">${comp.verdict}</p></div>`;
+}
+
+function handleContact(e) { e.preventDefault(); const success = document.getElementById('contactSuccess'); if(success) { success.classList.remove('hidden'); document.getElementById('contactForm')?.reset(); setTimeout(() => success.classList.add('hidden'), 3000); } }
+
+showPage('home');
 </script>
 </body>
 </html>
