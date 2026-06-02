@@ -3,85 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ECLIPSE | Cosmic Intelligence</title>
+    <title>Eclipse | Cosmic Astrology</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
         
-        body { 
-            background-color: #000000; 
-            color: #f5f5f7; 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
-            -webkit-font-smoothing: antialiased;
+        * {
+            font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, sans-serif;
         }
-
-        .glass { 
-            background: rgba(255, 255, 255, 0.05); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        
+        body {
+            background: #0a0a0e;
+            background-image: 
+                radial-gradient(ellipse at 20% 30%, rgba(88, 28, 135, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 85% 70%, rgba(76, 29, 149, 0.15) 0%, transparent 55%);
+            min-height: 100vh;
         }
-
-        .premium-input {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        
+        /* Apple-style smooth animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .premium-input:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: #5E5CE6;
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes softGlow {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.7; }
+        }
+        
+        .animate-fadeUp { animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        
+        /* Apple-style card hover */
+        .apple-card {
+            background: rgba(20, 20, 30, 0.4);
+            backdrop-filter: blur(20px);
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .apple-card:hover {
+            background: rgba(30, 30, 45, 0.5);
+            border-color: rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Apple-style input */
+        .apple-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            border-radius: 12px;
+        }
+        
+        .apple-input:focus {
             outline: none;
+            border-color: #6b21a5;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 1px rgba(107, 33, 165, 0.3);
         }
-
-        .btn-main {
-            background: #0A84FF;
-            transition: all 0.3s ease;
+        
+        /* Apple-style button */
+        .apple-button {
+            background: linear-gradient(135deg, rgba(107, 33, 165, 0.9), rgba(76, 29, 149, 0.9));
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
         }
-        .btn-main:hover {
-            background: #0071e3;
-            transform: scale(1.02);
+        
+        .apple-button:hover {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(91, 33, 182, 0.9));
+            transform: scale(0.98);
+        }
+        
+        /* Glassmorphism navigation */
+        .apple-nav {
+            background: rgba(15, 15, 25, 0.6);
+            backdrop-filter: blur(30px);
+            border: 0.5px solid rgba(255, 255, 255, 0.06);
+            border-radius: 100px;
+        }
+        
+        .nav-item {
+            transition: all 0.2s ease;
+            border-radius: 100px;
+        }
+        
+        .nav-item.active {
+            background: rgba(107, 33, 165, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        /* Custom scrollbar - Apple style */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(107, 33, 165, 0.5);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 33, 165, 0.7);
+        }
+        
+        /* Typography */
+        .apple-title {
+            letter-spacing: -0.02em;
+            font-weight: 600;
+        }
+        
+        .apple-subtitle {
+            letter-spacing: 0.3em;
+            font-weight: 400;
         }
     </style>
 </head>
-<body class="selection:bg-indigo-500/30">
+<body class="text-white antialiased">
 
-    <div id="app" class="min-h-screen flex items-center justify-center p-6">
-        <!-- Render hissəsi bura yüklənir -->
+<div class="relative min-h-screen">
+    
+    <!-- Ambient mystical light orbs -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-20 left-1/3 w-80 h-80 bg-purple-800/15 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-indigo-700/12 rounded-full blur-[120px]" style="animation: softGlow 8s ease-in-out infinite;"></div>
+        <div class="absolute top-1/3 right-10 w-60 h-60 bg-pink-800/8 rounded-full blur-[80px]"></div>
     </div>
 
+    <div class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+        
+        <!-- Header - Apple minimalist -->
+        <div class="text-center mb-16 animate-fadeUp">
+            <div class="flex justify-center items-center gap-1 mb-6">
+                <span class="text-2xl opacity-60">🌙</span>
+                <span class="w-1 h-1 bg-purple-400/50 rounded-full mx-2"></span>
+                <span class="text-2xl opacity-60">✨</span>
+            </div>
+            <h1 class="text-6xl md:text-8xl apple-title bg-gradient-to-r from-white via-purple-100 to-purple-300 bg-clip-text text-transparent">
+                eclipse
+            </h1>
+            <p class="text-gray-500 text-[11px] apple-subtitle mt-5">KOSMOS SƏSİNİZİ GÖZLƏYİR</p>
+        </div>
+
+        <div id="app"></div>
+
+        <!-- Footer -->
+        <div class="mt-28 text-center">
+            <div class="flex justify-center items-center gap-2 text-gray-700 text-[9px] tracking-wider">
+                <span>✦</span>
+                <span>ULDUZLARIN İŞIĞI İLƏ</span>
+                <span>✦</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <script>
-// (Sizin əvvəlki kodunuzdakı "signs", "planetaryEvents" və funksiyalar olduğu kimi qalır)
-// Bura yalnız modernləşdirilmiş "render" funksiyasını əlavə edirəm:
+// ========== BÜRCLƏR ==========
+const signs = [
+    { name: 'Qoç', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, element: 'Od', planet: 'Mars', icon: '🐏', 
+      traits: 'Cəsarətli, enerjili, lider', love: 'Ehtirasla sevir, ani qərar verir', career: 'Rəhbərlik, hərbi, idman' },
+    { name: 'Buğa', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, element: 'Torpaq', planet: 'Venera', icon: '🐂',
+      traits: 'Sabit, sadiq, zövqlü', love: 'Dərin və uzunmüddətli sevgi', career: 'Maliyyə, incəsənət, aşpazlıq' },
+    { name: 'Əkizlər', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, element: 'Hava', planet: 'Merkuri', icon: '👯',
+      traits: 'Ünsiyyətcil, çevik, maraqlı', love: 'İntellektual bağ axtarır', career: 'Jurnalistika, satış, təhsil' },
+    { name: 'Xərçəng', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, element: 'Su', planet: 'Ay', icon: '🦀',
+      traits: 'Həssas, qayğıkeş, sezgili', love: 'Ev və ailə mərkəzli', career: 'Psixologiya, tibb, müəllimlik' },
+    { name: 'Şir', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, element: 'Od', planet: 'Günəş', icon: '🦁',
+      traits: 'Cömərd, yaradıcı, inandırıcı', love: 'Romantik və sadiq', career: 'Səhnə, show-biznes, liderlik' },
+    { name: 'Qız', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, element: 'Torpaq', planet: 'Merkuri', icon: '🌾',
+      traits: 'Analitik, dəqiq, xidmətçi', love: 'Təfərrüatlarla dolu sevgi', career: 'Həkimlik, analiz, tədqiqat' },
+    { name: 'Tərəzi', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, element: 'Hava', planet: 'Venera', icon: '⚖️',
+      traits: 'Dinc, ədalətli, sosial', love: 'Tarazlıq axtarır', career: 'Hüquq, diplomatiya, dizayn' },
+    { name: 'Əqrəb', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, element: 'Su', planet: 'Pluton', icon: '🦂',
+      traits: 'Sirli, güclü, dönüşən', love: 'Ya bütün, ya heç', career: 'Tədqiqat, psixologiya, maliyyə' },
+    { name: 'Oxatan', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, element: 'Od', planet: 'Yupiter', icon: '🏹',
+      traits: 'Macəraçı, filosof, səmimi', love: 'Azad ruhlu sevgi', career: 'Səyahət, təhsil, yayım' },
+    { name: 'Oğlaq', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, element: 'Torpaq', planet: 'Saturn', icon: '🐐',
+      traits: 'Ambitionlu, səbirli, nizamlı', love: 'Ciddi və planlı', career: 'Biznes, memarlıq, siyasət' },
+    { name: 'Dolça', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, element: 'Hava', planet: 'Uran', icon: '💧',
+      traits: 'İnnovativ, insanpərvər, fərqli', love: 'Qeyri-adi əlaqələr', career: 'Texnologiya, aktivizm, elm' },
+    { name: 'Balıq', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, element: 'Su', planet: 'Neptun', icon: '🐟',
+      traits: 'Xəyalpərəst, şəfqətli, sənətkar', love: 'Şərtisiz və mistik', career: 'Sənət, musiqi, ruhanilik' }
+];
+
+// ========== PLANET HADİSƏLƏRİ ==========
+const planetaryEvents = [
+    { name: 'Venera Yaxınlaşması', planet: 'Venera', period: 'Hər 1.5 ildə bir', dates: ['12 Yanvar', '16 Avqust'], effect: '💕 Sevgi həyatınızda böyük dəyişikliklər olacaq. Köhnə sevgilər geri dönə bilər.' },
+    { name: 'Merkuri Retrogradı', planet: 'Merkuri', period: 'İldə 3-4 dəfə', dates: ['1-25 Aprel', '5-29 Avqust'], effect: '📱 Rabitə problemləri, texniki nasazlıqlar, keçmiş insanlarla qarşılaşma.' },
+    { name: 'Mars Yaxınlaşması', planet: 'Mars', period: '2 ildə bir', dates: ['30 Oktyabr', '14 İyun'], effect: '⚡ Enerjiniz zirvədə olacaq. Yeni layihələrə başlamaq üçün ideal vaxt.' },
+    { name: 'Ay Tutulması', planet: 'Ay', period: 'İldə 2 dəfə', dates: ['25 Mart 2025', '18 Sentyabr 2025'], effect: '🌙 Emosional dalğalanmalar. Keçmişdən gələn mesajlar. Sirlər üzə çıxır.' },
+    { name: 'Günəş Tutulması', planet: 'Günəş', period: 'İldə 2-5 dəfə', dates: ['8 Aprel 2025', '2 Oktyabr 2025'], effect: '☀️ Yeni başlanğıclar. Həyatınızda səhifə açılır.' }
+];
+
+// ========== BÜRCÜ TAP ==========
+function getZodiacSign(date) {
+    const month = parseInt(date.split('-')[1]);
+    const day = parseInt(date.split('-')[2]);
+    
+    for (const sign of signs) {
+        if (sign.startMonth === 1 && month === 12) {
+            if ((month === 12 && day >= sign.startDay) || (month === 1 && day <= sign.endDay)) return sign;
+        } else if (sign.startMonth <= sign.endMonth) {
+            if (month === sign.startMonth && day >= sign.startDay) return sign;
+            if (month === sign.endMonth && day <= sign.endDay) return sign;
+            if (month > sign.startMonth && month < sign.endMonth) return sign;
+        } else {
+            if (month >= sign.startMonth || month <= sign.endMonth) return sign;
+        }
+    }
+    return signs[9];
+}
+
+function getLoveCompatibility(sign1, sign2) {
+    if (sign1.element === sign2.element) return `✨ Mükəmməl uyum! Hər ikiniz ${sign1.element} elementindənsiniz. Bu birlikdəlik güclü və dərindir.`;
+    if ((sign1.element === 'Od' && sign2.element === 'Hava') || (sign1.element === 'Hava' && sign2.element === 'Od')) return `🌟 Əla uyum! Od+Hava bir-birini alovlandırır. Birlikdə böyük işlər bacararsınız.`;
+    if ((sign1.element === 'Torpaq' && sign2.element === 'Su') || (sign1.element === 'Su' && sign2.element === 'Torpaq')) return `💎 Çox yaxşı uyum! Torpaq+Su bir-birini bəsləyir.`;
+    return `🌙 Maraqlı uyum! Fərqli elementlər cəlb edir. Bu birlikdəlikdə öyrənəcəyiniz çox şey var.`;
+}
+
+function getWeeklyPrediction(sign) {
+    const predictions = [
+        `🔮 Bu həftə ${sign.planet} planeti sizin üçün xüsusi bir enerji daşıyır. Karyeranızda irəliləyiş mümkündür.`,
+        `✨ ${sign.name}, bu həftə keçmişlə bağlı xəbərlər ala bilərsiniz. Açıq fikirli olun.`,
+        `🌊 Enerjiniz yüksələcək. Yeni insanlarla tanış olmaq üçün ideal vaxtdır.`
+    ];
+    return predictions[Math.floor(Math.random() * predictions.length)];
+}
+
+// ========== STATE ==========
+let step = 'welcome';
+let userName = '';
+let birthdate = '';
+let userSign = null;
+let currentSection = 'daily';
 
 function render() {
     const app = document.getElementById('app');
+    if (!app) return;
     
     if (step === 'welcome') {
         app.innerHTML = `
-            <div class="text-center animate-in fade-in zoom-in duration-700">
-                <span class="text-[10px] tracking-[0.3em] text-gray-500 uppercase mb-4 block">Astro-Intelligence</span>
-                <h1 class="text-6xl md:text-8xl font-semibold tracking-tighter mb-8">ECLIPSE</h1>
-                <p class="text-xl md:text-2xl text-gray-400 font-light max-w-lg mb-12">Kainatın ritmini özündə hiss et. Peşəkar astroloji analiz.</p>
-                <button onclick="goToInput()" class="btn-main px-12 py-4 rounded-full text-sm font-medium tracking-wide">BAŞLA</button>
-            </div>
-        `;
-    } 
-    else if (step === 'input') {
-        app.innerHTML = `
-            <div class="glass p-10 md:p-16 rounded-[2rem] w-full max-w-lg animate-in slide-in-from-bottom-8 duration-500">
-                <h2 class="text-3xl font-semibold mb-8">Şəxsi məlumatlar</h2>
-                <div class="space-y-6">
-                    <input type="text" id="nameInput" placeholder="Adınız" class="premium-input w-full rounded-2xl px-6 py-4">
-                    <input type="date" id="dateInput" class="premium-input w-full rounded-2xl px-6 py-4 text-gray-400">
-                    <button onclick="submitUserData()" class="btn-main w-full py-4 rounded-2xl font-medium">ANALİZİ İŞƏ SAL</button>
+            <div class="animate-fadeUp text-center space-y-12">
+                <div class="space-y-4">
+                    <p class="text-3xl md:text-4xl font-light text-white/90 leading-relaxed max-w-2xl mx-auto">
+                        Ulduzlar <span class="text-purple-300">sizin üçün</span> nə deyir?
+                    </p>
+                    <p class="text-gray-500 text-sm">Adınızı və doğum tarixinizi yazın</p>
+                </div>
+                
+                <button onclick="goToInput()" class="group inline-flex items-center gap-2 px-8 py-4 apple-button rounded-full text-sm tracking-wide transition">
+                    KOSMOSA QOŞUL
+                    <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                </button>
+
+                <div class="pt-12 max-w-md mx-auto">
+                    <p class="text-gray-600 text-xs mb-4 tracking-wider">KƏŞF EDİLƏCƏKLƏR</p>
+                    <div class="flex flex-wrap justify-center gap-2 text-[11px] text-gray-500">
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full">💕 Sevgi uyumu</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full">⭐ Gündəlik fal</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full">🪐 Planet hərəkətləri</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full">📈 Karyera</span>
+                    </div>
                 </div>
             </div>
         `;
-        document.getElementById('nameInput').addEventListener('input', (e) => userName = e.target.value);
-        document.getElementById('dateInput').addEventListener('input', (e) => birthdate = e.target.value);
     }
-    // ... (digər bölmələr də bu "glass" və "rounded-[2rem]" stili ilə yenilənir)
+    else if (step === 'input') {
+        app.innerHTML = `
+            <div class="animate-fadeUp max-w-md mx-auto space-y-8">
+                <div class="text-center mb-8">
+                    <p class="text-purple-400 text-xs tracking-wider">✦ SƏSİNİ TANIT ✦</p>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="block text-gray-400 text-[11px] tracking-wide">ADINIZ</label>
+                    <input type="text" id="nameInput" value="${userName}" placeholder="Aysel" class="apple-input w-full px-5 py-3.5 text-white text-sm">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-gray-400 text-[11px] tracking-wide">DOĞUM TARİXİNİZ</label>
+                    <input type="date" id="dateInput" value="${birthdate}" class="apple-input w-full px-5 py-3.5 text-white text-sm">
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button onclick="step='welcome'; render()" class="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 text-sm hover:bg-white/10 transition">GERİ</button>
+                    <button onclick="submitUserData()" class="flex-1 px-4 py-3 apple-button rounded-xl text-sm font-medium">DAVAM ET</button>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('nameInput')?.addEventListener('input', (e) => { userName = e.target.value; });
+        document.getElementById('dateInput')?.addEventListener('input', (e) => { birthdate = e.target.value; });
+    }
+    else if (step === 'dashboard' && userSign) {
+        app.innerHTML = `
+            <div class="animate-fadeIn">
+                <div class="text-center mb-10">
+                    <p class="text-purple-300 text-xs tracking-wider">✦ ${userName.toUpperCase()} ✦</p>
+                    <p class="text-gray-500 text-[10px] mt-1">${userSign.name} · ${userSign.element} · ${userSign.planet}</p>
+                </div>
+
+                <div class="flex justify-center mb-10">
+                    <div class="apple-nav inline-flex p-1 gap-1">
+                        <button onclick="currentSection='daily'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'daily' ? 'active text-white' : 'text-gray-400 hover:text-white'}">🌟 GÜNLÜK</button>
+                        <button onclick="currentSection='love'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'love' ? 'active text-white' : 'text-gray-400 hover:text-white'}">💕 SEVGI</button>
+                        <button onclick="currentSection='planets'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'planets' ? 'active text-white' : 'text-gray-400 hover:text-white'}">🪐 PLANETLƏR</button>
+                        <button onclick="currentSection='career'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'career' ? 'active text-white' : 'text-gray-400 hover:text-white'}">💼 KARYERA</button>
+                    </div>
+                </div>
+
+                <div id="dashboardContent" class="space-y-6"></div>
+
+                <div class="flex justify-center mt-12">
+                    <button onclick="resetApp()" class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-gray-500 text-xs hover:bg-white/10 transition">⟳ YENİDƏN</button>
+                </div>
+            </div>
+        `;
+        renderDashboardContent();
+    }
 }
+
+function renderDashboardContent() {
+    const contentDiv = document.getElementById('dashboardContent');
+    if (!contentDiv || !userSign) return;
+    
+    if (currentSection === 'daily') {
+        contentDiv.innerHTML = `
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-purple-400">🌟</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">BUGÜNÜN PROQNOZU</h3>
+                </div>
+                <p class="text-white/80 leading-relaxed text-sm">${getWeeklyPrediction(userSign)}</p>
+            </div>
+
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-purple-400">⭐</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">BÜRCÜN HAZIRLIQLARI</h3>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between text-sm border-b border-white/10 pb-2">
+                        <span class="text-gray-400">Şanslı rəng:</span>
+                        <span class="text-purple-300">${['Bənövşəyi', 'Mavi', 'Yaşıl', 'Qızılı'][Math.floor(Math.random()*4)]}</span>
+                    </div>
+                    <div class="flex justify-between text-sm border-b border-white/10 pb-2">
+                        <span class="text-gray-400">Şanslı nömrə:</span>
+                        <span class="text-purple-300">${Math.floor(Math.random()*9)+1}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-400">Bugünkü enerji:</span>
+                        <span class="text-purple-300">${['Yüksək', 'Orta', 'Kreativ', 'Dinc'][Math.floor(Math.random()*4)]}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-900/10 to-indigo-900/10 rounded-2xl p-6 border border-white/5">
+                <p class="text-center text-xs text-gray-400 italic">“${userSign.traits.split(',')[0]} ruhu, bu gün səni gözləyən macəralara hazır ol.”</p>
+            </div>
+        `;
+    }
+    else if (currentSection === 'love') {
+        contentDiv.innerHTML = `
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="text-pink-400">💕</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">SEVGI UYUMU</h3>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="text-center mb-4">
+                        <p class="text-gray-500 text-xs">Sizin bürcünüz: <span class="text-purple-300">${userSign.name}</span></p>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="block text-gray-400 text-[11px] tracking-wide">PARTNYORUN ADI</label>
+                        <input type="text" id="partnerNameInput" placeholder="Emin" class="apple-input w-full px-4 py-3 text-white text-sm">
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <label class="block text-gray-400 text-[11px] tracking-wide">PARTNYORUN DOĞUM TARİXİ</label>
+                        <input type="date" id="partnerDateInput" class="apple-input w-full px-4 py-3 text-white text-sm">
+                    </div>
+                    
+                    <button onclick="calculateLove()" class="w-full mt-4 py-3 apple-button rounded-xl text-sm font-medium">UYUMU GÖR</button>
+                </div>
+            </div>
+            <div id="loveResult"></div>
+        `;
+    }
+    else if (currentSection === 'planets') {
+        const topEvents = [...planetaryEvents].slice(0, 3);
+        contentDiv.innerHTML = `
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="text-yellow-400">🪐</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">YAXIN PLANET HADİSƏLƏRİ</h3>
+                </div>
+                
+                <div class="space-y-5">
+                    ${topEvents.map(event => `
+                        <div class="border-l-2 border-purple-500 pl-4 py-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-purple-300 text-sm font-medium">${event.name}</span>
+                                <span class="text-[9px] text-gray-500">${event.planet}</span>
+                            </div>
+                            <p class="text-gray-400 text-xs leading-relaxed mb-1">${event.effect}</p>
+                            <p class="text-gray-600 text-[9px]">Yaxın vaxt: ${event.dates[0]}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="mt-5 pt-4 border-t border-white/10 text-center">
+                    <p class="text-[10px] text-gray-500">${userSign.planet} planeti ${userSign.name} bürcünü idarə edir</p>
+                </div>
+            </div>
+        `;
+    }
+    else if (currentSection === 'career') {
+        contentDiv.innerHTML = `
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-blue-400">💼</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">KARYERA PROQNOZU</h3>
+                </div>
+                <p class="text-white/80 text-sm leading-relaxed">${userSign.career}</p>
+            </div>
+
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-green-400">📈</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">BU AY ÜÇÜN TÖVSİYƏ</h3>
+                </div>
+                <p class="text-white/80 text-sm leading-relaxed">${userSign.element} elementi sizi bu ayda yeni layihələrə doğru aparır. ${userSign.planet} planetinin enerjisindən istifadə edin.</p>
+            </div>
+
+            <div class="apple-card rounded-2xl p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-amber-400">✨</span>
+                    <h3 class="text-xs tracking-wide text-gray-400">GÜCLÜ TƏRƏFLƏRİNİZ</h3>
+                </div>
+                <p class="text-white/80 text-sm">${userSign.traits}</p>
+            </div>
+        `;
+    }
+}
+
+function calculateLove() {
+    const partnerName = document.getElementById('partnerNameInput')?.value;
+    const partnerDate = document.getElementById('partnerDateInput')?.value;
+    const loveResultDiv = document.getElementById('loveResult');
+    
+    if (!partnerName || !partnerDate) {
+        if (loveResultDiv) loveResultDiv.innerHTML = `<div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center text-red-300 text-xs">Zəhmət olmasa hər iki məlumatı daxil edin</div>`;
+        return;
+    }
+    
+    const partnerSign = getZodiacSign(partnerDate);
+    const compatibility = getLoveCompatibility(userSign, partnerSign);
+    
+    if (loveResultDiv) {
+        loveResultDiv.innerHTML = `
+            <div class="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-2xl p-5 border border-purple-500/20 animate-fadeUp mt-4">
+                <div class="text-center mb-2">
+                    <span class="text-2xl">${compatibility.includes('Mükəmməl') ? '💜' : compatibility.includes('Əla') ? '💖' : '💗'}</span>
+                </div>
+                <p class="text-center text-white/80 text-sm">${partnerName} ilə uyumunuz:</p>
+                <p class="text-center text-purple-300 text-sm mt-2">${compatibility}</p>
+                <p class="text-center text-gray-500 text-[10px] mt-2">${partnerSign.name} · ${partnerSign.element}</p>
+            </div>
+        `;
+    }
+}
+
+function submitUserData() {
+    if (!userName || !birthdate) return;
+    userSign = getZodiacSign(birthdate);
+    step = 'dashboard';
+    render();
+}
+
+function goToInput() {
+    step = 'input';
+    render();
+}
+
+function resetApp() {
+    step = 'welcome';
+    userName = '';
+    birthdate = '';
+    userSign = null;
+    currentSection = 'daily';
+    render();
+}
+
+function renderDashboard() {
+    renderDashboardContent();
+}
+
+render();
 </script>
 </body>
 </html>
