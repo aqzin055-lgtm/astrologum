@@ -3,26 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Eclipse | Cosmic Astrology</title>
+    <title>Nyx | Qara Astrologiya</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
         
-        * {
-            font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, sans-serif;
-        }
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
         
         body {
-            background: #0a0a0e;
-            background-image: 
-                radial-gradient(ellipse at 20% 30%, rgba(88, 28, 135, 0.12) 0%, transparent 60%),
-                radial-gradient(ellipse at 85% 70%, rgba(76, 29, 149, 0.15) 0%, transparent 55%);
+            background: #000000;
+            background-image: radial-gradient(circle at 25% 40%, rgba(30, 30, 40, 0.4) 0%, #000000 90%);
             min-height: 100vh;
         }
         
-        /* Apple-style smooth animations */
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -31,183 +26,257 @@
             to { opacity: 1; }
         }
         
-        @keyframes softGlow {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 0.7; }
+        @keyframes slowDrift {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+            50% { transform: translate(20px, -20px) scale(1.1); opacity: 0.25; }
+            100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+        }
+        
+        @keyframes subtleGlow {
+            0%, 100% { text-shadow: 0 0 5px rgba(255,255,255,0.05); }
+            50% { text-shadow: 0 0 20px rgba(100,100,150,0.15); }
+        }
+        
+        @keyframes borderPulse {
+            0%, 100% { border-color: rgba(255,255,255,0.08); box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+            50% { border-color: rgba(150,150,200,0.2); box-shadow: 0 0 20px rgba(100,100,150,0.1); }
         }
         
         .animate-fadeUp { animation: fadeUp 0.7s cubic-bezier(0.23, 1, 0.32, 1); }
         .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        .drift-bg { animation: slowDrift 15s ease-in-out infinite; }
+        .glow-text { animation: subtleGlow 4s ease-in-out infinite; }
+        .card-pulse { animation: borderPulse 3s ease-in-out infinite; }
         
-        /* Apple-style card hover */
-        .apple-card {
-            background: rgba(20, 20, 30, 0.4);
-            backdrop-filter: blur(20px);
-            border: 0.5px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        /* Black glass cards */
+        .onyx-card {
+            background: rgba(5, 5, 8, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
         
-        .apple-card:hover {
-            background: rgba(30, 30, 45, 0.5);
-            border-color: rgba(139, 92, 246, 0.2);
-            transform: translateY(-2px);
+        .onyx-card:hover {
+            background: rgba(10, 10, 18, 0.85);
+            border-color: rgba(180, 180, 220, 0.15);
+            transform: translateY(-3px);
         }
         
-        /* Apple-style input */
-        .apple-input {
-            background: rgba(255, 255, 255, 0.04);
-            border: 0.5px solid rgba(255, 255, 255, 0.1);
+        /* Input styling - pure black */
+        .dark-input {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             transition: all 0.2s ease;
-            border-radius: 12px;
         }
         
-        .apple-input:focus {
+        .dark-input:focus {
             outline: none;
-            border-color: #6b21a5;
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 0 1px rgba(107, 33, 165, 0.3);
+            border-color: rgba(180, 180, 220, 0.4);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 0 3px rgba(100, 100, 150, 0.1);
         }
         
-        /* Apple-style button */
-        .apple-button {
-            background: linear-gradient(135deg, rgba(107, 33, 165, 0.9), rgba(76, 29, 149, 0.9));
-            backdrop-filter: blur(10px);
-            transition: all 0.2s ease;
-        }
+        /* Minimal scroll */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 10px; }
         
-        .apple-button:hover {
-            background: linear-gradient(135deg, rgba(124, 58, 237, 0.9), rgba(91, 33, 182, 0.9));
-            transform: scale(0.98);
-        }
-        
-        /* Glassmorphism navigation */
-        .apple-nav {
-            background: rgba(15, 15, 25, 0.6);
-            backdrop-filter: blur(30px);
-            border: 0.5px solid rgba(255, 255, 255, 0.06);
-            border-radius: 100px;
-        }
-        
-        .nav-item {
-            transition: all 0.2s ease;
-            border-radius: 100px;
-        }
-        
-        .nav-item.active {
-            background: rgba(107, 33, 165, 0.5);
-            backdrop-filter: blur(10px);
-        }
-        
-        /* Custom scrollbar - Apple style */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: rgba(107, 33, 165, 0.5);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(107, 33, 165, 0.7);
-        }
-        
-        /* Typography */
-        .apple-title {
-            letter-spacing: -0.02em;
-            font-weight: 600;
-        }
-        
-        .apple-subtitle {
-            letter-spacing: 0.3em;
-            font-weight: 400;
-        }
+        /* Selection */
+        ::selection { background: rgba(150, 150, 200, 0.2); }
     </style>
 </head>
 <body class="text-white antialiased">
 
 <div class="relative min-h-screen">
     
-    <!-- Ambient mystical light orbs -->
+    <!-- Drifting dark energy orbs -->
     <div class="fixed inset-0 pointer-events-none overflow-hidden">
-        <div class="absolute top-20 left-1/3 w-80 h-80 bg-purple-800/15 rounded-full blur-[100px] animate-pulse"></div>
-        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-indigo-700/12 rounded-full blur-[120px]" style="animation: softGlow 8s ease-in-out infinite;"></div>
-        <div class="absolute top-1/3 right-10 w-60 h-60 bg-pink-800/8 rounded-full blur-[80px]"></div>
+        <div class="absolute top-20 left-1/4 w-96 h-96 bg-white/3 rounded-full blur-[150px] drift-bg"></div>
+        <div class="absolute bottom-20 right-1/5 w-80 h-80 bg-white/2 rounded-full blur-[130px] drift-bg" style="animation-delay: -5s; animation-duration: 20s;"></div>
+        <div class="absolute top-1/3 right-0 w-60 h-60 bg-white/1 rounded-full blur-[100px] drift-bg" style="animation-delay: -10s;"></div>
     </div>
 
-    <div class="relative z-10 max-w-6xl mx-auto px-6 py-12 md:py-20">
+    <div class="relative z-10 max-w-5xl mx-auto px-5 py-10 md:py-16">
         
-        <!-- Header - Apple minimalist -->
-        <div class="text-center mb-16 animate-fadeUp">
-            <div class="flex justify-center items-center gap-1 mb-6">
-                <span class="text-2xl opacity-60">🌙</span>
-                <span class="w-1 h-1 bg-purple-400/50 rounded-full mx-2"></span>
-                <span class="text-2xl opacity-60">✨</span>
+        <!-- Header -->
+        <div class="text-center mb-14 animate-fadeUp">
+            <div class="flex justify-center items-center gap-2 mb-5">
+                <span class="text-2xl opacity-40">◆</span>
+                <span class="w-4 h-px bg-white/20"></span>
+                <span class="text-xl opacity-40">✦</span>
+                <span class="w-4 h-px bg-white/20"></span>
+                <span class="text-2xl opacity-40">◆</span>
             </div>
-            <h1 class="text-6xl md:text-8xl apple-title bg-gradient-to-r from-white via-purple-100 to-purple-300 bg-clip-text text-transparent">
-                eclipse
+            <h1 class="text-6xl md:text-8xl font-light tracking-[-0.03em] text-white/90 glow-text">
+                nyx
             </h1>
-            <p class="text-gray-500 text-[11px] apple-subtitle mt-5">KOSMOS SƏSİNİZİ GÖZLƏYİR</p>
+            <p class="text-white/20 text-[9px] tracking-[0.4em] mt-4">GECƏNİN ASTROLOGİYASI</p>
         </div>
 
         <div id="app"></div>
 
-        <!-- Footer -->
-        <div class="mt-28 text-center">
-            <div class="flex justify-center items-center gap-2 text-gray-700 text-[9px] tracking-wider">
-                <span>✦</span>
-                <span>ULDUZLARIN İŞIĞI İLƏ</span>
-                <span>✦</span>
+        <div class="mt-24 text-center">
+            <div class="flex justify-center items-center gap-2 text-white/10 text-[7px] tracking-widest">
+                <span>◈</span>
+                <span>ULDUZLARIN KÖLGƏSİNDƏ</span>
+                <span>◈</span>
             </div>
         </div>
-
     </div>
 </div>
 
 <script>
-// ========== BÜRCLƏR ==========
+// ========== BÜRCLƏR (Detaylı) ==========
 const signs = [
-    { name: 'Qoç', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, element: 'Od', planet: 'Mars', icon: '🐏', 
-      traits: 'Cəsarətli, enerjili, lider', love: 'Ehtirasla sevir, ani qərar verir', career: 'Rəhbərlik, hərbi, idman' },
-    { name: 'Buğa', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, element: 'Torpaq', planet: 'Venera', icon: '🐂',
-      traits: 'Sabit, sadiq, zövqlü', love: 'Dərin və uzunmüddətli sevgi', career: 'Maliyyə, incəsənət, aşpazlıq' },
-    { name: 'Əkizlər', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, element: 'Hava', planet: 'Merkuri', icon: '👯',
-      traits: 'Ünsiyyətcil, çevik, maraqlı', love: 'İntellektual bağ axtarır', career: 'Jurnalistika, satış, təhsil' },
-    { name: 'Xərçəng', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, element: 'Su', planet: 'Ay', icon: '🦀',
-      traits: 'Həssas, qayğıkeş, sezgili', love: 'Ev və ailə mərkəzli', career: 'Psixologiya, tibb, müəllimlik' },
-    { name: 'Şir', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, element: 'Od', planet: 'Günəş', icon: '🦁',
-      traits: 'Cömərd, yaradıcı, inandırıcı', love: 'Romantik və sadiq', career: 'Səhnə, show-biznes, liderlik' },
-    { name: 'Qız', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, element: 'Torpaq', planet: 'Merkuri', icon: '🌾',
-      traits: 'Analitik, dəqiq, xidmətçi', love: 'Təfərrüatlarla dolu sevgi', career: 'Həkimlik, analiz, tədqiqat' },
-    { name: 'Tərəzi', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, element: 'Hava', planet: 'Venera', icon: '⚖️',
-      traits: 'Dinc, ədalətli, sosial', love: 'Tarazlıq axtarır', career: 'Hüquq, diplomatiya, dizayn' },
-    { name: 'Əqrəb', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, element: 'Su', planet: 'Pluton', icon: '🦂',
-      traits: 'Sirli, güclü, dönüşən', love: 'Ya bütün, ya heç', career: 'Tədqiqat, psixologiya, maliyyə' },
-    { name: 'Oxatan', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, element: 'Od', planet: 'Yupiter', icon: '🏹',
-      traits: 'Macəraçı, filosof, səmimi', love: 'Azad ruhlu sevgi', career: 'Səyahət, təhsil, yayım' },
-    { name: 'Oğlaq', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, element: 'Torpaq', planet: 'Saturn', icon: '🐐',
-      traits: 'Ambitionlu, səbirli, nizamlı', love: 'Ciddi və planlı', career: 'Biznes, memarlıq, siyasət' },
-    { name: 'Dolça', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, element: 'Hava', planet: 'Uran', icon: '💧',
-      traits: 'İnnovativ, insanpərvər, fərqli', love: 'Qeyri-adi əlaqələr', career: 'Texnologiya, aktivizm, elm' },
-    { name: 'Balıq', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, element: 'Su', planet: 'Neptun', icon: '🐟',
-      traits: 'Xəyalpərəst, şəfqətli, sənətkar', love: 'Şərtisiz və mistik', career: 'Sənət, musiqi, ruhanilik' }
+    { name: 'Qoç', nameEn: 'Aries', startMonth: 3, startDay: 21, endMonth: 4, endDay: 19, element: 'Od', elementEn: 'Fire', planet: 'Mars', icon: '🐏', 
+      traits: 'Cəsarətli, impulsiv, lider ruhlu, döyüşçü', negativeTraits: 'Dözümsüz, tələskən, eqosentrik',
+      loveProfile: 'Ehtirasla sevir, amma tez soyuya bilər. Onun üçün ov etmək, qazanmaq zövqdür.',
+      careerPath: 'Hərbi, idman, cərrahlıq, sahibkarlıq, yanğınsöndürən',
+      gemstone: 'Qan daşı', tarot: 'İmperator', luckyNumbers: [1,9,17], luckyColors: ['Qırmızı', 'Dəmir boz'] },
+    { name: 'Buğa', nameEn: 'Taurus', startMonth: 4, startDay: 20, endMonth: 5, endDay: 20, element: 'Torpaq', elementEn: 'Earth', planet: 'Venera', icon: '🐂',
+      traits: 'Sabit, sadiq, zövqlü, inadkar', negativeTraits: 'Mülkədər, tənbəl, dəyişiklikdən qorxan',
+      loveProfile: 'Dərin bağlılıq, fiziki toxunuş onun üçün hər şeydir. Sadiq və qısqancdır.',
+      careerPath: 'Bank, incəsənət, aşpazlıq, memarlıq, bağbanlıq',
+      gemstone: 'Zümrüd', tarot: 'Baş Kahin', luckyNumbers: [2,6,15], luckyColors: ['Yaşıl', 'Çəhrayı'] },
+    { name: 'Əkizlər', nameEn: 'Gemini', startMonth: 5, startDay: 21, endMonth: 6, endDay: 20, element: 'Hava', elementEn: 'Air', planet: 'Merkuri', icon: '👯',
+      traits: 'Maraqlı, ünsiyyətcil, çevik', negativeTraits: 'İkidürlü, qərarsız, sözünde durmayan',
+      loveProfile: 'İntellektual bağ axtarır. Darıxmaq onun üçün ölümdür. İkiüzlü ola bilər.',
+      careerPath: 'Jurnalist, satış, müəllim, yazıçı, aktyor',
+      gemstone: 'Aqat', tarot: 'Sehrbaz', luckyNumbers: [3,12,21], luckyColors: ['Sarı', 'Açıq mavi'] },
+    { name: 'Xərçəng', nameEn: 'Cancer', startMonth: 6, startDay: 21, endMonth: 7, endDay: 22, element: 'Su', elementEn: 'Water', planet: 'Ay', icon: '🦀',
+      traits: 'Həssas, qayğıkeş, sezgili, vəfalı', negativeTraits: 'Kədərli, manipulyativ, daxili qapalı',
+      loveProfile: 'Ailə qurmaq istəyir. Sevərkən anası kimi qayğı göstərir, ayrılanda qisasçı olur.',
+      careerPath: 'Psixoloq, həkim, müəllim, tarixçi, aşpaz',
+      gemstone: 'İnci', tarot: 'Araba', luckyNumbers: [2,7,16], luckyColors: ['Gümüşü', 'Ağ'] },
+    { name: 'Şir', nameEn: 'Leo', startMonth: 7, startDay: 23, endMonth: 8, endDay: 22, element: 'Od', elementEn: 'Fire', planet: 'Günəş', icon: '🦁',
+      traits: 'Cömərd, yaradıcı, lider, səmimi', negativeTraits: 'Təkəbbürlü, dram queen, eqosentrik',
+      loveProfile: 'Romantik, sadiq, diqqət mərkəzində olmağı sevir. Kral kimi sevər, kral kimi tərk edər.',
+      careerPath: 'Səhnə, siyasət, moda, liderlik, show-biznes',
+      gemstone: 'Qaplan gözü', tarot: 'Güc', luckyNumbers: [1,4,19], luckyColors: ['Qızılı', 'Narıncı'] },
+    { name: 'Qız', nameEn: 'Virgo', startMonth: 8, startDay: 23, endMonth: 9, endDay: 22, element: 'Torpaq', elementEn: 'Earth', planet: 'Merkuri', icon: '🌾',
+      traits: 'Analitik, dəqiq, xidmətçi, tənqidçi', negativeTraits: 'Mükəmməliyyətçi, narahat, soyuq',
+      loveProfile: 'Praktik sevgi. Hisslərdən çox əməllərlə sevir. Partnyorunu təhlil edər.',
+      careerPath: 'Həkim, analitik, mühasib, tədqiqatçı, redaktor',
+      gemstone: 'Safir', tarot: 'Zahid', luckyNumbers: [5,14,23], luckyColors: ['Qəhvəyi', 'Tünd göy'] },
+    { name: 'Tərəzi', nameEn: 'Libra', startMonth: 9, startDay: 23, endMonth: 10, endDay: 22, element: 'Hava', elementEn: 'Air', planet: 'Venera', icon: '⚖️',
+      traits: 'Dinc, ədalətli, sosial, cazibədar', negativeTraits: 'Qərarsız, səthi, bağımlı',
+      loveProfile: 'Tarazlıq axtarır. Romantikdir, amma qərar verməkdə çətinlik çəkir. Birlikdə olmaq istəyər.',
+      careerPath: 'Hüquq, diplomatiya, dizayn, PR, danışıqçı',
+      gemstone: 'Lapis', tarot: 'Ədalət', luckyNumbers: [6,15,24], luckyColors: ['Çəhrayı', 'Mavi'] },
+    { name: 'Əqrəb', nameEn: 'Scorpio', startMonth: 10, startDay: 23, endMonth: 11, endDay: 21, element: 'Su', elementEn: 'Water', planet: 'Pluton', icon: '🦂',
+      traits: 'Sirli, güclü, dönüşən, sadiq', negativeTraits: 'Qısqanc, intiqamçı, manipulyativ',
+      loveProfile: 'Ya bütün, ya heç. Sahib olduğunu hiss etməlidir. İntuisiyası güclüdür, yalan sevməz.',
+      careerPath: 'Tədqiqat, psixologiya, maliyyə, detektiv, cərrah',
+      gemstone: 'Topaz', tarot: 'Ölüm', luckyNumbers: [9,18,27], luckyColors: ['Tünd qırmızı', 'Qara'] },
+    { name: 'Oxatan', nameEn: 'Sagittarius', startMonth: 11, startDay: 22, endMonth: 12, endDay: 21, element: 'Od', elementEn: 'Fire', planet: 'Yupiter', icon: '🏹',
+      traits: 'Macəraçı, filosof, səmimi, optimist', negativeTraits: 'Dikbaşlı, səbirsiz, dəqiqsiz',
+      loveProfile: 'Azad ruh. Bağlanmaqdan qorxur, amma sadiqdir. Onun üçün səyahət etmək sevməkdir.',
+      careerPath: 'Səyahət, təhsil, yayım, idman, elm',
+      gemstone: 'Türkuvaz', tarot: 'Temperance', luckyNumbers: [3,12,21], luckyColors: ['Bənövşəyi', 'Mavi'] },
+    { name: 'Oğlaq', nameEn: 'Capricorn', startMonth: 12, startDay: 22, endMonth: 1, endDay: 19, element: 'Torpaq', elementEn: 'Earth', planet: 'Saturn', icon: '🐐',
+      traits: 'Ambitionlu, səbirli, nizamlı, məsuliyyətli', negativeTraits: 'Soyuq, pessimist, tənqidçi',
+      loveProfile: 'Ciddi yanaşır. Əvvəl karyera, sonra sevgi. Uzunmüddətli bağlılıq axtarır.',
+      careerPath: 'Biznes, memarlıq, siyasət, menecment, mühəndis',
+      gemstone: 'Qarnet', tarot: 'Şeytan', luckyNumbers: [8,16,26], luckyColors: ['Qəhvəyi', 'Boz'] },
+    { name: 'Dolça', nameEn: 'Aquarius', startMonth: 1, startDay: 20, endMonth: 2, endDay: 18, element: 'Hava', elementEn: 'Air', planet: 'Uran', icon: '💧',
+      traits: 'İnnovativ, insanpərvər, fərqli, müstəqil', negativeTraits: 'Qəribə, uzaq, rəsmi',
+      loveProfile: 'Dostluq əsaslı sevgi. Qeyri-adi əlaqələrə açıqdır. Ona görə sevmək azadlıqdır.',
+      careerPath: 'Texnologiya, aktivizm, elm, astronomiya, musiqi',
+      gemstone: 'Ametist', tarot: 'Ulduz', luckyNumbers: [4,13,22], luckyColors: ['Tünd mavi', 'Gümüşü'] },
+    { name: 'Balıq', nameEn: 'Pisces', startMonth: 2, startDay: 19, endMonth: 3, endDay: 20, element: 'Su', elementEn: 'Water', planet: 'Neptun', icon: '🐟',
+      traits: 'Xəyalpərəst, şəfqətli, sənətkar, sezgili', negativeTraits: 'Qaçaq, həssas, dağınıq',
+      loveProfile: 'Şərtisiz sevgi. Ruh yoldaşı axtarır. Sərhədləri yoxdur, görüşməyə başlamazdan əvvəl xəyal qurar.',
+      careerPath: 'Sənət, musiqi, ruhanilik, film, xeyriyyəçilik',
+      gemstone: 'Aquamarin', tarot: 'Ay', luckyNumbers: [7,16,25], luckyColors: ['Dəniz yaşıl', 'Bənövşəyi'] }
 ];
+
+// ========== DETAYLI UZUN PROQNOZLAR ==========
+function getDetailedHoroscope(sign, period, category) {
+    const horoscopes = {
+        daily: {
+            general: `Səhər saatlarında ${sign.planet} planetinin təsiri ilə enerjiniz yüksələcək. Gün ortasında kiçik anlaşılmazlıqlar ola bilər, lakin axşama doğru hər şey öz yerinə oturacaq. ${sign.name} bürcü olaraq bu gün qəlbən rahat hiss edəcəksiniz. Kainat sizə xüsusi bir işarə göndərəcək. ${sign.luckyColors[0]} rənginə diqqət edin. Bugün sizin üçün ən şanslı saat 15:22-dir. Bu vaxt aldığınız qərarlar həyatınızı dəyişdirə bilər. Keçmişdə birini incitmisinizsə, bu gün ondan üzr istəmək üçün ideal gündür. Ayın fazası sizin xeyrinizədir. Yeni başlanğıclar etməkdən çəkinməyin. Ulduzlar sizinlədir.`,
+            love: `💕 Sevgi həyatınızda dəyişikliklər gözlənilir. ${sign.loveProfile} Bu gün köhnə bir sevgili ilə qarşılaşa bilərsiniz. Bu qarşılaşma sizin üçün nə deməkdir? Kainat sizə bir şans daha verir. Ancaq unutmayın, bəzi dövrlər bağlanmaq üçündür. Təklifsizsinizsə, bu gün bir kafedə və ya kitab mağazasında maraqlı biri ilə tanış ola bilərsiniz. Onun gözləri sizə tanış gələcək. Bu bir déjà vu ola bilər. Axşam saatlarında sevdiyiniz insana bir mesaj göndərin. Sadəcə "Bugün səni düşündüm" kimi. Bu kiçik jest hər şeyi dəyişdirə bilər. Evli və ya münasibətdə olanlar üçün: bu gün bir-birinizə vaxt ayırın. Telefonları bir kənara qoyun. Xatirələri yada salın.`,
+            money: `💰 Maliyyə ulduzlarınız bu gün sizinlədir. ${sign.name}, ${sign.luckyNumbers[0]} rəqəminə diqqət edin. Bu rəqəmlə əlaqəli bir məbləğ sizə gələ bilər. Beklenmedik bir miras, bonus, hədiyyə və ya əvvəldən unutduğunuz bir borcun qaytarılması mümkündür. Ancaq diqqətli olun: bu gün böyük alış-veriş etmək üçün uyğun deyil. Saturn planetinin təsiri ilə impulsiv qərarlar sizi sonradan pişman edə bilər. Əgər investisiya edəcəksənsə, 3 gün gözlə. Həmin vaxt daha doğru qərar verəcəksən. Yeni bir iş təklifi alacaqsınızsa, detalları diqqətlə oxuyun. Kiçik şriftlərdə gizlənən bir maddə sonradan problem yarada bilər.`,
+            health: `💪 Bugün bədəniniz sizə mesaj göndərəcək. ${sign.healthWarning || 'Enerjiniz bir qədər aşağı ola bilər.'} Xüsusilə bel və ya baş ağrılarına diqqət edin. Bu bir xəbərdarlıqdır. Bəlkə də çox işləyirsiniz? Yoxsa kifayət qədər su içmirsiniz? ${sign.name}, bədəninizin səsinə qulaq asın. Bu gün yüngül bir gəzinti, təmiz hava sizə çox yaxşı gələcək. Axşam saatlarında isti duş alıb, erkən yatmağa çalışın. Yuxuda göndəriləcək bir simvol sizə vacib bir mesaj daşıyacaq. Oyananda bu simvolu xatırlamağa çalışın. Sağlamlığınızla bağlı bir test nəticəsi gözləyirsinizsə, nəticə müsbət olacaq. Ancaq yenə də həkim tövsiyələrinə əməl edin.`,
+            career: `📈 Karyera ulduzlarınız bu gün parlaqdır. ${sign.careerPath.split(',')[0]} sahəsində işləyənlər üçün böyük fürsətlər var. Patronunuz gözünüzün içinə baxacaq və gizli bir şey axtaracaq. Təmiz olun. Layihə təqdimatı edəcəksinizsə, səhər saatları daha uğurlu olacaq. Rəqibləriniz sizin haqqınızda danışır, amma qorxmayın. Onların dedikləri sizi daha güclü edəcək. Bu gün bir iş yoldaşınız sizə vacib bir sirr aça bilər. Onu dinləyin, amma başqalarına danışmayın. Əgər iş axtarırsınızsa, CV-nizi bu gün yeniləyin və 2 gün ərzində göndərin. Ulduzlar sizə tam dəstək verir. Yeni bir işə başlayacaqsınızsa, ilk gününüz üçün ${sign.luckyColors[0]} rəngli bir aksesuar seçin.`
+        },
+        weekly: {
+            general: `Bu həftə ${sign.planet} planeti sizin bürcünüzə xüsusi bir enerji göndərir. Həftənin əvvəli (Bazar ertəsi-Çərşənbə) keçmişlə hesablaşma zamanıdır. Kimi bağışlamalısan? Kimdən üzr istəməlisən? Bu suallara cavab tap. Həftənin ortalarında (Cümə axşamı) iş həyatınızda sürpriz bir yüksəliş olacaq. Cümə günü sevdiyiniz insanla aranızda əvvəllər danışılmamış bir mövzu açılacaq. Bu, sizi daha da yaxınlaşdıracaq. Həftə sonu isə tamamilə özünüzə vaxt ayırın. Kainat sizə "dur, nəfəs al" deyir. Bu həftə ən şanslı gününüz ${['Çərşənbə', 'Cümə', 'Bazar'][Math.floor(Math.random()*3)]} günüdür. Həmin gün ${sign.luckyColors[1]} rəngli bir şey taxın. Həftə ərzində bir dəfə göyə baxın və ulduzlara bir arzu deyin. Həmin arzu bir gün gerçəkləşəcək.`
+        },
+        monthly: {
+            general: `Bu ay sizin üçün dönüş ayı olacaq, ${sign.name}. ${sign.element} elementi gücünü göstərəcək. Ayın ilk 10 günü: ${sign.negativeTraits.split(',')[0]} xüsusiyyətiniz sizi bir az çətinliyə sala bilər. Bunun fərqində olun və nəfəs alın. Ayın 11-20 günləri: karmik bir görüş baş verəcək. Kiminləsə qarşılaşacaqsınız və o, sizə əvvəlki həyatınızdan bir xatırlatma gətirəcək. Ona diqqət yetirin. Ayın 21-dən sonra: maddi qazanclar, yeni iş fürsətləri, səyahət planları. Bu ay ${sign.gemstone} daşını yanınızda gəzdirmək şans gətirər. Ayın 7-də, 14-də və 23-də aldığınız qərarlar həyatınızı dəyişdirəcək. Bu günlərdə xüsusilə diqqətli olun. Ayın son günü göydə bir ulduz parlayacaq - o ulduz sizin ulduzunuzdur. Həmin gecə onu diləyin.`,
+            love: `💕 Bu ay sevgi həyatınızda fırtınalar gözlənilir, amma bu fırtınalar təmizlik gətirəcək. ${sign.name} bürcü olaraq sevgidə ${sign.loveProfile.split('.')[0]}. Ayın 5-8 arasında köhnə bir sevgili peyda olacaq. Bu sizi sarsıda bilər. Ayın 12-15 arasında yeni bir tanışlıq. Bu tanışlıq fərqli olacaq. O, heç tanımadığınız bir dünyadan gələcək. Ayın 20-25 arasında münasibətdə olanlar üçün böyük bir qərar vaxtıdır. Evlilik, ayrılıq, daşınma... Bir şey olacaq. Ürəyinizi dinləyin. Tək olanlar üçün ayın son günləri ən uyğun vaxtdır. Ruh eşiniz artıq yaxındır. Onu tanıyacaqsınız. Onun gözlərində tanış bir işıq olacaq.`
+        },
+        yearly: {
+            general: `✨ ${new Date().getFullYear()} ili ${sign.name} bürcü üçün "Kəpənək ili" olacaq. Niyə kəpənək? Çünki bu il siz dönüşəcəksiniz. Tırtıl ikən qanadlanacaqsınız. ${sign.planet} planeti bu il sizin ən böyük müttəfiqinizdir. ${sign.tarot} kartının enerjisi sizi qoruyacaq. İlin birinci yarısı (Yanvar-Mart) keçmişə veda vaxtıdır. Kimləri buraxmalısan? Hansı yerləri tərk etməlisən? Bu sualların cavabını tap. Aprel-İyun ayları yeni başlanğıclar üçün. Yeni iş, yeni ev, yeni ölkə... İyul-Sentyabr arası səyahət aylarıdır. Fiziki və ya ruhani səyahət - fərq etməz. Sən getməlisən. Oktyabr-Dekabr isə bolluq və bərəkət aylarıdır. Maddiyat, sevgi, sağlamlıq - hər şey yerinə oturacaq. Bu il bir dəfə ${sign.gemstone} daşı ilə meditasiya edin. Həmin gecə bir arzu gerçəkləşəcək. İlin son gecəsi gözünüzü yumun. Nə görürsünüz? O, sizin gələcəyinizdir.`
+        }
+    };
+    
+    return horoscopes[period]?.[category] || horoscopes.daily.general;
+}
+
+// ========== RUH YOLDAŞI UYUMU (Uzun analiz) ==========
+function getSoulmateCompatibility(sign1, sign2, name1, name2) {
+    let score = 0;
+    let analysis = '';
+    
+    // Element uyumu
+    if (sign1.element === sign2.element) {
+        score += 35;
+        analysis = `İki ${sign1.element} elementi. Bu, ruhların eyni kökdən gəldiyini göstərir. Siz bir-birinizi sözsüz başa düşürsünüz. Sanki eyni ruhun iki fərqli bədəndə yaşayan yarılarısınız. ${sign1.name} və ${sign2.name} birlikdə olduqda kainatda bir harmoniyan yaranır. Bu birlik çox güclüdür, amma bəzən partlayıcı da ola bilər. Öfkeye sahib çıxmasını bilin.`;
+    } else if ((sign1.element === 'Od' && sign2.element === 'Hava') || (sign1.element === 'Hava' && sign2.element === 'Od')) {
+        score += 32;
+        analysis = `Od və Hava - mükəmməl birlik! ${sign1.element === 'Od' ? sign1.name : sign2.name} atəşi yandırır, ${sign1.element === 'Hava' ? sign1.name : sign2.name} küləyi isə bu atəşi bütün dünyaya yayır. Birlikdə böyük işlər bacarır, bir-birinizi heç vaxt darıxdırmırsınız. Sizin münasibətiniz macəra, səyahət, yeni kəşflərlə doludur. Ancaq bəzən hava çox güclü əsəndə od sönə bilər. Dengeyi tapın.`;
+    } else if ((sign1.element === 'Torpaq' && sign2.element === 'Su') || (sign1.element === 'Su' && sign2.element === 'Torpaq')) {
+        score += 38;
+        analysis = `Torpaq və Su - kainatın ən qədim ikilisi. ${sign1.element === 'Torpaq' ? sign1.name : sign2.name} torpağı, ${sign1.element === 'Su' ? sign1.name : sign2.name} suyu təmsil edir. Su olmasa torpaq quruyar, torpaq olmasa su axıb gedər. Bir-birinizi tamamlayırsınız. Bu münasibət çox sağlam, dərin və sabitdir. Birlikdə çiçəklər yetişdirirsiniz. Həyatı birlikdə gözəlləşdirirsiniz. Bu, nikah, ailə, ömürlük birlik üçün ən ideal kombinasiyadır.`;
+    } else {
+        score += 25;
+        analysis = `Fərqli elementlər. Siz bir-birinizi tamamlayan ziddiyyətlərsiniz. ${sign1.name} səma, ${sign2.name} yer kimi. Və ya gecə ilə gündüz. Hər şeyə fərqli baxırsınız, amma bu fərqlilik sizi inkişaf etdirir. Sizin münasibətiniz böyümək, öyrənmək, dönüşmək üçündür. Bəzən çətin olacaq, amma hər çətinlik sizə bir dərs verəcək. Əgər bu dərsləri öyrənsəniz, birlikdə xoşbəxt ola bilərsiniz.`;
+    }
+    
+    // Planet uyumu bonusu
+    if (sign1.planet === sign2.planet) {
+        score += 12;
+        analysis += ` Ayrıca, hər ikiniz eyni planet (${sign1.planet}) tərəfindən idarə olunursunuz. Bu, ortaq dəyərlər, ortaq hədəflər deməkdir. Sizin üçün "normal" olan şeylər başqaları üçün "qəribə" ola bilər. Bu ortaq anlayış sizi çox yaxın edir.`;
+    } else if ((sign1.planet === 'Mars' && sign2.planet === 'Venera') || (sign1.planet === 'Venera' && sign2.planet === 'Mars')) {
+        score += 15;
+        analysis += ` ${sign1.planet === 'Mars' ? sign1.name : sign2.name} Mars (müharibə) və ${sign1.planet === 'Venera' ? sign1.name : sign2.name} Venera (sevgi). Bu, sözün əsl mənasında "müharibə və sülh" münasibətidir. Bəzən mübarizə aparırsınız, bəzən eşq edirsiniz. Bu dinamik sizi heç vaxt cansıxıcı etmir. Hər an bir sürpriz var. Bu birlik çox ehtiraslıdır.`;
+    }
+    
+    // Rəqəm uyumu
+    const numBonus = Math.floor(Math.random() * 10);
+    score += numBonus;
+    score = Math.min(score, 100);
+    
+    let verdict = '';
+    if (score >= 85) verdict = '💜 MÜKƏMMƏL UYUM - Ruh eşinizi tapmış ola bilərsiniz! Bu əlaqə ömürlük ola bilər.';
+    else if (score >= 70) verdict = '💖 ÇOX YAXŞI UYUM - Bu birlikdə böyük potensial var. Üzərində işləsəniz, ömürlük xoşbəxtlik mümkündür.';
+    else if (score >= 55) verdict = '💗 YAXŞI UYUM - Anlaşırsınız, amma bəzi fərqlilikləri qəbul etməyi öyrənməlisiniz. Bu mümkündür.';
+    else if (score >= 40) verdict = '💔 ORTA UYUM - Bu əlaqə inkişaf üçündür. Birlikdə böyüyə bilərsiniz, amma çalışmaq lazımdır.';
+    else verdict = '✨ KARMİK ƏLAQƏ - Bu əlaqə sizə bir dərs verəcək. Ayrılsanız belə, bir-birinizi unutmayacaqsınız.';
+    
+    // Uyum zamanı (nə vaxt olacaq?)
+    const timing = ["Bu ay içində", "3 ay ərzində", "Bu yay", "Bu ilin sonuna qədər", "Növbəti dolunayda", "Artıq yaxınlaşdınız, fərqində olun", "Karmik olaraq bağlısınız, vaxtı gələcək"][Math.floor(Math.random() * 7)];
+    
+    return { score, analysis, verdict, timing };
+}
 
 // ========== PLANET HADİSƏLƏRİ ==========
 const planetaryEvents = [
-    { name: 'Venera Yaxınlaşması', planet: 'Venera', period: 'Hər 1.5 ildə bir', dates: ['12 Yanvar', '16 Avqust'], effect: '💕 Sevgi həyatınızda böyük dəyişikliklər olacaq. Köhnə sevgilər geri dönə bilər.' },
-    { name: 'Merkuri Retrogradı', planet: 'Merkuri', period: 'İldə 3-4 dəfə', dates: ['1-25 Aprel', '5-29 Avqust'], effect: '📱 Rabitə problemləri, texniki nasazlıqlar, keçmiş insanlarla qarşılaşma.' },
-    { name: 'Mars Yaxınlaşması', planet: 'Mars', period: '2 ildə bir', dates: ['30 Oktyabr', '14 İyun'], effect: '⚡ Enerjiniz zirvədə olacaq. Yeni layihələrə başlamaq üçün ideal vaxt.' },
-    { name: 'Ay Tutulması', planet: 'Ay', period: 'İldə 2 dəfə', dates: ['25 Mart 2025', '18 Sentyabr 2025'], effect: '🌙 Emosional dalğalanmalar. Keçmişdən gələn mesajlar. Sirlər üzə çıxır.' },
-    { name: 'Günəş Tutulması', planet: 'Günəş', period: 'İldə 2-5 dəfə', dates: ['8 Aprel 2025', '2 Oktyabr 2025'], effect: '☀️ Yeni başlanğıclar. Həyatınızda səhifə açılır.' }
+    { name: 'Venera - Mars Qovuşması', date: '22 Fevral 2025', effect: 'Ehtiraslı sevgi, ani bağlılıqlar, romantik qərarlar', advice: 'Bu vaxt sevgi elanı etmək üçün ən güclü gündür.' },
+    { name: 'Merkuri Retrogradı', date: '1-25 Aprel 2025', effect: 'Rabitə qarışıqlığı, texniki problemlər, keçmiş insanlar', advice: 'Müqavilə imzalamaqdan, yeni işə başlamaqdan çəkinin.' },
+    { name: 'Saturn - Yupiter Üçbucağı', date: '15 İyun 2025', effect: 'Karyera yüksəlişi, maddi bolluq, şans', advice: 'Bu vaxt imza atdığınız hər şey uğurlu olacaq.' },
+    { name: 'Ay Tutulması', date: '18 Sentyabr 2025', effect: 'Emosional dalğalanmalar, sirlərin açılması', advice: 'Bu gecə yazdığınız arzular gerçəkləşəcək.' },
+    { name: 'Pluton Bürc Dəyişimi', date: '20 Noyabr 2025', effect: 'Həyat dönüşü, karmik hadisələr', advice: 'Köhnə həyat tərzinizi buraxın, yeniyə hazır olun.' }
 ];
 
-// ========== BÜRCÜ TAP ==========
+function getCurrentPlanetaryEvent() {
+    return planetaryEvents[Math.floor(Math.random() * planetaryEvents.length)];
+}
+
+// ========== BÜRCÜ TAPMA ==========
 function getZodiacSign(date) {
     const month = parseInt(date.split('-')[1]);
     const day = parseInt(date.split('-')[2]);
@@ -226,28 +295,13 @@ function getZodiacSign(date) {
     return signs[9];
 }
 
-function getLoveCompatibility(sign1, sign2) {
-    if (sign1.element === sign2.element) return `✨ Mükəmməl uyum! Hər ikiniz ${sign1.element} elementindənsiniz. Bu birlikdəlik güclü və dərindir.`;
-    if ((sign1.element === 'Od' && sign2.element === 'Hava') || (sign1.element === 'Hava' && sign2.element === 'Od')) return `🌟 Əla uyum! Od+Hava bir-birini alovlandırır. Birlikdə böyük işlər bacararsınız.`;
-    if ((sign1.element === 'Torpaq' && sign2.element === 'Su') || (sign1.element === 'Su' && sign2.element === 'Torpaq')) return `💎 Çox yaxşı uyum! Torpaq+Su bir-birini bəsləyir.`;
-    return `🌙 Maraqlı uyum! Fərqli elementlər cəlb edir. Bu birlikdəlikdə öyrənəcəyiniz çox şey var.`;
-}
-
-function getWeeklyPrediction(sign) {
-    const predictions = [
-        `🔮 Bu həftə ${sign.planet} planeti sizin üçün xüsusi bir enerji daşıyır. Karyeranızda irəliləyiş mümkündür.`,
-        `✨ ${sign.name}, bu həftə keçmişlə bağlı xəbərlər ala bilərsiniz. Açıq fikirli olun.`,
-        `🌊 Enerjiniz yüksələcək. Yeni insanlarla tanış olmaq üçün ideal vaxtdır.`
-    ];
-    return predictions[Math.floor(Math.random() * predictions.length)];
-}
-
 // ========== STATE ==========
 let step = 'welcome';
 let userName = '';
 let birthdate = '';
 let userSign = null;
-let currentSection = 'daily';
+let currentPeriod = 'daily';
+let currentCategory = 'general';
 
 function render() {
     const app = document.getElementById('app');
@@ -257,24 +311,24 @@ function render() {
         app.innerHTML = `
             <div class="animate-fadeUp text-center space-y-12">
                 <div class="space-y-4">
-                    <p class="text-3xl md:text-4xl font-light text-white/90 leading-relaxed max-w-2xl mx-auto">
-                        Ulduzlar <span class="text-purple-300">sizin üçün</span> nə deyir?
+                    <p class="text-xl md:text-2xl font-light text-white/70 leading-relaxed max-w-md mx-auto">
+                        gecənin səssizliyində <span class="text-white/40">ulduzlar</span> sənin üçün nə deyir?
                     </p>
-                    <p class="text-gray-500 text-sm">Adınızı və doğum tarixinizi yazın</p>
+                    <p class="text-white/20 text-[10px] tracking-wide">adi • doğum günü • kainatın səsi</p>
                 </div>
                 
-                <button onclick="goToInput()" class="group inline-flex items-center gap-2 px-8 py-4 apple-button rounded-full text-sm tracking-wide transition">
-                    KOSMOSA QOŞUL
-                    <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+                <button onclick="goToInput()" class="group inline-flex items-center gap-3 px-8 py-4 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all duration-500 text-[11px] tracking-wide">
+                    SƏSSİZLIYƏ QULAQ AS
+                    <span class="text-white/30 group-hover:translate-x-1 transition">→</span>
                 </button>
 
-                <div class="pt-12 max-w-md mx-auto">
-                    <p class="text-gray-600 text-xs mb-4 tracking-wider">KƏŞF EDİLƏCƏKLƏR</p>
-                    <div class="flex flex-wrap justify-center gap-2 text-[11px] text-gray-500">
-                        <span class="px-3 py-1.5 bg-white/5 rounded-full">💕 Sevgi uyumu</span>
-                        <span class="px-3 py-1.5 bg-white/5 rounded-full">⭐ Gündəlik fal</span>
-                        <span class="px-3 py-1.5 bg-white/5 rounded-full">🪐 Planet hərəkətləri</span>
-                        <span class="px-3 py-1.5 bg-white/5 rounded-full">📈 Karyera</span>
+                <div class="pt-12 border-t border-white/5 max-w-md mx-auto">
+                    <p class="text-white/15 text-[9px] mb-4 tracking-widest">KƏŞF EDİLƏCƏK DƏRİNLİKLƏR</p>
+                    <div class="flex flex-wrap justify-center gap-2 text-[9px] text-white/20">
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full tracking-wide">💜 RUH UYUMU</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full tracking-wide">🌙 GÜNLÜK FAL</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full tracking-wide">🪐 PLANET HƏRƏKƏTLƏRİ</span>
+                        <span class="px-3 py-1.5 bg-white/5 rounded-full tracking-wide">✨ KARMA ANALİZİ</span>
                     </div>
                 </div>
             </div>
@@ -284,22 +338,22 @@ function render() {
         app.innerHTML = `
             <div class="animate-fadeUp max-w-md mx-auto space-y-8">
                 <div class="text-center mb-8">
-                    <p class="text-purple-400 text-xs tracking-wider">✦ SƏSİNİ TANIT ✦</p>
+                    <p class="text-white/30 text-[9px] tracking-[0.2em]">✦ ÖZÜNÜ TANIT ✦</p>
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="block text-gray-400 text-[11px] tracking-wide">ADINIZ</label>
-                    <input type="text" id="nameInput" value="${userName}" placeholder="Aysel" class="apple-input w-full px-5 py-3.5 text-white text-sm">
+                    <label class="block text-white/30 text-[9px] tracking-wider">ADIN</label>
+                    <input type="text" id="nameInput" value="${userName}" placeholder="..." class="dark-input w-full px-5 py-3.5 text-white/80 text-sm">
                 </div>
 
                 <div class="space-y-2">
-                    <label class="block text-gray-400 text-[11px] tracking-wide">DOĞUM TARİXİNİZ</label>
-                    <input type="date" id="dateInput" value="${birthdate}" class="apple-input w-full px-5 py-3.5 text-white text-sm">
+                    <label class="block text-white/30 text-[9px] tracking-wider">DOĞUM GÜNÜN</label>
+                    <input type="date" id="dateInput" value="${birthdate}" class="dark-input w-full px-5 py-3.5 text-white/80 text-sm">
                 </div>
 
                 <div class="flex gap-3 pt-4">
-                    <button onclick="step='welcome'; render()" class="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 text-sm hover:bg-white/10 transition">GERİ</button>
-                    <button onclick="submitUserData()" class="flex-1 px-4 py-3 apple-button rounded-xl text-sm font-medium">DAVAM ET</button>
+                    <button onclick="step='welcome'; render()" class="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white/40 text-[11px] hover:bg-white/10 transition">GERİ</button>
+                    <button onclick="submitUserData()" class="flex-1 px-4 py-3 bg-white/10 border border-white/15 rounded-xl text-white/80 text-[11px] font-medium hover:bg-white/20 transition">DAVAM ET</button>
                 </div>
             </div>
         `;
@@ -308,26 +362,60 @@ function render() {
         document.getElementById('dateInput')?.addEventListener('input', (e) => { birthdate = e.target.value; });
     }
     else if (step === 'dashboard' && userSign) {
+        const planetEvent = getCurrentPlanetaryEvent();
+        
         app.innerHTML = `
             <div class="animate-fadeIn">
                 <div class="text-center mb-10">
-                    <p class="text-purple-300 text-xs tracking-wider">✦ ${userName.toUpperCase()} ✦</p>
-                    <p class="text-gray-500 text-[10px] mt-1">${userSign.name} · ${userSign.element} · ${userSign.planet}</p>
+                    <p class="text-white/40 text-[9px] tracking-[0.2em]">✦ ${userName.toUpperCase()} ✦</p>
+                    <p class="text-white/20 text-[8px] mt-2">${userSign.name} • ${userSign.elementEn} • ${userSign.planet}</p>
                 </div>
 
-                <div class="flex justify-center mb-10">
-                    <div class="apple-nav inline-flex p-1 gap-1">
-                        <button onclick="currentSection='daily'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'daily' ? 'active text-white' : 'text-gray-400 hover:text-white'}">🌟 GÜNLÜK</button>
-                        <button onclick="currentSection='love'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'love' ? 'active text-white' : 'text-gray-400 hover:text-white'}">💕 SEVGI</button>
-                        <button onclick="currentSection='planets'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'planets' ? 'active text-white' : 'text-gray-400 hover:text-white'}">🪐 PLANETLƏR</button>
-                        <button onclick="currentSection='career'; renderDashboard()" class="nav-item px-5 py-2 text-xs transition-all ${currentSection === 'career' ? 'active text-white' : 'text-gray-400 hover:text-white'}">💼 KARYERA</button>
+                <div class="flex justify-center mb-10 overflow-x-auto">
+                    <div class="flex gap-px bg-white/5 rounded-full p-0.5">
+                        <button onclick="currentPeriod='daily'; renderDashboard()" class="period-btn px-5 py-2 rounded-full text-[10px] tracking-wide transition-all ${currentPeriod === 'daily' ? 'bg-white/15 text-white/80' : 'text-white/30 hover:text-white/50'}">GÜNLÜK</button>
+                        <button onclick="currentPeriod='weekly'; renderDashboard()" class="period-btn px-5 py-2 rounded-full text-[10px] tracking-wide transition-all ${currentPeriod === 'weekly' ? 'bg-white/15 text-white/80' : 'text-white/30 hover:text-white/50'}">HƏFTƏLİK</button>
+                        <button onclick="currentPeriod='monthly'; renderDashboard()" class="period-btn px-5 py-2 rounded-full text-[10px] tracking-wide transition-all ${currentPeriod === 'monthly' ? 'bg-white/15 text-white/80' : 'text-white/30 hover:text-white/50'}">AYLIQ</button>
+                        <button onclick="currentPeriod='yearly'; renderDashboard()" class="period-btn px-5 py-2 rounded-full text-[10px] tracking-wide transition-all ${currentPeriod === 'yearly' ? 'bg-white/15 text-white/80' : 'text-white/30 hover:text-white/50'}">İLLİK</button>
                     </div>
+                </div>
+
+                <div class="flex justify-center gap-2 mb-10 flex-wrap">
+                    <button onclick="currentCategory='general'; renderDashboard()" class="cat-btn px-4 py-1.5 rounded-full text-[9px] transition-all ${currentCategory === 'general' ? 'bg-white/10 text-white/70' : 'text-white/20 hover:text-white/30'}">🌙 ÜMUMİ</button>
+                    <button onclick="currentCategory='love'; renderDashboard()" class="cat-btn px-4 py-1.5 rounded-full text-[9px] transition-all ${currentCategory === 'love' ? 'bg-white/10 text-white/70' : 'text-white/20 hover:text-white/30'}">💕 SEVGİ</button>
+                    <button onclick="currentCategory='money'; renderDashboard()" class="cat-btn px-4 py-1.5 rounded-full text-[9px] transition-all ${currentCategory === 'money' ? 'bg-white/10 text-white/70' : 'text-white/20 hover:text-white/30'}">💰 PUL</button>
+                    <button onclick="currentCategory='health'; renderDashboard()" class="cat-btn px-4 py-1.5 rounded-full text-[9px] transition-all ${currentCategory === 'health' ? 'bg-white/10 text-white/70' : 'text-white/20 hover:text-white/30'}">💪 SAĞLAMLIQ</button>
+                    <button onclick="currentCategory='career'; renderDashboard()" class="cat-btn px-4 py-1.5 rounded-full text-[9px] transition-all ${currentCategory === 'career' ? 'bg-white/10 text-white/70' : 'text-white/20 hover:text-white/30'}">📈 KARYERA</button>
                 </div>
 
                 <div id="dashboardContent" class="space-y-6"></div>
 
-                <div class="flex justify-center mt-12">
-                    <button onclick="resetApp()" class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-gray-500 text-xs hover:bg-white/10 transition">⟳ YENİDƏN</button>
+                <!-- Planet hadisəsi -->
+                <div class="mt-8 onyx-card rounded-2xl p-5 border-l-4 border-white/15">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-white/40 text-[9px] tracking-wider">🪐 PLANET HADİSƏSİ</span>
+                    </div>
+                    <p class="text-white/60 text-xs leading-relaxed"><span class="text-white/80">${planetEvent.name}</span> · ${planetEvent.date}</p>
+                    <p class="text-white/40 text-[11px] leading-relaxed mt-2">${planetEvent.effect}</p>
+                    <p class="text-white/30 text-[9px] mt-2 italic">${planetEvent.advice}</p>
+                </div>
+
+                <!-- Sevgi uyumu bölməsi -->
+                <div class="mt-8 onyx-card rounded-2xl p-5 border border-white/5">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-white/40">💜</span>
+                        <span class="text-white/30 text-[9px] tracking-wider">RUH YOLDAŞI UYUMU</span>
+                    </div>
+                    <div class="space-y-3">
+                        <input type="text" id="partnerName" placeholder="onun adı..." class="dark-input w-full px-4 py-2.5 text-white/60 text-xs">
+                        <input type="date" id="partnerDate" placeholder="doğum günü" class="dark-input w-full px-4 py-2.5 text-white/60 text-xs">
+                        <button onclick="calculateLove()" class="w-full py-2.5 bg-white/5 border border-white/10 rounded-xl text-white/40 text-[10px] hover:bg-white/10 transition">BAĞLANTINI ARAŞDIR</button>
+                    </div>
+                    <div id="loveResult" class="mt-4"></div>
+                </div>
+
+                <div class="flex justify-center mt-10">
+                    <button onclick="resetApp()" class="px-5 py-2 bg-white/5 border border-white/10 rounded-full text-white/20 text-[9px] hover:bg-white/10 transition">⟳ YENİDƏN</button>
                 </div>
             </div>
         `;
@@ -339,150 +427,65 @@ function renderDashboardContent() {
     const contentDiv = document.getElementById('dashboardContent');
     if (!contentDiv || !userSign) return;
     
-    if (currentSection === 'daily') {
-        contentDiv.innerHTML = `
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-purple-400">🌟</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">BUGÜNÜN PROQNOZU</h3>
+    const prediction = getDetailedHoroscope(userSign, currentPeriod, currentCategory);
+    
+    contentDiv.innerHTML = `
+        <div class="onyx-card rounded-2xl p-6 card-pulse">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2">
+                    <span class="text-white/30 text-[8px] tracking-widest">${currentPeriod.toUpperCase()} PROQNOZ</span>
                 </div>
-                <p class="text-white/80 leading-relaxed text-sm">${getWeeklyPrediction(userSign)}</p>
+                <span class="text-white/20 text-[9px]">${userSign.icon}</span>
             </div>
-
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-purple-400">⭐</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">BÜRCÜN HAZIRLIQLARI</h3>
-                </div>
-                <div class="space-y-3">
-                    <div class="flex justify-between text-sm border-b border-white/10 pb-2">
-                        <span class="text-gray-400">Şanslı rəng:</span>
-                        <span class="text-purple-300">${['Bənövşəyi', 'Mavi', 'Yaşıl', 'Qızılı'][Math.floor(Math.random()*4)]}</span>
-                    </div>
-                    <div class="flex justify-between text-sm border-b border-white/10 pb-2">
-                        <span class="text-gray-400">Şanslı nömrə:</span>
-                        <span class="text-purple-300">${Math.floor(Math.random()*9)+1}</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-400">Bugünkü enerji:</span>
-                        <span class="text-purple-300">${['Yüksək', 'Orta', 'Kreativ', 'Dinc'][Math.floor(Math.random()*4)]}</span>
-                    </div>
-                </div>
+            <p class="text-white/60 text-sm leading-relaxed tracking-wide">
+                ${prediction}
+            </p>
+            <div class="mt-5 pt-3 border-t border-white/5 flex justify-between text-white/20 text-[9px]">
+                <span>${userSign.name} · ${userSign.element}</span>
+                <span>${userSign.gemstone} · ${userSign.tarot}</span>
             </div>
-
-            <div class="bg-gradient-to-r from-purple-900/10 to-indigo-900/10 rounded-2xl p-6 border border-white/5">
-                <p class="text-center text-xs text-gray-400 italic">“${userSign.traits.split(',')[0]} ruhu, bu gün səni gözləyən macəralara hazır ol.”</p>
-            </div>
-        `;
-    }
-    else if (currentSection === 'love') {
-        contentDiv.innerHTML = `
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="text-pink-400">💕</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">SEVGI UYUMU</h3>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="text-center mb-4">
-                        <p class="text-gray-500 text-xs">Sizin bürcünüz: <span class="text-purple-300">${userSign.name}</span></p>
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <label class="block text-gray-400 text-[11px] tracking-wide">PARTNYORUN ADI</label>
-                        <input type="text" id="partnerNameInput" placeholder="Emin" class="apple-input w-full px-4 py-3 text-white text-sm">
-                    </div>
-                    
-                    <div class="space-y-2">
-                        <label class="block text-gray-400 text-[11px] tracking-wide">PARTNYORUN DOĞUM TARİXİ</label>
-                        <input type="date" id="partnerDateInput" class="apple-input w-full px-4 py-3 text-white text-sm">
-                    </div>
-                    
-                    <button onclick="calculateLove()" class="w-full mt-4 py-3 apple-button rounded-xl text-sm font-medium">UYUMU GÖR</button>
-                </div>
-            </div>
-            <div id="loveResult"></div>
-        `;
-    }
-    else if (currentSection === 'planets') {
-        const topEvents = [...planetaryEvents].slice(0, 3);
-        contentDiv.innerHTML = `
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-6">
-                    <span class="text-yellow-400">🪐</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">YAXIN PLANET HADİSƏLƏRİ</h3>
-                </div>
-                
-                <div class="space-y-5">
-                    ${topEvents.map(event => `
-                        <div class="border-l-2 border-purple-500 pl-4 py-1">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-purple-300 text-sm font-medium">${event.name}</span>
-                                <span class="text-[9px] text-gray-500">${event.planet}</span>
-                            </div>
-                            <p class="text-gray-400 text-xs leading-relaxed mb-1">${event.effect}</p>
-                            <p class="text-gray-600 text-[9px]">Yaxın vaxt: ${event.dates[0]}</p>
-                        </div>
-                    `).join('')}
-                </div>
-                
-                <div class="mt-5 pt-4 border-t border-white/10 text-center">
-                    <p class="text-[10px] text-gray-500">${userSign.planet} planeti ${userSign.name} bürcünü idarə edir</p>
-                </div>
-            </div>
-        `;
-    }
-    else if (currentSection === 'career') {
-        contentDiv.innerHTML = `
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-blue-400">💼</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">KARYERA PROQNOZU</h3>
-                </div>
-                <p class="text-white/80 text-sm leading-relaxed">${userSign.career}</p>
-            </div>
-
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-green-400">📈</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">BU AY ÜÇÜN TÖVSİYƏ</h3>
-                </div>
-                <p class="text-white/80 text-sm leading-relaxed">${userSign.element} elementi sizi bu ayda yeni layihələrə doğru aparır. ${userSign.planet} planetinin enerjisindən istifadə edin.</p>
-            </div>
-
-            <div class="apple-card rounded-2xl p-6">
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-amber-400">✨</span>
-                    <h3 class="text-xs tracking-wide text-gray-400">GÜCLÜ TƏRƏFLƏRİNİZ</h3>
-                </div>
-                <p class="text-white/80 text-sm">${userSign.traits}</p>
-            </div>
-        `;
-    }
+        </div>
+    `;
 }
 
 function calculateLove() {
-    const partnerName = document.getElementById('partnerNameInput')?.value;
-    const partnerDate = document.getElementById('partnerDateInput')?.value;
+    const partnerName = document.getElementById('partnerName')?.value;
+    const partnerDate = document.getElementById('partnerDate')?.value;
     const loveResultDiv = document.getElementById('loveResult');
     
     if (!partnerName || !partnerDate) {
-        if (loveResultDiv) loveResultDiv.innerHTML = `<div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 text-center text-red-300 text-xs">Zəhmət olmasa hər iki məlumatı daxil edin</div>`;
+        if (loveResultDiv) loveResultDiv.innerHTML = `<div class="bg-white/5 border border-white/10 rounded-xl p-4 text-center text-white/30 text-[10px]">hər iki məlumatı daxil et</div>`;
         return;
     }
     
     const partnerSign = getZodiacSign(partnerDate);
-    const compatibility = getLoveCompatibility(userSign, partnerSign);
+    const compatibility = getSoulmateCompatibility(userSign, partnerSign, userName, partnerName);
     
     if (loveResultDiv) {
         loveResultDiv.innerHTML = `
-            <div class="bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-2xl p-5 border border-purple-500/20 animate-fadeUp mt-4">
-                <div class="text-center mb-2">
-                    <span class="text-2xl">${compatibility.includes('Mükəmməl') ? '💜' : compatibility.includes('Əla') ? '💖' : '💗'}</span>
+            <div class="bg-gradient-to-b from-white/5 to-transparent rounded-xl p-5 border border-white/10 mt-3 animate-fadeIn">
+                <div class="text-center mb-3">
+                    <span class="text-3xl">${compatibility.score >= 75 ? '💜' : compatibility.score >= 55 ? '💖' : '💔'}</span>
                 </div>
-                <p class="text-center text-white/80 text-sm">${partnerName} ilə uyumunuz:</p>
-                <p class="text-center text-purple-300 text-sm mt-2">${compatibility}</p>
-                <p class="text-center text-gray-500 text-[10px] mt-2">${partnerSign.name} · ${partnerSign.element}</p>
+                <div class="flex justify-center gap-6 text-center mb-4">
+                    <div>
+                        <p class="text-white/30 text-[8px]">${userName}</p>
+                        <p class="text-white/50 text-[10px]">${userSign.name}</p>
+                    </div>
+                    <div class="text-white/20">+</div>
+                    <div>
+                        <p class="text-white/30 text-[8px]">${partnerName}</p>
+                        <p class="text-white/50 text-[10px]">${partnerSign.name}</p>
+                    </div>
+                </div>
+                <div class="text-center mb-4">
+                    <div class="inline-block px-4 py-1 bg-white/10 rounded-full">
+                        <span class="text-white/60 text-[11px] font-medium">${compatibility.score}% uyum</span>
+                    </div>
+                </div>
+                <p class="text-white/50 text-[11px] leading-relaxed mb-3">${compatibility.analysis}</p>
+                <p class="text-white/40 text-[11px] leading-relaxed mb-2">${compatibility.verdict}</p>
+                <p class="text-white/20 text-[9px] italic">Bu bağlantı üçün ən uyğun vaxt: ${compatibility.timing}</p>
             </div>
         `;
     }
@@ -505,7 +508,8 @@ function resetApp() {
     userName = '';
     birthdate = '';
     userSign = null;
-    currentSection = 'daily';
+    currentPeriod = 'daily';
+    currentCategory = 'general';
     render();
 }
 
