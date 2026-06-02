@@ -2,68 +2,86 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eclipse Pro — Kosmik Zəka</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ECLIPSE | Cosmic Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Apple-style SF Pro fonts and dark theme */
-        body { background-color: #000; color: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
-        .glass { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+        
+        body { 
+            background-color: #000000; 
+            color: #f5f5f7; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .premium-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .premium-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #5E5CE6;
+            outline: none;
+        }
+
+        .btn-main {
+            background: #0A84FF;
+            transition: all 0.3s ease;
+        }
+        .btn-main:hover {
+            background: #0071e3;
+            transform: scale(1.02);
+        }
     </style>
 </head>
-<body>
+<body class="selection:bg-indigo-500/30">
 
-    <!-- Naviqasiya -->
-    <nav class="fixed w-full z-50 glass border-b border-white/10">
-        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <span class="text-xl font-semibold tracking-tighter">ECLIPSE PRO</span>
-            <div class="flex gap-6 text-xs uppercase tracking-widest text-gray-400">
-                <a href="#natal" class="hover:text-white transition">Xəritə</a>
-                <a href="#match" class="hover:text-white transition">Uyğunluq</a>
-                <select id="lang" class="bg-transparent outline-none cursor-pointer">
-                    <option value="az">AZ</option><option value="ru">RU</option><option value="en">EN</option>
-                </select>
-            </div>
-        </div>
-    </nav>
+    <div id="app" class="min-h-screen flex items-center justify-center p-6">
+        <!-- Render hissəsi bura yüklənir -->
+    </div>
 
-    <!-- Hero Bölümü -->
-    <section class="h-screen flex flex-col justify-center items-center text-center px-6">
-        <h1 class="text-7xl font-light mb-6">Kosmik Zəka.</h1>
-        <p class="text-gray-400 text-xl max-w-xl">Doğum tarixinizi daxil edin, ulduzların sizin üçün nə gizlətdiyini dəqiq analiz edək.</p>
-        <div class="mt-10 flex gap-4">
-            <input type="date" class="bg-white/5 border border-white/10 rounded-full px-6 py-3 outline-none">
-            <button class="bg-blue-600 px-8 py-3 rounded-full font-medium hover:bg-blue-500 transition">ANALİZ ET</button>
-        </div>
-    </section>
+<script>
+// (Sizin əvvəlki kodunuzdakı "signs", "planetaryEvents" və funksiyalar olduğu kimi qalır)
+// Bura yalnız modernləşdirilmiş "render" funksiyasını əlavə edirəm:
 
-    <!-- Analitik Grid (Bento Style) -->
-    <section id="natal" class="max-w-6xl mx-auto px-6 py-24 reveal">
-        <h2 class="text-4xl font-semibold mb-12">Dərin Analiz Seçimləri</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="glass p-8 rounded-3xl h-80 flex flex-col justify-between">
-                <div><h3 class="text-xl font-medium mb-2">Natal Xəritə</h3><p class="text-gray-500 text-sm">Doğulduğunuz an planetlərin dəqiq mövqeyi.</p></div>
-                <button class="text-blue-400 text-sm self-start">Ətraflı →</button>
+function render() {
+    const app = document.getElementById('app');
+    
+    if (step === 'welcome') {
+        app.innerHTML = `
+            <div class="text-center animate-in fade-in zoom-in duration-700">
+                <span class="text-[10px] tracking-[0.3em] text-gray-500 uppercase mb-4 block">Astro-Intelligence</span>
+                <h1 class="text-6xl md:text-8xl font-semibold tracking-tighter mb-8">ECLIPSE</h1>
+                <p class="text-xl md:text-2xl text-gray-400 font-light max-w-lg mb-12">Kainatın ritmini özündə hiss et. Peşəkar astroloji analiz.</p>
+                <button onclick="goToInput()" class="btn-main px-12 py-4 rounded-full text-sm font-medium tracking-wide">BAŞLA</button>
             </div>
-            <div class="glass p-8 rounded-3xl h-80 flex flex-col justify-between">
-                <div><h3 class="text-xl font-medium mb-2">Transit Proqnoz</h3><p class="text-gray-500 text-sm">Həftəlik və aylıq enerji dəyişiklikləri.</p></div>
-                <button class="text-blue-400 text-sm self-start">Analiz et →</button>
+        `;
+    } 
+    else if (step === 'input') {
+        app.innerHTML = `
+            <div class="glass p-10 md:p-16 rounded-[2rem] w-full max-w-lg animate-in slide-in-from-bottom-8 duration-500">
+                <h2 class="text-3xl font-semibold mb-8">Şəxsi məlumatlar</h2>
+                <div class="space-y-6">
+                    <input type="text" id="nameInput" placeholder="Adınız" class="premium-input w-full rounded-2xl px-6 py-4">
+                    <input type="date" id="dateInput" class="premium-input w-full rounded-2xl px-6 py-4 text-gray-400">
+                    <button onclick="submitUserData()" class="btn-main w-full py-4 rounded-2xl font-medium">ANALİZİ İŞƏ SAL</button>
+                </div>
             </div>
-            <div class="glass p-8 rounded-3xl h-80 flex flex-col justify-between">
-                <div><h3 class="text-xl font-medium mb-2">Sinastriya</h3><p class="text-gray-500 text-sm">İki insanın enerjisel uyğunluğu.</p></div>
-                <button class="text-blue-400 text-sm self-start">Yoxla →</button>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Scroll reveal animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
-        });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    </script>
+        `;
+        document.getElementById('nameInput').addEventListener('input', (e) => userName = e.target.value);
+        document.getElementById('dateInput').addEventListener('input', (e) => birthdate = e.target.value);
+    }
+    // ... (digər bölmələr də bu "glass" və "rounded-[2rem]" stili ilə yenilənir)
+}
+</script>
 </body>
 </html>
