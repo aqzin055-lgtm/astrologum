@@ -1,366 +1,447 @@
-```html
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" class="scroll-smooth bg-black">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Nyx | Celestial Analytics Platform</title>
-    <meta name="description" content="Dəqiq astronomik hesablamalara əsaslanan peşəkar astrologiya platforması. Natal xəritə, transitlər, sinastri və karmik analiz.">
-    <meta name="keywords" content="astrologiya, natal xəritə, transit, sinastri, numerologiya, tarot">
-    <meta name="author" content="Nyx Astrology">
-    <meta name="robots" content="index, follow">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <title>AETHER | Kosmik Mexanika</title>
+    
+    <!-- Apple Style Fonts (Inter kimi SF Pro alternativi) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        space: '#000000',
+                        panel: '#111111',
+                        surface: '#1c1c1e', // Apple Dark Mode gray
+                        nasa: '#0B3D91',
+                        silver: '#F5F5F7'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-deep: #0a0a1a;
-            --bg-void: #010105;
-            --surface: #111128;
-            --card-bg: rgba(17, 17, 40, 0.7);
-            --border-subtle: rgba(255,255,255,0.06);
-            --gold: #D4AF37;
-            --gold-dim: #B8962E;
-            --silver: #C0C0C0;
-            --text-primary: #F5F5F7;
-            --text-secondary: #86868B;
-            --accent-blue: #5E5CE6;
-        }
-        body {
-            background: var(--bg-void);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            line-height: 1.5;
-        }
-        .font-serif { font-family: 'Cormorant Garamond', serif; }
-        .glass-panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-subtle);
-            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-        .glass-panel:hover {
-            border-color: var(--gold);
-            transform: translateY(-2px);
-        }
-        .btn-primary {
-            background: var(--gold);
-            color: var(--bg-void);
-            border: none;
-            padding: 12px 28px;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            transition: all 0.2s;
-        }
-        .btn-primary:hover {
-            background: var(--gold-dim);
-            transform: scale(1.02);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 12px 28px;
-            font-weight: 500;
-            transition: 0.2s;
-        }
-        .btn-outline:hover {
-            background: rgba(212, 175, 55, 0.1);
-        }
-        .cosmic-input {
-            background: rgba(10,10,30,0.8);
-            border: 1px solid var(--border-subtle);
-            padding: 12px 16px;
-            color: white;
-            width: 100%;
-            transition: 0.2s;
-        }
-        .cosmic-input:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-        .nav-link {
-            position: relative;
-            cursor: pointer;
-            font-size: 13px;
-            letter-spacing: 0.3px;
-            color: var(--text-secondary);
-            transition: 0.2s;
-        }
-        .nav-link:hover { color: var(--gold); }
-        .nav-link.active { color: var(--gold); }
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: var(--gold);
-        }
-        .hero-glow {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(212,175,55,0.12), transparent 70%);
-            pointer-events: none;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.2, 0.9, 0.4, 1);
-        }
-        .fade-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .energy-bar {
-            height: 3px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 0;
-        }
-        .energy-fill {
-            height: 100%;
-            background: var(--gold);
-            width: 0%;
-            transition: width 0.8s ease;
-        }
-        .planet-dot { cursor: pointer; transition: filter 0.2s; }
-        .planet-dot:hover { filter: drop-shadow(0 0 6px var(--gold)); }
-        .tab-btn {
-            cursor: pointer;
-            padding: 8px 16px;
-            font-size: 12px;
-            border-bottom: 2px solid transparent;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            border-bottom-color: var(--gold);
-            color: var(--gold);
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--bg-deep); }
-        ::-webkit-scrollbar-thumb { background: var(--gold); }
+        /* APPLE & TESLA AESTHETICS */
+        body { background-color: #000000; color: #F5F5F7; overflow-x: hidden; letter-spacing: -0.01em; }
+        
+        /* Typography specifics */
+        h1, h2, h3 { letter-spacing: -0.04em; font-weight: 500; }
+        
+        /* Glassmorphism / UI Elements */
+        .glass-nav { background: rgba(0, 0, 0, 0.7); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .apple-card { background: #1c1c1e; border-radius: 24px; transition: transform 0.3s ease; }
+        .apple-card:hover { transform: scale(1.02); }
+        
+        /* Inputs & Buttons */
+        .apple-input { background: #2c2c2e; border: none; border-radius: 12px; color: white; transition: 0.2s; }
+        .apple-input:focus { outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,0.2); background: #3a3a3c; }
+        
+        .tesla-btn { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 999px; font-weight: 500; transition: all 0.3s; }
+        .tesla-btn:hover { background: #ffffff; color: #000000; }
+        .tesla-btn-solid { background: #ffffff; color: #000000; border-radius: 999px; font-weight: 500; transition: all 0.3s; }
+        .tesla-btn-solid:hover { transform: scale(1.05); }
+
+        /* Animations */
+        .fade-up { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* NASA Orbital Grid Background */
+        .orbital-bg { position: absolute; inset: 0; background-image: radial-gradient(circle at center, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 100px 100px; opacity: 0.3; pointer-events: none; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-<!-- FIXED NAVIGATION -->
-<nav class="fixed top-0 left-0 w-full z-50 bg-[#010105]/90 backdrop-blur-xl border-b border-white/5">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center flex-wrap gap-4">
-        <div class="text-3xl font-serif font-light tracking-wider text-[#D4AF37] cursor-pointer" onclick="navigateTo('home')">NYX</div>
-        <div class="hidden md:flex gap-8">
-            <a onclick="navigateTo('home')" id="nav-home" class="nav-link active">ANA SƏHİFƏ</a>
-            <a onclick="navigateTo('natal')" id="nav-natal" class="nav-link">NATAL XƏRİTƏ</a>
-            <a onclick="navigateTo('transits')" id="nav-transits" class="nav-link">TRANZİTLƏR</a>
-            <a onclick="navigateTo('synastry')" id="nav-synastry" class="nav-link">SİNASTRİ</a>
-            <a onclick="navigateTo('numerology')" id="nav-numerology" class="nav-link">NUMEROLOGİYA</a>
-            <a onclick="navigateTo('tarot')" id="nav-tarot" class="nav-link">TAROT</a>
-            <a onclick="navigateTo('blog')" id="nav-blog" class="nav-link">BLOQ</a>
+    <!-- GLOBAL NAV (Apple Style) -->
+    <nav class="fixed w-full top-0 z-50 glass-nav px-6 py-4 flex justify-between items-center text-xs md:text-sm font-medium">
+        <a href="#" class="tracking-tight text-xl font-semibold">AETHER</a>
+        <div class="hidden md:flex gap-8 text-white/60">
+            <a href="#dashboard" class="hover:text-white transition">İdarə Paneli</a>
+            <a href="#natal" class="hover:text-white transition">Orbital Xəritə</a>
+            <a href="#transits" class="hover:text-white transition">Tranzitlər</a>
+            <a href="#synastry" class="hover:text-white transition">Sinastri</a>
+            <a href="#pricing" class="hover:text-white transition">Aether+</a>
         </div>
-        <div class="flex gap-3"><button class="text-sm text-white/40">Daxil ol</button><button class="btn-primary text-sm py-2 px-5">Başla</button></div>
-    </div>
-</nav>
+        <div class="flex gap-4 items-center">
+            <button class="text-white/60 hover:text-white transition">Hesab</button>
+        </div>
+    </nav>
 
-<main class="pt-24" id="main-content">
-    <!-- HERO SECTION (only on home) -->
-    <section id="heroSection" class="min-h-[65vh] flex items-center relative overflow-hidden fade-up">
-        <div class="hero-glow top-20 left-1/4"></div>
-        <div class="max-w-6xl mx-auto px-6 text-center">
-            <div class="inline-flex items-center gap-2 text-[#D4AF37]/60 text-[11px] tracking-[0.2em] mb-4"><span>✦</span> PEŞƏKAR ASTROLOJİ ANALİZ <span>✦</span></div>
-            <h1 class="text-6xl md:text-7xl font-serif font-light italic">Kainatın Sirləri —<br><span class="text-[#D4AF37] not-italic">Dəqiq Hesablamalarla</span></h1>
-            <p class="text-white/40 text-lg mt-6 max-w-xl mx-auto">NASA standartlarında efemeris hesablamaları, fərdi natal xəritə və peşəkar proqnozlar</p>
-            <div class="flex gap-4 justify-center mt-10"><button onclick="navigateTo('natal')" class="btn-primary">Xəritəmi Yarat</button><button class="btn-outline">Kəşf et</button></div>
+    <!-- SEC 1: HERO (Tesla Style) -->
+    <section class="relative h-screen flex flex-col justify-end items-center text-center pb-24 px-4 overflow-hidden">
+        <div class="orbital-bg"></div>
+        <!-- Abstract Earth/Space curve -->
+        <div class="absolute top-[20%] w-[150%] h-[150%] rounded-[100%] border-t border-white/10 opacity-50" style="box-shadow: inset 0 100px 100px rgba(255,255,255,0.02);"></div>
+        
+        <div class="relative z-10 w-full max-w-4xl fade-up">
+            <h1 class="text-6xl md:text-[90px] font-semibold tracking-tighter mb-4 leading-tight">
+                Kainatın Mexanikası.
+            </h1>
+            <p class="text-xl md:text-2xl text-white/50 font-light mb-12 tracking-tight">
+                Astrologiya. Elmi dəqiqliklə yenidən kəşf edildi.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#natal" class="tesla-btn-solid px-12 py-4 text-sm">Xəritəni Yarat</a>
+                <a href="#dashboard" class="tesla-btn px-12 py-4 text-sm">Məlumatlara Bax</a>
+            </div>
+        </div>
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-50 animate-bounce">
+            <span class="text-[10px] uppercase tracking-widest mb-2">Kəşf Et</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </div>
     </section>
 
-    <!-- HOME PAGE DASHBOARD -->
-    <div id="homeContainer">
-        <section class="py-16 fade-up"><div class="max-w-7xl mx-auto px-6"><h2 class="text-3xl font-serif font-light">✨ Günlük Bürc Rezonansları</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div id="zodiacGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"></div></div></section>
-        <section class="py-16 bg-[#0a0a1a]/30 fade-up"><div class="max-w-7xl mx-auto px-6"><h2 class="text-3xl font-serif font-light">🌙 Ay Təqvimi & Fazalar</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div id="moonCalendar" class="grid grid-cols-7 gap-2 text-center"></div><div id="moonDetail" class="mt-8 p-5 glass-panel rounded-none"></div></div></section>
-        <section class="py-16 fade-up"><div class="max-w-7xl mx-auto px-6"><h2 class="text-3xl font-serif font-light">🪐 Planet Tranzitləri (Canlı)</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div id="transitLiveTable" class="overflow-x-auto"></div><div id="mercuryWarning" class="mt-5 p-4 border-l-4 border-[#D4AF37] bg-[#D4AF37]/5 hidden"></div></div></section>
-    </div>
+    <!-- SEC 2: DASHBOARD (Apple Widgets Style) -->
+    <section id="dashboard" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/10 fade-up">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">Aktiv Enerji Paneli</h2>
+            <p class="text-white/50 text-lg">Real vaxt rejimində mövqe məlumatları.</p>
+        </div>
+        <div id="zodiac-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"></div>
+        
+        <div id="zodiac-detail" class="hidden mt-6 apple-card p-8 md:p-12 fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-6 mb-6">
+                <h3 id="zd-name" class="text-3xl font-semibold tracking-tight"></h3>
+                <div class="flex bg-[#2c2c2e] p-1 rounded-lg text-sm mt-4 md:mt-0" id="zd-tabs">
+                    <button class="px-4 py-2 rounded-md bg-[#3a3a3c] text-white shadow" onclick="switchWidgetTab(this, 'Psixologiya')">Psixologiya</button>
+                    <button class="px-4 py-2 rounded-md text-white/50 hover:text-white" onclick="switchWidgetTab(this, 'Dinamika')">Dinamika</button>
+                    <button class="px-4 py-2 rounded-md text-white/50 hover:text-white" onclick="switchWidgetTab(this, 'Sağlamlıq')">Sağlamlıq</button>
+                </div>
+            </div>
+            <p id="zd-text" class="text-white/70 text-lg leading-relaxed font-light"></p>
+        </div>
+    </section>
 
-    <!-- NATAL CHART PAGE -->
-    <div id="natalContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">🌌 Natal Xəritə Hesablayıcısı</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div class="grid md:grid-cols-2 gap-8"><div class="space-y-4"><input type="text" id="natalName" placeholder="Adınız" class="cosmic-input"><input type="date" id="natalDate" class="cosmic-input"><input type="time" id="natalTime" class="cosmic-input"><input type="text" id="natalPlace" placeholder="Doğum yeri (şəhər)" class="cosmic-input"><button id="calculateNatalBtn" class="btn-primary w-full">Xəritəni Hesabla</button></div><div id="natalResult" class="space-y-4"></div></div></div></div></div>
+    <!-- SEC 3: NATAL CALCULATOR (Clean Form) -->
+    <section id="natal" class="py-32 px-6 bg-panel fade-up">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">Orbital Xəritə</h2>
+                    <p class="text-white/50 text-lg mb-10">Doğum anındakı planetar koordinatların dəqiq analizi.</p>
+                    <form id="natal-form" class="space-y-6" onsubmit="event.preventDefault(); calcNatal();">
+                        <input type="text" id="n-name" placeholder="Ad və Soyad" required class="apple-input w-full p-4 text-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="date" id="n-date" required class="apple-input w-full p-4 text-white/50">
+                            <input type="time" id="n-time" required class="apple-input w-full p-4 text-white/50">
+                        </div>
+                        <input type="text" id="n-place" placeholder="Koordinat və ya Şəhər (məs: Baku, AZ)" required class="apple-input w-full p-4 text-lg">
+                        <button type="submit" class="tesla-btn-solid w-full py-4 text-lg mt-4">Analiz Et</button>
+                    </form>
+                </div>
+                <div id="natal-result" class="apple-card p-10 flex flex-col items-center justify-center min-h-[500px] border border-white/5 relative overflow-hidden">
+                    <!-- Placeholder Radar -->
+                    <div class="w-64 h-64 border border-white/10 rounded-full flex items-center justify-center relative">
+                        <div class="w-48 h-48 border border-white/5 rounded-full"></div>
+                        <div class="absolute w-full h-[1px] bg-white/5"></div>
+                        <div class="absolute h-full w-[1px] bg-white/5"></div>
+                        <p class="absolute text-white/30 text-sm">Gözlənilir...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- TRANSITS PAGE -->
-    <div id="transitsContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">🪐 Güncel Planet Tranzitləri</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div id="transitFullTable"></div><div id="transitCountdown" class="mt-6 p-5 glass-panel text-center"></div></div></div></div>
+    <!-- SEC 4: TRANSITS (Data Table) -->
+    <section id="transits" class="py-32 px-6 max-w-5xl mx-auto fade-up">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-semibold tracking-tight mb-4">Qlobal Tranzit Monitorinqi</h2>
+            <p class="text-white/50">Göy cisimlərinin real vaxt orbit hərəkətləri və təsirləri.</p>
+        </div>
+        
+        <div class="apple-card overflow-hidden">
+            <div class="bg-red-500/10 text-red-400 p-4 text-sm text-center font-medium border-b border-red-500/20">
+                Sistem Xəbərdarlığı: Merkuri Retroqrad Mərhələsindədir. Kommunikasiya axınlarında kəsilmələr gözlənilir.
+            </div>
+            <table class="w-full text-left text-sm">
+                <thead class="bg-[#2c2c2e] text-white/50">
+                    <tr>
+                        <th class="p-4 font-medium rounded-tl-2xl">Obyekt</th>
+                        <th class="p-4 font-medium">Mövqe</th>
+                        <th class="p-4 font-medium">Vektor</th>
+                        <th class="p-4 font-medium rounded-tr-2xl">Status Analizi</th>
+                    </tr>
+                </thead>
+                <tbody id="transit-body" class="divide-y divide-white/5"></tbody>
+            </table>
+        </div>
+    </section>
 
-    <!-- SYNASTRY PAGE -->
-    <div id="synastryContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">💞 Sinastri — İki Ruhun Uyumu</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div class="grid md:grid-cols-2 gap-8"><div><h3 class="font-medium mb-3">Şəxs A</h3><input id="synNameA" placeholder="Ad" class="cosmic-input mb-3"><input id="synDateA" type="date" class="cosmic-input mb-3"><input id="synTimeA" type="time" class="cosmic-input mb-3"><input id="synPlaceA" placeholder="Yer" class="cosmic-input"></div><div><h3 class="font-medium mb-3">Şəxs B</h3><input id="synNameB" placeholder="Ad" class="cosmic-input mb-3"><input id="synDateB" type="date" class="cosmic-input mb-3"><input id="synTimeB" type="time" class="cosmic-input mb-3"><input id="synPlaceB" placeholder="Yer" class="cosmic-input"></div></div><button id="calcSynastryBtn" class="btn-primary mt-6 w-full md:w-auto px-8">Uyumu Hesabla</button><div id="synastryResult" class="mt-8"></div></div></div></div>
+    <!-- SEC 5: SYNASTRY -->
+    <section id="synastry" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/10 fade-up">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-semibold tracking-tight mb-4">Sistem Uyğunluğu (Sinastri)</h2>
+            <p class="text-white/50">İki fərqli orbital xəritənin toqquşma və harmoniya analizi.</p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6 mb-10">
+            <div class="apple-card p-8">
+                <h3 class="text-xl font-medium mb-6 text-white/80">Obyekt Alpha (Siz)</h3>
+                <div class="space-y-4">
+                    <input type="text" id="s1-name" placeholder="Məlumat" class="apple-input w-full p-3">
+                    <input type="date" id="s1-date" class="apple-input w-full p-3 text-white/50">
+                </div>
+            </div>
+            <div class="apple-card p-8">
+                <h3 class="text-xl font-medium mb-6 text-white/80">Obyekt Beta (Tərəfdaş)</h3>
+                <div class="space-y-4">
+                    <input type="text" id="s2-name" placeholder="Məlumat" class="apple-input w-full p-3">
+                    <input type="date" id="s2-date" class="apple-input w-full p-3 text-white/50">
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <button onclick="calcSynastry()" class="tesla-btn-solid px-12 py-4">Korrelyasiyanı Hesabla</button>
+        </div>
+        <div id="syn-result" class="mt-12 hidden"></div>
+    </section>
 
-    <!-- NUMEROLOGY PAGE -->
-    <div id="numerologyContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">🔢 Numerologiya Portreti</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div class="grid md:grid-cols-2 gap-8"><div><input id="numFullName" placeholder="Ad Soyad" class="cosmic-input mb-4"><input id="numBirthDate" type="date" class="cosmic-input mb-4"><button id="calculateNumBtn" class="btn-primary w-full">Hesabla</button></div><div id="numResult" class="space-y-4"></div></div></div></div></div>
+    <!-- SEC 6-12: COMBINED GRID SYSTEM (Apple App Library Style) -->
+    <section class="py-32 px-6 max-w-7xl mx-auto border-t border-white/10 fade-up">
+        <h2 class="text-4xl font-semibold tracking-tight mb-16 text-center">Modullar</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Tarot (Data Abstraction) -->
+            <div class="apple-card p-8 row-span-2 flex flex-col justify-between" style="background: linear-gradient(145deg, #1c1c1e, #111);">
+                <div>
+                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center mb-4"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg></div>
+                    <h3 class="text-2xl font-semibold mb-2">Ehtimal Matrisi</h3>
+                    <p class="text-white/50 text-sm mb-6">Tarot arxetiplərinin riyazi interpretasiyası ilə qərarlarınızı optimallaşdırın.</p>
+                </div>
+                <div class="space-y-3" id="tarot-mini-board">
+                    <button onclick="renderTarot()" class="tesla-btn w-full py-3 text-sm">Alqoritmi İşə Sal</button>
+                </div>
+            </div>
 
-    <!-- TAROT PAGE -->
-    <div id="tarotContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">🎴 Gündəlik Tarot Oxuması</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div class="flex flex-wrap justify-center gap-6 mb-8" id="tarotCardsContainer"></div><button id="reshuffleTarotBtn" class="btn-outline mx-auto block">Yeni Oxuma</button></div></div></div>
+            <!-- Numerology -->
+            <div class="apple-card p-8 bg-panel">
+                <h3 class="text-xl font-semibold mb-2">Rəqəmsal Kod (Numerologiya)</h3>
+                <p class="text-white/50 text-sm mb-4">Adınızın və tarixinizin numerik tezliyi.</p>
+                <div class="flex gap-2">
+                    <input type="text" placeholder="Ad" class="apple-input w-full p-2 text-sm">
+                    <button onclick="alert('Tezlik hesablanır: 7 (Analitik Nüvə)')" class="tesla-btn-solid px-4">Bax</button>
+                </div>
+            </div>
 
-    <!-- BLOG PAGE -->
-    <div id="blogContainer" class="hidden fade-up"><div class="max-w-6xl mx-auto px-6 py-8"><div class="glass-panel p-8"><h2 class="text-3xl font-serif font-light">📖 Astrologiya Bloq & Lüğət</h2><div class="w-16 h-px bg-[#D4AF37] mt-4 mb-8"></div><div class="grid md:grid-cols-3 gap-6" id="blogGrid"></div></div></div></div>
+            <!-- Lunar Calendar -->
+            <div class="apple-card p-8 bg-nasa text-white">
+                <h3 class="text-xl font-semibold mb-2">Lunar Dövrələr</h3>
+                <p class="text-white/70 text-sm mb-6">Ayın fazaları və qravitasiya təsiri.</p>
+                <div class="flex justify-between items-end">
+                    <div class="text-5xl">🌖</div>
+                    <div class="text-right"><div class="text-2xl font-semibold">98%</div><div class="text-xs text-white/50 uppercase">İşıqlanma</div></div>
+                </div>
+            </div>
 
-    <footer class="py-12 border-t border-white/5 mt-12"><div class="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8"><div><div class="text-2xl font-serif text-[#D4AF37]">NYX</div><p class="text-white/30 text-sm mt-2">Dəqiq astronomik hesablamalar</p></div><div><h4 class="font-medium">Xidmətlər</h4><ul class="text-white/40 text-sm mt-2 space-y-1"><li>Natal Xəritə</li><li>Sinastri Analizi</li><li>Tranzitlər</li></ul></div><div><h4 class="font-medium">Şirkət</h4><ul class="text-white/40 text-sm mt-2 space-y-1"><li>Haqqımızda</li><li>Astroloqlar</li><li>Əlaqə</li></ul></div><div><h4 class="font-medium">Newsletter</h4><input type="email" placeholder="E-poçt" class="cosmic-input text-sm"><button class="btn-primary w-full mt-2 text-sm">Abunə ol</button></div></div><div class="text-center text-white/20 text-xs mt-10">© 2025 NYX Astrology — Elmi Astrologiya Platforması</div></footer>
-</main>
+            <!-- Shop / Tools -->
+            <div class="apple-card p-8 bg-[#1c1c1e] lg:col-span-2 flex flex-col justify-center">
+                <h3 class="text-xl font-semibold mb-4">Avadanlıqlar (Astro Shop)</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="shop-grid"></div>
+            </div>
 
-<script>
-    // ==================== BÜRC MƏLUMATLARI ====================
-    const zodiacs = [
-        { name: "Qoç", symbol: "♈", element: "Od", dates: "21.03-19.04", keyword: "Liderlik", energy: 87, love: "Ehtiraslı bağlar", career: "Rəhbərlik" },
-        { name: "Buğa", symbol: "♉", element: "Torpaq", dates: "20.04-20.05", keyword: "Sabitlik", energy: 72, love: "Sadiqlik", career: "Maliyyə" },
-        { name: "Əkizlər", symbol: "♊", element: "Hava", dates: "21.05-20.06", keyword: "Ünsiyyət", energy: 94, love: "Flirt, ünsiyyət", career: "Kommunikasiya" },
-        { name: "Xərçəng", symbol: "♋", element: "Su", dates: "21.06-22.07", keyword: "Həssaslıq", energy: 65, love: "Ailəvi", career: "Qayğı" },
-        { name: "Şir", symbol: "♌", element: "Od", dates: "23.07-22.08", keyword: "Parlaq", energy: 95, love: "Romantik", career: "Liderlik" },
-        { name: "Qız", symbol: "♍", element: "Torpaq", dates: "23.08-22.09", keyword: "Analitik", energy: 70, love: "Detallar", career: "Təhlil" },
-        { name: "Tərəzi", symbol: "♎", element: "Hava", dates: "23.09-22.10", keyword: "Balans", energy: 78, love: "Harmoniya", career: "Diplomatiya" },
-        { name: "Əqrəb", symbol: "♏", element: "Su", dates: "23.10-21.11", keyword: "Güc", energy: 88, love: "Dərinlik", career: "Transformasiya" },
-        { name: "Oxatan", symbol: "♐", element: "Od", dates: "22.11-21.12", keyword: "Macəra", energy: 92, love: "Səyahət", career: "Beynəlxalq" },
-        { name: "Oğlaq", symbol: "♑", element: "Torpaq", dates: "22.12-19.01", keyword: "Disiplin", energy: 80, love: "Bağlılıq", career: "Yüksəliş" },
-        { name: "Dolça", symbol: "♒", element: "Hava", dates: "20.01-18.02", keyword: "İnnovasiya", energy: 85, love: "Dostluq", career: "Texnologiya" },
-        { name: "Balıq", symbol: "♓", element: "Su", dates: "19.02-20.03", keyword: "Xəyal", energy: 75, love: "Mistik", career: "Sənət" }
-    ];
+        </div>
+    </section>
 
-    function getSunSign(month, day) {
-        if((month===3 && day>=21) || (month===4 && day<=19)) return zodiacs[0];
-        if((month===4 && day>=20) || (month===5 && day<=20)) return zodiacs[1];
-        if((month===5 && day>=21) || (month===6 && day<=20)) return zodiacs[2];
-        if((month===6 && day>=21) || (month===7 && day<=22)) return zodiacs[3];
-        if((month===7 && day>=23) || (month===8 && day<=22)) return zodiacs[4];
-        if((month===8 && day>=23) || (month===9 && day<=22)) return zodiacs[5];
-        if((month===9 && day>=23) || (month===10 && day<=22)) return zodiacs[6];
-        if((month===10 && day>=23) || (month===11 && day<=21)) return zodiacs[7];
-        if((month===11 && day>=22) || (month===12 && day<=21)) return zodiacs[8];
-        if((month===12 && day>=22) || (month===1 && day<=19)) return zodiacs[9];
-        if((month===1 && day>=20) || (month===2 && day<=18)) return zodiacs[10];
-        return zodiacs[11];
-    }
+    <!-- SEC 13: PRICING (Tesla Ordering Style) -->
+    <section id="pricing" class="py-32 px-6 border-t border-white/10 bg-panel fade-up">
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">AETHER+</h2>
+            <p class="text-white/50 text-lg">Məlumatlara tam giriş əldə edin.</p>
+        </div>
+        <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
+            <div class="apple-card p-10 border border-white/10 flex flex-col">
+                <h3 class="text-2xl font-semibold mb-2">Baza Giriş</h3>
+                <div class="text-4xl font-semibold mb-8">$0 <span class="text-lg text-white/40 font-normal">/ ay</span></div>
+                <ul class="space-y-4 mb-8 flex-1 text-white/70">
+                    <li class="flex gap-3"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Gündəlik Enerji Paneli</li>
+                    <li class="flex gap-3"><svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Baza Natal Xəritə</li>
+                </ul>
+                <button class="tesla-btn w-full py-4">Mövcud Plan</button>
+            </div>
+            
+            <div class="apple-card p-10 bg-white text-black flex flex-col scale-100 md:scale-105 shadow-2xl">
+                <div class="text-xs font-bold uppercase tracking-widest text-nasa mb-2">Tövsiyə Edilir</div>
+                <h3 class="text-2xl font-semibold mb-2">Kainat Girişi (Pro)</h3>
+                <div class="text-4xl font-semibold mb-8">$29 <span class="text-lg text-black/50 font-normal">/ ay</span></div>
+                <ul class="space-y-4 mb-8 flex-1 text-black/80 font-medium">
+                    <li class="flex gap-3"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Tam Detallı PDF Analiz</li>
+                    <li class="flex gap-3"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Canlı Tranzit Bildirişləri</li>
+                    <li class="flex gap-3"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Məhdudiyyətsiz Sinastri Matrixi</li>
+                </ul>
+                <button class="bg-black text-white rounded-full w-full py-4 font-semibold hover:scale-105 transition">Sifariş Et</button>
+            </div>
+        </div>
+    </section>
 
-    function renderZodiacGrid() {
-        const container = document.getElementById('zodiacGrid');
-        if(container) container.innerHTML = zodiacs.map(z => `<div class="glass-panel p-5 text-center cursor-pointer transition-all" onclick="alert('${z.name}: ${z.love} · ${z.career}')"><div class="text-5xl">${z.symbol}</div><div class="text-xl font-serif mt-2">${z.name}</div><div class="text-xs text-white/40">${z.element}</div><div class="energy-bar mt-3"><div class="energy-fill" style="width:${z.energy}%"></div></div><div class="text-[10px] text-white/50 mt-1">Enerji ${z.energy}%</div></div>`).join('');
-    }
+    <!-- FOOTER -->
+    <footer class="py-12 px-6 border-t border-white/10 text-center md:text-left">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-2xl font-semibold tracking-tight">AETHER</div>
+            <div class="flex gap-6 text-sm text-white/50">
+                <a href="#" class="hover:text-white transition">Məxfilik</a>
+                <a href="#" class="hover:text-white transition">Şərtlər</a>
+                <a href="#" class="hover:text-white transition">Dəstək</a>
+            </div>
+            <div class="text-xs text-white/30">AETHER OS v1.0 © 2026. Bütün sistemlər normaldır.</div>
+        </div>
+    </footer>
 
-    // AY TƏQVİMİ
-    function getMoonPhase(year, month, day) { const phases = ["🌑 Yeni Ay","🌒 Artan","🌓 Birinci Dörddə","🌔 Balans","🌕 Dolunay","🌖 Azalan","🌗 Son Dörddə","🌘 Sönən"]; return phases[(day+month)%phases.length]; }
-    function renderMoonCalendar() {
-        const now = new Date(); const year = now.getFullYear(), month = now.getMonth();
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month+1, 0).getDate();
-        let html = `<div class="grid grid-cols-7 gap-1 mb-2 text-[11px] text-[#D4AF37]/50">${['B.e','Ç.a','Ç','C.a','C','Ş','B'].map(d=>`<div>${d}</div>`).join('')}</div><div class="grid grid-cols-7 gap-1">`;
-        for(let i=0;i<firstDay;i++) html+=`<div></div>`;
-        for(let d=1;d<=daysInMonth;d++){ let phase = getMoonPhase(year, month+1, d); html+=`<div class="p-2 text-center border border-white/5 cursor-pointer hover:bg-white/5 moon-day" data-day="${d}" data-phase="${phase}">${d}<br><span class="text-[9px]">${phase.slice(0,2)}</span></div>`;}
-        html+=`</div>`;
-        document.getElementById('moonCalendar').innerHTML = html;
-        document.querySelectorAll('.moon-day').forEach(el=>el.addEventListener('click',function(){ document.getElementById('moonDetail').innerHTML = `<div class="text-[#D4AF37]">${this.dataset.day} gün — ${this.dataset.phase}</div><div class="text-sm mt-2">Bu fazada niyyət etmək, keçmişi buraxmaq üçün güclü enerji.</div>`; }));
-    }
+    <!-- JAVASCRIPT ENGINE -->
+    <script>
+        // 1. DASHBOARD (Zodiac Data translated to Scientific terms)
+        const zodiacs = [
+            { s: 'Ar', n: 'Aries Sector', k: 'Aktivasiya', text: 'Kinetik enerji səviyyəsi maksimumdadır. İlkin təşəbbüslər üçün optimal şərait.' },
+            { s: 'Ta', n: 'Taurus Sector', k: 'Sabitləşmə', text: 'Resursların idarəedilməsi və strukturun qorunması mərhələsi.' },
+            { s: 'Ge', n: 'Gemini Sector', k: 'Məlumat axını', text: 'Rabitə kanallarında yüksək tezlik. Data transferi üçün uyğundur.' },
+            { s: 'Ca', n: 'Cancer Sector', k: 'Daxili Nüvə', text: 'Müdafiə sistemləri aktivdir. Emosional təməl güclənir.' }
+        ];
 
-    // TRANZİTLƏR
-    const transits = [
-        { planet: "☉ Günəş", sign: "Qoç", retro: false, effect: "Şəxsi iradə güclənir" },
-        { planet: "☽ Ay", sign: "Xərçəng", retro: false, effect: "Emosional dərinlik" },
-        { planet: "☿ Merkuri", sign: "Buğa", retro: true, effect: "Rabitədə ləngimə, diqqət!" },
-        { planet: "♀ Venera", sign: "Əkizlər", retro: false, effect: "Romantik ünsiyyət" },
-        { planet: "♂ Mars", sign: "Şir", retro: false, effect: "Enerji və hərəkət" },
-        { planet: "♃ Yupiter", sign: "Oxatan", retro: false, effect: "Genişlənmə, şans" },
-        { planet: "♄ Saturn", sign: "Balıq", retro: true, effect: "Məsuliyyət hissi" }
-    ];
-    function renderTransitTables() {
-        const tableHtml = `<table class="w-full text-left"><thead class="border-b border-white/10"><tr><th class="p-3 text-sm font-medium">Planet</th><th class="text-sm font-medium">Bürc</th><th class="text-sm font-medium">Retrograd</th><th class="text-sm font-medium">Təsir</th></tr></thead><tbody>${transits.map(t=>`<tr class="border-b border-white/5"><td class="p-3">${t.planet}</td><td>${t.sign}</td><td>${t.retro ? '<span class="text-[#D4AF37]">℞ Retrograd</span>' : '-'}</td><td class="text-sm text-white/60">${t.effect}</td></tr>`).join('')}</tbody></table>`;
-        document.getElementById('transitLiveTable') && (document.getElementById('transitLiveTable').innerHTML = tableHtml);
-        document.getElementById('transitFullTable') && (document.getElementById('transitFullTable').innerHTML = tableHtml);
-        const warn = document.getElementById('mercuryWarning');
-        if(transits.find(t=>t.planet.includes('Merkuri') && t.retro) && warn) { warn.innerHTML = `⚠️ Merkuri retroqrad — sənədləri yoxlayın, yeni başlanğıclardan çəkinin.`; warn.classList.remove('hidden'); }
-        const countdownDiv = document.getElementById('transitCountdown');
-        if(countdownDiv) countdownDiv.innerHTML = `<div class="text-[#D4AF37]">🔮 Növbəti böyük transit: Saturn 7-ci evə keçir (14 gün sonra)</div>`;
-    }
+        document.getElementById('zodiac-grid').innerHTML = zodiacs.map(z => `
+            <div class="apple-card p-6 cursor-pointer flex flex-col justify-between h-40 border border-white/5" onclick="showZodiac('${z.n}', '${z.text}')">
+                <div class="flex justify-between items-start">
+                    <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center font-semibold">${z.s}</div>
+                    <span class="text-xs text-white/40 uppercase tracking-widest">${z.k}</span>
+                </div>
+                <div>
+                    <h3 class="font-medium text-lg">${z.n}</h3>
+                    <div class="w-full bg-white/10 h-1 mt-3 rounded-full overflow-hidden"><div class="bg-white h-full" style="width: ${Math.floor(Math.random()*60 + 40)}%"></div></div>
+                </div>
+            </div>
+        `).join('');
 
-    // NATAL HESABLAMA
-    document.getElementById('calculateNatalBtn')?.addEventListener('click', () => {
-        const name = document.getElementById('natalName').value || 'İstifadəçi';
-        const date = document.getElementById('natalDate').value;
-        if(!date) { alert('Doğum tarixi daxil edin'); return; }
-        const d = new Date(date);
-        const sunSign = getSunSign(d.getMonth()+1, d.getDate());
-        const moonIdx = (d.getDate() % 12);
-        const risingIdx = (d.getHours() % 12);
-        document.getElementById('natalResult').innerHTML = `<div class="bg-[#111128] p-6"><p class="text-2xl font-serif">${name}, Natal Xəritən</p><div class="w-12 h-px bg-[#D4AF37] my-3"></div><div class="space-y-2"><div><span class="text-[#D4AF37]">🌞 Günəş bürcü:</span> ${sunSign.name} ${sunSign.symbol}</div><div><span class="text-[#D4AF37]">🌙 Ay bürcü:</span> ${zodiacs[moonIdx].name}</div><div><span class="text-[#D4AF37]">⬆️ Yüksələn (Asc):</span> ${zodiacs[risingIdx].name}</div></div><button class="btn-outline text-sm mt-5" onclick="alert('PDF hesabatı hazırlanır')">📄 PDF Yüklə</button></div>`;
-    });
+        function showZodiac(name, text) {
+            document.getElementById('zodiac-detail').classList.remove('hidden');
+            document.getElementById('zd-name').innerText = name;
+            document.getElementById('zd-text').innerText = text;
+        }
 
-    // SİNASTRİ
-    document.getElementById('calcSynastryBtn')?.addEventListener('click', () => {
-        const nameA = document.getElementById('synNameA').value || 'A';
-        const nameB = document.getElementById('synNameB').value || 'B';
-        const score = Math.floor(Math.random() * 35 + 65);
-        document.getElementById('synastryResult').innerHTML = `<div class="bg-[#111128] p-6"><div class="text-5xl font-serif text-[#D4AF37]">${score}%</div><div class="text-sm mt-1">Ümumi Uyum</div><div class="mt-5 grid gap-3"><div><div class="flex justify-between text-xs"><span>Sevgi Uyumu</span><span>${Math.floor(Math.random()*40+60)}%</span></div><div class="energy-bar"><div class="energy-fill" style="width:${Math.floor(Math.random()*40+60)}%"></div></div></div><div><div class="flex justify-between text-xs"><span>Kommunikasiya</span><span>${Math.floor(Math.random()*40+60)}%</span></div><div class="energy-bar"><div class="energy-fill" style="width:${Math.floor(Math.random()*40+60)}%"></div></div></div></div><p class="mt-4 text-white/70 text-sm">${nameA} və ${nameB} arasında Venera-Mars sinastriyası güclüdür. Uzunmüddətli potensial yüksəkdir.</p><button class="btn-outline mt-4">Tam Sinastri Hesabatı</button></div>`;
-    });
+        function switchWidgetTab(btn, tab) {
+            const tabs = btn.parentElement.children;
+            for(let t of tabs) { t.className = "px-4 py-2 rounded-md text-white/50 hover:text-white transition"; }
+            btn.className = "px-4 py-2 rounded-md bg-[#3a3a3c] text-white shadow transition";
+            document.getElementById('zd-text').innerText = `${tab} üzrə hesabat: Sistem göstəriciləri normal parametrlər daxilindədir. Orbital təsirlər stabildir.`;
+        }
 
-    // NUMEROLOGİYA
-    document.getElementById('calculateNumBtn')?.addEventListener('click', () => {
-        let name = document.getElementById('numFullName').value || 'İstifadəçi';
-        let dob = document.getElementById('numBirthDate').value;
-        if(!dob) { alert('Doğum tarixi daxil edin'); return; }
-        let sum = dob.replace(/-/g,'').split('').reduce((a,b)=>a+parseInt(b),0);
-        while(sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) sum = sum.toString().split('').reduce((a,b)=>a+parseInt(b),0);
-        document.getElementById('numResult').innerHTML = `<div><div class="text-6xl font-serif text-[#D4AF37]">${sum}</div><div class="text-xs tracking-wider mt-1">Həyat Yolu Nömrəsi</div><p class="mt-3 text-sm">${name}, ${sum} rəqəmi daxili liderlik, güclü intuisiya və məqsəd enerjisi daşıyır.</p><button class="btn-outline text-sm mt-3">Tam Hesabat</button></div>`;
-    });
+        // 3. NATAL CALCULATOR (NASA Style Radar)
+        function calcNatal() {
+            const name = document.getElementById('n-name').value;
+            const res = document.getElementById('natal-result');
+            res.innerHTML = `
+                <div class="w-full max-w-sm">
+                    <h3 class="text-2xl font-semibold mb-1 text-center">Subyekt: ${name}</h3>
+                    <p class="text-white/50 text-sm text-center mb-8">Koordinatlar təsdiqləndi.</p>
+                    
+                    <div class="relative w-64 h-64 mx-auto mb-8">
+                        <!-- Orbital Rings -->
+                        <div class="absolute inset-0 border border-white/20 rounded-full"></div>
+                        <div class="absolute inset-4 border border-white/10 rounded-full border-dashed animate-[spin_60s_linear_infinite]"></div>
+                        <div class="absolute inset-12 border border-white/5 rounded-full"></div>
+                        <!-- Crosshairs -->
+                        <div class="absolute w-full h-[1px] top-1/2 bg-white/10"></div>
+                        <div class="absolute h-full w-[1px] left-1/2 bg-white/10"></div>
+                        <!-- Planets (Data Points) -->
+                        <div class="absolute w-3 h-3 bg-white rounded-full top-[10%] left-[30%] shadow-[0_0_15px_white]"></div>
+                        <div class="absolute w-2 h-2 bg-nasa rounded-full top-[60%] left-[80%] shadow-[0_0_10px_#0B3D91]"></div>
+                        <div class="absolute w-2 h-2 bg-red-500 rounded-full bottom-[20%] left-[20%]"></div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-mono">CORE</div>
+                    </div>
 
-    // TAROT
-    const majorArcana = ["Ozan","Kahin","İmperatriça","İmperator","Baş Kahin","Aşiqlər","Araba","Güc","Zahid","Falçılar Çarxı","Ədalət","Asılmış Adam","Ölüm","Temperance","Şeytan","Qüllə","Ulduz","Ay","Günəş","Məhkəmə","Dünya"];
-    let currentTarot = [];
-    function shuffleTarot() { currentTarot = [...majorArcana].sort(()=>Math.random()-0.5).slice(0,3); renderTarotCards(); }
-    function renderTarotCards() {
-        const container = document.getElementById('tarotCardsContainer');
-        if(container) container.innerHTML = currentTarot.map((card,i)=>`<div class="glass-panel w-36 h-44 flex flex-col items-center justify-center text-center p-3 cursor-pointer" onclick="alert('${card}: Bu kart daxili səsinə qulaq asmağın vaxtıdır.')"><div class="text-4xl mb-2">🃟</div><div class="text-[10px] text-[#D4AF37]">${i===0?"Keçmiş":i===1?"İndiki":"Gələcək"}</div><div class="font-serif mt-2 text-sm">${card}</div></div>`).join('');
-    }
-    document.getElementById('reshuffleTarotBtn')?.addEventListener('click', shuffleTarot);
-    shuffleTarot();
+                    <div class="flex justify-between text-sm bg-white/5 p-4 rounded-xl mb-4">
+                        <span class="text-white/50">Günəş Vektoru</span>
+                        <span class="font-mono">145° (Şir)</span>
+                    </div>
+                    <div class="flex justify-between text-sm bg-white/5 p-4 rounded-xl mb-6">
+                        <span class="text-white/50">Ayın Orbiti</span>
+                        <span class="font-mono">210° (Əqrəb)</span>
+                    </div>
+                    
+                    <button class="tesla-btn w-full py-3">Sistemin PDF Çıxarışı</button>
+                </div>
+            `;
+        }
 
-    // BLOG
-    const blogPosts = [
-        { title: "Merkuri Retrogradı Elmi Təhlili", category: "Planetlər", readTime: "6 dəq" },
-        { title: "Saturnun Dönüşü: 29-30 Yaş Böhranı", category: "Karma", readTime: "8 dəq" },
-        { title: "Dolunay Fizikası: Gelgit və Emosiyalar", category: "Ay", readTime: "5 dəq" },
-        { title: "Yüksələn Bürc: Xarici Qabığın Psixologiyası", category: "Bürclər", readTime: "7 dəq" },
-        { title: "Venera Tranzitləri və Münasibət Dinamikası", category: "Münasibətlər", readTime: "5 dəq" }
-    ];
-    const blogGrid = document.getElementById('blogGrid');
-    if(blogGrid) blogGrid.innerHTML = blogPosts.map(p => `<div class="glass-panel p-5"><div class="text-[10px] text-[#D4AF37] uppercase tracking-wider">${p.category}</div><h3 class="font-serif text-xl mt-1">${p.title}</h3><div class="text-white/40 text-xs mt-2">${p.readTime} oxuma</div><button class="btn-outline text-xs mt-3 py-1 px-3">Oxu →</button></div>`).join('');
+        // 4. TRANSITS (Data Console style)
+        const transits = [
+            { n: 'Sol (Günəş)', p: 'Əkizlər (75°)', v: 'Düz', s: 'Aktiv' },
+            { n: 'Luna (Ay)', p: 'Oxatan (255°)', v: 'Düz', s: 'Dəyişkən' },
+            { n: 'Merkuri', p: 'Buğa (45°)', v: 'Retroqrad (-1.2°)', s: 'Kritik' },
+            { n: 'Mars', p: 'Şir (130°)', v: 'Düz', s: 'Yüksək Enerji' }
+        ];
+        document.getElementById('transit-body').innerHTML = transits.map(t => `
+            <tr class="hover:bg-white/5 transition">
+                <td class="p-4 font-medium">${t.n}</td>
+                <td class="p-4 font-mono text-white/70">${t.p}</td>
+                <td class="p-4 ${t.v.includes('Retroqrad') ? 'text-red-400' : 'text-green-400'}">${t.v}</td>
+                <td class="p-4"><span class="bg-white/10 px-2 py-1 rounded text-xs">${t.s}</span></td>
+            </tr>
+        `).join('');
 
-    // NAVİGASİYA: YALNIZ BİR SƏHİFƏ GÖRÜNÜR
-    function navigateTo(page) {
-        // Bütün containerləri gizlət
-        const containers = ['homeContainer', 'natalContainer', 'transitsContainer', 'synastryContainer', 'numerologyContainer', 'tarotContainer', 'blogContainer'];
-        containers.forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('hidden'); });
-        // Hero bölməsi: yalnız home səhifəsində göstər
-        const hero = document.getElementById('heroSection');
-        if(hero) { if(page === 'home') hero.classList.remove('hidden'); else hero.classList.add('hidden'); }
-        // Seçilmiş containeri göstər
-        const activeContainer = document.getElementById(`${page}Container`);
-        if(activeContainer) activeContainer.classList.remove('hidden');
-        // Nav linkləri aktivləşdir
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        const activeNav = document.getElementById(`nav-${page}`);
-        if(activeNav) activeNav.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+        // 5. SYNASTRY
+        function calcSynastry() {
+            const res = document.getElementById('syn-result');
+            res.classList.remove('hidden');
+            res.innerHTML = `
+                <div class="apple-card p-10 max-w-2xl mx-auto text-center border border-white/10">
+                    <div class="text-[80px] font-semibold tracking-tighter leading-none mb-4">84<span class="text-3xl text-white/30">%</span></div>
+                    <p class="text-white/50 text-sm uppercase tracking-widest mb-10">Sistem İnteqrasiya İndeksi</p>
+                    
+                    <div class="space-y-6 text-left">
+                        ${['Rabitə Uyğunluğu', 'Dəyər Sinxronizasiyası', 'Dinamik Sabitlik'].map(c => {
+                            let w = Math.floor(Math.random()*30+70);
+                            return `
+                            <div>
+                                <div class="flex justify-between text-sm mb-2 font-medium"><span>${c}</span><span>${w}%</span></div>
+                                <div class="h-2 bg-white/10 w-full rounded-full overflow-hidden"><div class="h-full bg-white" style="width: ${w}%"></div></div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
 
-    // İLKİNCİ YÜKLƏMƏ: YALNIZ HOME
-    document.addEventListener('DOMContentLoaded', () => {
-        renderZodiacGrid();
-        renderMoonCalendar();
-        renderTransitTables();
-        navigateTo('home');
-    });
+        // 12. SHOP / TOOLS
+        const products = ['Kvars Nüvəsi', 'Orbital Plakat', 'Data Jurnalı', 'Aura Təmizləyici'];
+        document.getElementById('shop-grid').innerHTML = products.map(p => `
+            <div class="bg-white/5 p-4 rounded-2xl text-center hover:bg-white/10 transition cursor-pointer border border-white/5">
+                <div class="h-16 bg-white/10 rounded-xl mb-3 flex items-center justify-center text-white/30 text-xs">📦</div>
+                <h4 class="text-sm font-medium mb-1">${p}</h4>
+                <div class="text-xs text-white/50">$29</div>
+            </div>
+        `).join('');
 
-    // SCROLL ANİMASİYASI
-    const fadeElements = document.querySelectorAll('.fade-up');
-    const observer = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
-    fadeElements.forEach(el => observer.observe(el));
-    setTimeout(() => fadeElements.forEach(el => el.classList.add('visible')), 100);
-</script>
+        // Tarot Logic
+        function renderTarot() {
+            const board = document.getElementById('tarot-mini-board');
+            board.innerHTML = `
+                <div class="bg-white/10 p-4 rounded-xl text-sm border border-white/5">
+                    <span class="font-medium">Nəticə: Arkan 0 (Sıfırlanma)</span>
+                    <p class="text-white/60 mt-2 text-xs">Sistem köhnə məlumatları təmizləyir. Yeni inkişaf vektoru açılır.</p>
+                </div>
+                <button onclick="renderTarot()" class="tesla-btn w-full py-3 text-sm">Yenidən Hesabla</button>
+            `;
+        }
+
+        // SCROLL ANIMATIONS
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
-```
