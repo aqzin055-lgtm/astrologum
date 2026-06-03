@@ -1,293 +1,262 @@
-// pages/index.tsx (Next.js + TypeScript + Tailwind + Framer Motion)
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Head from 'next/head';
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Aether | Premium Astrologiya Platforması</title>
+    <meta name="description" content="Peşəkar astrologiya portalı — Natal xəritə, transitlər, sinastri, numerologiya, tarot və daha çox.">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --void: #03020A;
+            --deep: #08051A;
+            --mid: #110D2E;
+            --surface: #1A1440;
+            --glass: rgba(255,255,255,0.04);
+            --glass-border: rgba(255,255,255,0.08);
+            --gold: #C9A96E;
+            --gold-light: #E8CFA0;
+            --accent: #7B6EF6;
+            --star: #F5F0E8;
+            --muted: rgba(245,240,232,0.45);
+            --font-heading: 'Cormorant Garamond', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+        body { background: var(--void); color: var(--star); font-family: var(--font-body); line-height: 1.4; overflow-x: hidden; }
+        h1, h2, h3, .logo, .hero-title, .section-title { font-family: var(--font-heading); font-weight: 300; letter-spacing: -0.02em; }
+        h2 { font-size: 3rem; margin-bottom: 2rem; }
+        @media (min-width: 768px) { h2 { font-size: 3.5rem; } }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        section { padding: 80px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .glass-nav { background: rgba(3,2,10,0.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--glass-border); position: sticky; top: 0; z-index: 100; }
+        .gold-border { border-bottom: 1px solid var(--gold); width: 60px; margin: 12px 0 20px; }
+        .btn-primary { background: var(--gold); color: var(--void); border: none; padding: 12px 28px; font-weight: 500; font-size: 14px; transition: all 0.2s; }
+        .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+        .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 12px 28px; font-weight: 500; transition: 0.2s; }
+        .btn-outline:hover { background: rgba(201,169,110,0.1); }
+        .card { background: var(--deep); border: 1px solid var(--glass-border); transition: 0.3s; }
+        .card:hover { border-top: 2px solid var(--gold); transform: translateY(-4px); }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 24px; }
+        .energy-bar { height: 6px; background: var(--mid); border-radius: 0; width: 100%; overflow: hidden; }
+        .energy-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.8s ease; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .nav-link { font-size: 14px; font-weight: 400; color: var(--muted); transition: 0.2s; }
+        .nav-link:hover { color: var(--gold); }
+        @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-glow { position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(201,169,110,0.15), transparent 70%); pointer-events: none; }
+        @media (max-width: 768px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } .hero-title { font-size: 48px !important; } }
+        .tab-active { border-bottom: 2px solid var(--gold); color: var(--gold); }
+        .progress-circle { width: 120px; height: 120px; }
+    </style>
+</head>
+<body>
 
-// ==================== TİPLER ====================
-interface PlanetData {
-  name: string;
-  deg: number;
-  sign: string;
-  degMin: string;
-  house: number;
-  element?: string;
-  meaning?: string;
-}
-
-interface UserData {
-  name: string;
-  birthDate: string;
-  birthTime: string;
-  city: string;
-  lat: number;
-  lon: number;
-  tz: number;
-}
-
-// ==================== SABİT KOORDİNATLAR ====================
-const CITIES: Record<string, { lat: number; lon: number; tz: number }> = {
-  Bakı: { lat: 40.4093, lon: 49.8671, tz: 4 },
-  İstanbul: { lat: 41.0082, lon: 28.9784, tz: 3 },
-  London: { lat: 51.5074, lon: -0.1278, tz: 0 },
-  Moskva: { lat: 55.7558, lon: 37.6173, tz: 3 },
-  'New York': { lat: 40.7128, lon: -74.006, tz: -5 },
-  Tokyo: { lat: 35.6895, lon: 139.6917, tz: 9 },
-  Sydney: { lat: -33.8688, lon: 151.2093, tz: 11 },
-};
-
-// ==================== ELEMENTLƏR & MƏNALAR ====================
-const PLANET_MEANINGS: Record<string, string> = {
-  Günəş: 'Şüur, identiklik, həyat enerjisi',
-  Ay: 'Emosiyalar, intuisiya, daxili dünya',
-  Merkuri: 'Kommunikasiya, analiz, düşüncə',
-  Venera: 'Sevgi, gözəllik, dəyərlər',
-  Mars: 'Fəaliyyət, cəsarət, mübarizə',
-  Yupiter: 'Genişlənmə, şans, optimizm',
-  Saturn: 'Sərhədlər, məsuliyyət, dərslər',
-  Uran: 'Yenilik, qəfil dəyişim, azadlıq',
-  Neptun: 'Xəyallar, spiritualite, ilüziya',
-  Pluton: 'Dönüşüm, güc, yenidən doğuş',
-};
-
-// ==================== EFEMERİS SİMULYASİYASI (REAL HESABLAMA ANALOQU) ====================
-function calculatePlanets(date: Date, lat: number, lon: number): PlanetData[] {
-  const seed = (date.getDate() * date.getMonth() * (date.getFullYear() % 100) + Math.floor(lat * 10) + Math.floor(lon * 10)) % 360;
-  const planetNames = ['Günəş', 'Ay', 'Merkuri', 'Venera', 'Mars', 'Yupiter', 'Saturn', 'Uran', 'Neptun', 'Pluton'];
-  const signs = ['Qoç', 'Buğa', 'Əkizlər', 'Xərçəng', 'Şir', 'Qız', 'Tərəzi', 'Əqrəb', 'Oxatan', 'Oğlaq', 'Dolça', 'Balıq'];
-  
-  return planetNames.map((name, idx) => {
-    let deg = (seed + idx * 30 + date.getHours() * 0.5 + date.getMinutes() * 0.00833) % 360;
-    const signIdx = Math.floor(deg / 30);
-    const degInSign = deg % 30;
-    const degMin = `${Math.floor(degInSign)}°${Math.floor((degInSign % 1) * 60)}'`;
-    const house = ((idx + Math.floor(Math.abs(lat) / 10) + date.getDate() % 12) % 12) + 1;
-    return { name, deg, sign: signs[signIdx], degMin, house };
-  });
-}
-
-// ==================== ASPEKTLƏRİN ANALİZİ ====================
-function getAspects(planets: PlanetData[]): Array<{ p1: string; p2: string; type: string; orb: number; meaning: string }> {
-  const aspects = [];
-  for (let i = 0; i < planets.length; i++) {
-    for (let j = i + 1; j < planets.length; j++) {
-      let diff = Math.abs(planets[i].deg - planets[j].deg);
-      diff = Math.min(diff, 360 - diff);
-      const orb = 7;
-      if (Math.abs(diff - 0) < orb) aspects.push({ p1: planets[i].name, p2: planets[j].name, type: '⚡ Qovuşma', orb: diff, meaning: 'Güclü sintez, enerjilər birləşir' });
-      else if (Math.abs(diff - 60) < orb) aspects.push({ p1: planets[i].name, p2: planets[j].name, type: '✨ Sekstil', orb: diff, meaning: 'Yetenek, fürsət axını' });
-      else if (Math.abs(diff - 90) < orb) aspects.push({ p1: planets[i].name, p2: planets[j].name, type: '⚠️ Kvadrat', orb: diff, meaning: 'Daxili gərginlik, böyümə üçün sınaq' });
-      else if (Math.abs(diff - 120) < orb) aspects.push({ p1: planets[i].name, p2: planets[j].name, type: '🌟 Trigon', orb: diff, meaning: 'İstedad, axıcılıq, rahatlıq' });
-      else if (Math.abs(diff - 180) < orb) aspects.push({ p1: planets[i].name, p2: planets[j].name, type: '🔮 Oppozisiya', orb: diff, meaning: 'Tarazlıq, proyeksiya, əksliklər' });
-    }
-  }
-  return aspects.slice(0, 12);
-}
-
-// ==================== NATAL XƏRİTƏ VİZUALİZASİYA (SVG WHEEL) ====================
-const WheelChart: React.FC<{ planets: PlanetData[]; onPlanetClick: (p: PlanetData) => void }> = ({ planets, onPlanetClick }) => {
-  const size = 380, cx = 190, cy = 190, r = 150;
-  const signs = ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓'];
-  
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-2xl">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(110,90,210,0.3)" strokeWidth="1" />
-      <circle cx={cx} cy={cy} r={r-25} fill="none" stroke="rgba(110,90,210,0.15)" strokeWidth="0.5" strokeDasharray="4 4" />
-      {[...Array(12)].map((_, i) => {
-        const angle = i * 30 - 90;
-        const rad = angle * Math.PI / 180;
-        const x = cx + r * Math.cos(rad);
-        const y = cy + r * Math.sin(rad);
-        const textX = cx + (r + 12) * Math.cos(rad);
-        const textY = cy + (r + 12) * Math.sin(rad);
-        return (
-          <g key={i}>
-            <line x1={cx} y1={cy} x2={x} y2={y} stroke="rgba(110,90,210,0.2)" strokeWidth="0.8" />
-            <text x={textX} y={textY} fill="#7f6bc0" fontSize="12" textAnchor="middle" dominantBaseline="middle" fontFamily="system-ui">{signs[i]}</text>
-          </g>
-        );
-      })}
-      {planets.map((p, idx) => {
-        const angle = p.deg - 90;
-        const rad = angle * Math.PI / 180;
-        const x = cx + (r - 20) * Math.cos(rad);
-        const y = cy + (r - 20) * Math.sin(rad);
-        const colors = ['#F4C542', '#C084FC', '#60A5FA', '#F472B6', '#34D399', '#F87171', '#A78BFA', '#2DD4BF', '#FB923C', '#818CF8'];
-        return (
-          <g key={p.name} onClick={() => onPlanetClick(p)} style={{ cursor: 'pointer' }}>
-            <circle cx={x} cy={y} r="7" fill={colors[idx % colors.length]} stroke="#fff" strokeWidth="1.5" className="transition-all duration-200 hover:r-10 hover:drop-shadow-lg" />
-            <text x={x + 9} y={y + 3} fill="#e2e2ff" fontSize="9" fontWeight="bold">{p.name[0]}</text>
-          </g>
-        );
-      })}
-    </svg>
-  );
-};
-
-// ==================== ONABOARDİNG KOMPONENTİ ====================
-const Onboarding: React.FC<{ onComplete: (data: UserData) => void }> = ({ onComplete }) => {
-  const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ name: '', birthDate: '', birthTime: '12:00', city: 'Bakı' });
-  const [rotating, setRotating] = useState(false);
-  
-  const nextStep = () => {
-    if (step === 0 && !form.name) return;
-    if (step === 1 && !form.birthDate) return;
-    if (step < 2) { setRotating(true); setTimeout(() => { setStep(step + 1); setRotating(false); }, 800); }
-    else {
-      const cityData = CITIES[form.city] || CITIES.Bakı;
-      onComplete({ ...form, lat: cityData.lat, lon: cityData.lon, tz: cityData.tz });
-    }
-  };
-  
-  return (
-    <div className="min-h-screen flex items-center justify-center px-4">
-      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-8 max-w-md w-full text-center">
-        <div className="mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 relative">
-            <div className={`absolute inset-0 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 ${rotating ? 'animate-spin' : ''}`} style={{ animationDuration: '1.5s' }}></div>
-            <span className="relative flex items-center justify-center w-full h-full text-3xl">🌙</span>
-          </div>
-          <h2 className="text-2xl font-light tracking-wide">
-            {step === 0 && 'Adınızı bilmək istəyirəm'}
-            {step === 1 && 'Doğum anınızın ulduzları'}
-            {step === 2 && 'Yerinizin enerjisi'}
-          </h2>
-          <p className="text-indigo-300/40 text-[10px] mt-2 tracking-wider">✦ KOSMİK KALİBRASİYA ✦</p>
+<!-- NAVIGATION -->
+<div class="glass-nav fixed w-full top-0 left-0 z-50">
+    <div class="container flex justify-between items-center py-4 flex-wrap gap-4">
+        <div class="logo text-3xl font-medium tracking-[0.12em] text-gold" style="color: var(--gold);">AETHER</div>
+        <div class="hidden md:flex gap-6">
+            <a href="#" class="nav-link" data-nav>Günlük</a>
+            <a href="#" class="nav-link" data-nav>Bürcüm</a>
+            <a href="#" class="nav-link" data-nav>Xəritəm</a>
+            <a href="#" class="nav-link" data-nav>Tranzitlər</a>
+            <a href="#" class="nav-link" data-nav>Astroloqlar</a>
+            <a href="#" class="nav-link" data-nav>Blog</a>
+            <a href="#" class="nav-link" data-nav>Mağaza</a>
         </div>
-        <div className="space-y-4 text-left">
-          {step === 0 && <input type="text" placeholder="Adınız" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="cosmic-input w-full px-5 py-3 text-white text-sm" autoFocus />}
-          {step === 1 && <input type="date" value={form.birthDate} onChange={e=>setForm({...form,birthDate:e.target.value})} className="cosmic-input w-full px-5 py-3 text-white" />}
-          {step === 2 && (
-            <div className="space-y-3">
-              <input type="time" value={form.birthTime} onChange={e=>setForm({...form,birthTime:e.target.value})} className="cosmic-input w-full px-5 py-3 text-white" />
-              <select value={form.city} onChange={e=>setForm({...form,city:e.target.value})} className="cosmic-input w-full px-5 py-3 text-white">
-                {Object.keys(CITIES).map(c => <option key={c}>{c}</option>)}
-              </select>
-            </div>
-          )}
-        </div>
-        <button onClick={nextStep} className="mt-8 w-full py-3 rounded-full bg-gradient-to-r from-indigo-600/40 to-purple-600/40 border border-indigo-400/50 text-white text-sm tracking-wide hover:scale-[1.02] transition">
-          {step < 2 ? 'Davam et →' : 'Xəritəni Aç'}
-        </button>
-        <div className="flex justify-center gap-1 mt-6">
-          {[0,1,2].map(i => <div key={i} className={`h-0.5 w-6 rounded-full transition-all ${step>=i ? 'bg-indigo-400' : 'bg-indigo-400/20'}`} />)}
-        </div>
-      </motion.div>
+        <div class="flex gap-3"><button class="text-sm text-muted">Daxil ol</button><button class="btn-primary text-sm py-2 px-5">Başla</button></div>
     </div>
-  );
-};
+</div>
+<main style="margin-top: 80px;">
 
-// ==================== PREMİUM OVERLAY (ÖDƏNİŞ MODALI) ====================
-const PremiumOverlay: React.FC<{ onClose: () => void; onBuy: () => void }> = ({ onClose, onBuy }) => {
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-50 p-4">
-      <motion.div initial={{ scale: 0.95, y: 20 }} animate={{ scale: 1, y: 0 }} className="glass-panel p-8 max-w-md w-full text-center border-indigo-500/50">
-        <div className="text-5xl mb-3">📘</div>
-        <h3 className="text-2xl font-light">Tam Natal Analizi</h3>
-        <p className="text-indigo-300/60 text-sm mt-2">12 səhifəlik dərin PDF hesabat: aspektlər, transiti, karmik düyünlər, peşəkar interpretasiya.</p>
-        <div className="my-6 flex justify-center gap-6">
-          <div><span className="text-3xl font-light">€29</span><span className="text-xs">/tam</span></div>
-          <div className="border-l border-indigo-500/30 pl-6"><span className="text-xs opacity-60">birdəfəlik</span><br /><span className="text-[10px]">PDF + 30 gün transit</span></div>
-        </div>
-        <button onClick={onBuy} className="w-full py-3 rounded-full bg-indigo-500/80 text-white font-medium hover:bg-indigo-600 transition">💳 Premium Hesabatı Al</button>
-        <button onClick={onClose} className="mt-3 text-[11px] text-white/40 hover:text-white/70">Bəlkə sonra</button>
-      </motion.div>
-    </motion.div>
-  );
-};
+<!-- HERO -->
+<section class="min-h-screen flex items-center relative overflow-hidden">
+    <div class="hero-glow top-1/4 left-1/4"></div>
+    <div class="container text-center relative z-2">
+        <div class="inline-flex items-center gap-3 text-gold-light text-xs tracking-wider mb-4"><span>✦</span> PREMIUM ASTROLOGİYA PLATFORM <span>✦</span></div>
+        <h1 class="hero-title text-7xl md:text-8xl font-light italic leading-tight">Kainatın Sirri — <br><span class="text-gold not-italic">Sənin Əlindədir</span></h1>
+        <p class="text-muted text-lg mt-6 max-w-xl mx-auto italic">Doğum xəritəndən gündəlik rehberə</p>
+        <div class="flex gap-4 justify-center mt-10"><button class="btn-primary">Xəritəmi Al</button><button class="btn-outline">Canlı Demo</button></div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">↓</div>
+    </div>
+</section>
 
-// ==================== ANA SƏHİFƏ ====================
-export default function Home() {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [planets, setPlanets] = useState<PlanetData[]>([]);
-  const [aspects, setAspects] = useState<any[]>([]);
-  const [selectedPlanet, setSelectedPlanet] = useState<PlanetData | null>(null);
-  const [showPremium, setShowPremium] = useState(false);
-  const [activeTab, setActiveTab] = useState('chart');
-  
-  const handleOnboardingComplete = (data: UserData) => {
-    setUser(data);
-    const date = new Date(`${data.birthDate}T${data.birthTime}`);
-    const planetList = calculatePlanets(date, data.lat, data.lon);
-    setPlanets(planetList);
-    setAspects(getAspects(planetList));
-  };
-  
-  const handleExportPDF = () => {
-    const content = `Nyx Astrology - ${user?.name}\nDoğum: ${user?.birthDate} ${user?.birthTime} ${user?.city}\n\nPLANETLƏR:\n${planets.map(p=>`${p.name}: ${p.degMin} ${p.sign} Ev${p.house}`).join('\n')}\n\nASPEKTLƏR:\n${aspects.map(a=>`${a.p1} - ${a.p2}: ${a.type} (${a.meaning})`).join('\n')}`;
-    const blob = new Blob([content], { type: 'application/pdf' });
-    const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = 'nyx_natal_report.pdf'; link.click();
-    URL.revokeObjectURL(link.href);
-  };
-  
-  if (!user) return <Onboarding onComplete={handleOnboardingComplete} />;
-  
-  return (
-    <>
-      <Head><title>Nyx | Celestial OS</title><meta name="viewport" content="width=device-width, initial-scale=1" /></Head>
-      <div className="min-h-screen pb-16">
-        <header className="flex justify-between items-center py-6 px-6 border-b border-indigo-500/20">
-          <div><h1 className="text-3xl font-light tracking-tighter bg-gradient-to-r from-white via-indigo-200 to-purple-300 bg-clip-text text-transparent">nyx</h1><p className="text-[7px] tracking-[0.2rem] text-indigo-300/30">CELESTIAL OS</p></div>
-          <div className="text-right"><p className="text-sm font-light">{user.name}</p><p className="text-[9px] text-indigo-300/40">{user.city} • {user.birthDate}</p></div>
-        </header>
-        
-        <div className="flex gap-2 justify-center mt-6">
-          {['chart','aspects','transit'].map(tab => (
-            <button key={tab} onClick={()=>setActiveTab(tab)} className={`px-5 py-1.5 rounded-full text-[11px] transition-all ${activeTab===tab ? 'bg-indigo-500/30 border border-indigo-400/50' : 'text-white/40'}`}>
-              {tab==='chart' && '🌌 Xəritə'} {tab==='aspects' && '⚡ Aspektlər'} {tab==='transit' && '🔄 Transit'}
-            </button>
-          ))}
+<!-- GÜNLÜK BÜRC DASHBOARD -->
+<section id="daily">
+    <div class="container">
+        <h2 class="section-title">✨ Günlük Bürc Rezonansları</h2>
+        <div class="gold-border"></div>
+        <div class="grid-3" id="zodiacGrid"></div>
+    </div>
+</section>
+
+<!-- NATAL XƏRİTƏ KALKULYATORU -->
+<section id="birthchart" class="bg-deep/40">
+    <div class="container">
+        <h2>🌌 Doğum Xəritən (Natal)</h2>
+        <div class="gold-border"></div>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="space-y-4"><input type="text" id="nameInput" placeholder="Adın" class="w-full p-3 bg-mid border border-glass-border text-white"><input type="date" id="dobInput" class="w-full p-3 bg-mid border border-glass-border"><input type="time" id="timeInput" class="w-full p-3 bg-mid border border-glass-border"><input type="text" id="placeInput" placeholder="Doğum yeri" class="w-full p-3 bg-mid border border-glass-border"><button id="calcChartBtn" class="btn-primary w-full">Xəritəmi Hesabla</button></div>
+            <div id="chartResult" class="bg-mid/30 p-5 border border-glass-border"><p class="text-muted">Natal məlumatlarınız burada göstəriləcək.</p></div>
         </div>
-        
-        <div className="max-w-5xl mx-auto px-4 py-6">
-          {activeTab === 'chart' && (
-            <div className="glass-panel p-6 flex flex-col md:flex-row gap-8 items-center">
-              <WheelChart planets={planets} onPlanetClick={setSelectedPlanet} />
-              <div className="flex-1 space-y-3">
-                <h3 className="text-sm font-medium tracking-wider text-indigo-300">✦ NATAL XÜLASƏ ✦</h3>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  {planets.slice(0,6).map(p => <div key={p.name}><span className="text-indigo-300/70">{p.name}</span><br />{p.degMin} {p.sign}<span className="text-[9px] text-white/30"> (Ev{p.house})</span></div>)}
-                </div>
-                <button onClick={()=>setShowPremium(true)} className="mt-4 w-full py-2.5 rounded-full border border-indigo-500/40 text-indigo-300 text-sm hover:bg-indigo-500/20 transition">📄 Tam PDF Hesabatı Al</button>
-              </div>
-            </div>
-          )}
-          {activeTab === 'aspects' && (
-            <div className="glass-panel p-6">
-              <h2 className="text-xl font-light mb-4">⚡ Aspekt Bağlantıları</h2>
-              <div className="space-y-3 max-h-96 overflow-auto">
-                {aspects.map((a,i) => <div key={i} className="border-l-4 border-indigo-400/60 pl-4 py-1"><p className="font-medium">{a.p1} ⟷ {a.p2} <span className="text-indigo-300 text-sm">{a.type}</span></p><p className="text-xs text-white/50">{a.meaning}</p></div>)}
-                {aspects.length===0 && <p>Güclü aspekt yoxdur, amma sekstil enerjilər mövcuddur.</p>}
-              </div>
-            </div>
-          )}
-          {activeTab === 'transit' && (
-            <div className="glass-panel p-6">
-              <h2 className="text-xl font-light mb-4">🔮 Bugünkü Transit Təsiri</h2>
-              <p className="text-sm text-indigo-200/70">Saturn 10-cu evinizdən keçir — karyerada məsuliyyət artır. Yupiter genişlənmə gətirir, sevgi həyatında yeni qapılar.</p>
-              <div className="mt-4 text-xs text-white/40 italic">*Real planet hərəkətləri Swiss Ephemeris əsasında hesablanır.</div>
-            </div>
-          )}
-        </div>
-        
-        <AnimatePresence>{showPremium && <PremiumOverlay onClose={()=>setShowPremium(false)} onBuy={()=>{handleExportPDF(); setShowPremium(false);}} />}</AnimatePresence>
-        
-        {selectedPlanet && (
-          <motion.div initial={{ opacity:0,y:20 }} animate={{ opacity:1,y:0 }} exit={{ opacity:0 }} className="fixed bottom-6 left-1/2 -translate-x-1/2 glass-panel p-4 max-w-sm w-full z-40 border-indigo-500/60">
-            <div className="flex justify-between"><h4 className="font-medium">{selectedPlanet.name}</h4><button onClick={()=>setSelectedPlanet(null)} className="text-white/40">✕</button></div>
-            <p className="text-sm mt-1">{selectedPlanet.degMin} {selectedPlanet.sign} • Ev {selectedPlanet.house}</p>
-            <p className="text-xs text-indigo-300/80 mt-2">{PLANET_MEANINGS[selectedPlanet.name] || 'Güclü planet təsiri'}</p>
-          </motion.div>
-        )}
-      </div>
-      <style jsx global>{`
-        body { background: radial-gradient(ellipse at 20% 30%, #0a041f, #010003); color: #f0f0ff; font-family: 'Inter', system-ui, sans-serif; }
-        .glass-panel { background: rgba(6, 3, 20, 0.65); backdrop-filter: blur(18px); border: 1px solid rgba(110, 90, 210, 0.4); border-radius: 2rem; }
-        .cosmic-input { background: rgba(2, 1, 18, 0.8); border: 1px solid #2e2a6a; border-radius: 2rem; transition: 0.2s; }
-        .cosmic-input:focus { outline: none; border-color: #b5a2ff; box-shadow: 0 0 0 3px rgba(120, 90, 220, 0.3); }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin { animation: spin 1.5s linear infinite; }
-      `}</style>
-    </>
-  );
+    </div>
+</section>
+
+<!-- PLANET TRANSIT TRACKER -->
+<section id="transits"><div class="container"><h2>🪐 Planet Tranzitləri</h2><div class="gold-border"></div><div id="transitTable" class="overflow-x-auto"></div><div id="mercuryWarning" class="mt-4 p-3 bg-gold/10 border-l-4 border-gold hidden"></div><button class="btn-outline mt-6">Tranzit bildirişinə abunə ol</button></div></section>
+
+<!-- SİNASTRİYA (Uyum) -->
+<section id="compatibility" class="bg-deep/40"><div class="container"><h2>💞 Sinastri — Uyum Analizi</h2><div class="gold-border"></div><div class="grid md:grid-cols-2 gap-8"><div><h3 class="font-light">Şəxs A</h3><input id="compNameA" placeholder="Ad" class="w-full p-3 bg-mid my-2"><input id="compDobA" type="date" class="w-full p-3 bg-mid my-2"><input id="compTimeA" type="time" class="w-full p-3 bg-mid my-2"><input id="compPlaceA" placeholder="Yer" class="w-full p-3 bg-mid my-2"></div><div><h3 class="font-light">Şəxs B</h3><input id="compNameB" placeholder="Ad" class="w-full p-3 bg-mid my-2"><input id="compDobB" type="date" class="w-full p-3 bg-mid my-2"><input id="compTimeB" type="time" class="w-full p-3 bg-mid my-2"><input id="compPlaceB" placeholder="Yer" class="w-full p-3 bg-mid my-2"></div></div><button id="calcCompatibilityBtn" class="btn-primary mt-6">Uyumu Hesabla</button><div id="compatResult" class="mt-8"></div></div></section>
+
+<!-- LUNAR CALENDAR -->
+<section><div class="container"><h2>🌙 Ay Təqvimi</h2><div class="gold-border"></div><div id="lunarCalendar" class="grid grid-cols-7 gap-1 text-center"></div><div id="moonDetail" class="mt-4 p-4 bg-mid/30"></div></div></section>
+
+<!-- TAROT GÜNLÜK KART -->
+<section class="bg-deep/40"><div class="container"><h2>🎴 Gündəlik Tarot Kartın</h2><div class="flex justify-center gap-8 flex-wrap" id="tarotCards"></div><button id="reshuffleBtn" class="btn-outline mt-8 mx-auto block">Yeni Oxuma</button></div></section>
+
+<!-- NUMEROLOGİYA -->
+<section><div class="container"><h2>🔢 Numerologiya Portreti</h2><div class="grid md:grid-cols-2 gap-6"><div><input id="numName" placeholder="Ad Soyad" class="w-full p-3 bg-mid"><input id="numDob" type="date" class="w-full p-3 bg-mid mt-3"><button id="calcNumBtn" class="btn-primary mt-4">Hesabla</button></div><div id="numResult" class="bg-mid/30 p-5"></div></div></div></section>
+
+<!-- ASTROLOQLAR & MEDİTASİYA, MAĞAZA, PRİCİNG qısa nümunə -->
+<section><div class="container"><h2>✨ Ulduz Mütəxəssislərimiz</h2><div class="grid-3" id="astroProfiles"></div></div></section>
+<section class="bg-deep/40"><div class="container"><h2>🧘 Astrologiya Meditasiyası</h2><div class="grid-3" id="meditationCards"></div></div></section>
+<section><div class="container"><h2>🛍 Astro Mağaza</h2><div class="grid-4" id="shopGrid"></div><div class="text-center mt-6"><button class="btn-outline">Bütün Məhsullar →</button></div></div></section>
+<section class="bg-deep/40"><div class="container"><h2>📦 Abunəlik Planları</h2><div class="grid md:grid-cols-3 gap-6" id="pricingCards"></div></div></section>
+<section><div class="container"><h2>⭐ İstifadəçi Rəyləri</h2><div class="grid-3" id="testimonialsGrid"></div></div></section>
+
+<!-- FOOTER -->
+<footer class="py-12 border-t border-glass-border"><div class="container grid md:grid-cols-4 gap-8"><div><div class="logo text-2xl text-gold">AETHER</div><p class="text-muted text-sm mt-2">Premium astrologiya platforması</p></div><div><h4 class="font-medium">Xidmətlər</h4><ul class="text-muted text-sm mt-2 space-y-1"><li>Natal Xəritə</li><li>Sinastri</li><li>Tranzitlər</li></ul></div><div><h4 class="font-medium">Şirkət</h4><ul class="text-muted text-sm mt-2 space-y-1"><li>Haqqımızda</li><li>Blog</li><li>Karyera</li></ul></div><div><h4 class="font-medium">Newsletter</h4><input type="email" placeholder="E-poçt" class="w-full p-2 bg-mid border border-glass-border"><button class="btn-primary w-full mt-2">Abunə ol</button></div></div><div class="text-center text-muted text-xs mt-10">© 2025 AETHER — Kainatın Sirri</div></footer>
+</main>
+
+<script>
+// ==================== BÜRC MƏLUMATLARI ====================
+const zodiacs = [
+    { name: "Qoç", symbol: "♈", dates: "21.03-19.04", keyword: "Liderlik", energy: 87, love: "Ehtiraslı bağlar", career: "Yeni başlanğıc", health: "Enerji patlaması", finance: "Investisiya fürsəti" },
+    { name: "Buğa", symbol: "♉", dates: "20.04-20.05", keyword: "Sabitlik", energy: 72, love: "Sadiqlik", career: "Maliyyə qazancları", health: "Yoga faydalı", finance: "Gəlir artır" },
+    { name: "Əkizlər", symbol: "♊", dates: "21.05-20.06", keyword: "Ünsiyyət", energy: 94, love: "Flirt", career: "Networking", health: "Sinirlər", finance: "İkili gəlir" },
+    { name: "Xərçəng", symbol: "♋", dates: "21.06-22.07", keyword: "Həssaslıq", energy: 65, love: "Ailəvi", career: "Evdən iş", health: "Mədə", finance: "Əmanət" },
+    { name: "Şir", symbol: "♌", dates: "23.07-22.08", keyword: "Parlaq", energy: 95, love: "Romantik", career: "Liderlik", health: "Ürək", finance: "Bolluq" },
+    { name: "Qız", symbol: "♍", dates: "23.08-22.09", keyword: "Təhlil", energy: 70, love: "Detallar", career: "Planlaşdırma", health: "Qidalanma", finance: "Büdcə" },
+    { name: "Tərəzi", symbol: "♎", dates: "23.09-22.10", keyword: "Balans", energy: 78, love: "Harmoniya", career: "Diplomatiya", health: "Dəri", finance: "Balanslı" },
+    { name: "Əqrəb", symbol: "♏", dates: "23.10-21.11", keyword: "Güc", energy: 88, love: "Dərinlik", career: "Transformasiya", health: "Cinsiyyət", finance: "Miras" },
+    { name: "Oxatan", symbol: "♐", dates: "22.11-21.12", keyword: "Macəra", energy: 92, love: "Səyahət", career: "Beynəlxalq", health: "Qaraciyər", finance: "Genişlənmə" },
+    { name: "Oğlaq", symbol: "♑", dates: "22.12-19.01", keyword: "Disiplin", energy: 80, love: "Bağlılıq", career: "Yüksəliş", health: "Sümük", finance: "Uzunmüddətli" },
+    { name: "Dolça", symbol: "♒", dates: "20.01-18.02", keyword: "İnnovasiya", energy: 85, love: "Dostluq", career: "Texnologiya", health: "Dövr", finance: "Kripto" },
+    { name: "Balıq", symbol: "♓", dates: "19.02-20.03", keyword: "Xəyal", energy: 75, love: "Mistik", career: "Sənət", health: "Ayaq", finance: "Xeyriyyə" }
+];
+
+function renderZodiacGrid() {
+    const container = document.getElementById('zodiacGrid');
+    if(!container) return;
+    container.innerHTML = zodiacs.map(z => `<div class="card p-5 cursor-pointer zodiac-card" data-sign="${z.name}"><div class="text-4xl">${z.symbol}</div><div class="text-xl font-heading mt-2">${z.name}</div><div class="text-muted text-xs">${z.dates}</div><div class="text-gold text-sm mt-2">✦ ${z.keyword}</div><div class="energy-bar mt-3"><div class="energy-fill" style="width: ${z.energy}%"></div></div><div class="text-right text-[10px] text-muted mt-1">${z.energy}%</div></div>`).join('');
+    document.querySelectorAll('.zodiac-card').forEach(card => card.addEventListener('click', function(e){ alert(zodiacs.find(z=>z.name===this.dataset.sign)?.love || "Günlük falınız yüksək enerjili."); }));
 }
+renderZodiacGrid();
+
+// NATAL CHART (simplified)
+document.getElementById('calcChartBtn')?.addEventListener('click', () => {
+    const dob = document.getElementById('dobInput').value;
+    const name = document.getElementById('nameInput').value || 'İstifadəçi';
+    if(!dob) { alert('Doğum tarixi daxil edin'); return; }
+    const dateObj = new Date(dob);
+    const month = dateObj.getMonth()+1, day = dateObj.getDate();
+    let sunSign = zodiacs.find(z => { let [sm, sd] = z.dates.split('-')[0].split('.').map(Number); let [em, ed] = z.dates.split('-')[1].split('.').map(Number); if((month===sm && day>=sd) || (month===em && day<=ed)) return true; return false; }) || zodiacs[0];
+    const moonSign = zodiacs[(month+day)%12];
+    const rising = zodiacs[(Math.floor(Math.random()*12))];
+    document.getElementById('chartResult').innerHTML = `<div><p class="text-gold">🌞 Günəş: ${sunSign.name} ${sunSign.symbol}</p><p class="text-gold-light mt-2">🌙 Ay: ${moonSign.name}</p><p>⬆️ Yüksələn: ${rising.name}</p><div class="mt-3 text-sm">Evlər: 1-ci ev ${sunSign.name}, 7-ci ev ${zodiacs[(zodiacs.indexOf(sunSign)+6)%12].name}</div><button class="btn-outline text-xs mt-4" onclick="alert('PDF hazırlanır')">📄 PDF Yüklə</button></div>`;
+});
+
+// TRANSIT TABLE + Mercury warning
+const todayTransits = [
+    { planet: "☉", name: "Günəş", sign: "Qoç", retro: false, effect: "Özünə inam artır" },
+    { planet: "☽", name: "Ay", sign: "Xərçəng", retro: false, effect: "Emosional dərinlik" },
+    { planet: "☿", name: "Merkuri", sign: "Buğa", retro: true, effect: "Rabitədə gecikmə", retrograde: true },
+    { planet: "♀", name: "Venera", sign: "Əkizlər", retro: false, effect: "Romantik ünsiyyət" },
+    { planet: "♂", name: "Mars", sign: "Şir", retro: false, effect: "Enerji yüksək" },
+    { planet: "♃", name: "Yupiter", sign: "Oxatan", retro: false, effect: "Genişlənmə" },
+    { planet: "♄", name: "Saturn", sign: "Balıq", retro: true, effect: "Məhdudiyyət hissi" }
+];
+function renderTransits() {
+    const table = document.getElementById('transitTable');
+    if(table) table.innerHTML = `<table class="w-full text-left border-collapse"><thead><tr class="border-b border-glass-border"><th class="p-2">Planet</th><th>Ad</th><th>Bürc</th><th>Retrograd</th><th>Təsir</th></tr></thead><tbody>${todayTransits.map(t => `<tr class="border-b border-glass-border/30"><td class="p-2">${t.planet}</td><td>${t.name}</td><td>${t.sign}</td><td>${t.retro ? '<span class="text-gold">℞ Retrograd</span>' : '-'}</td><td>${t.effect}</td></tr>`).join('')}</tbody></table>`;
+    const mercuryRetro = todayTransits.find(t=>t.name==='Merkuri' && t.retro);
+    const warnDiv = document.getElementById('mercuryWarning');
+    if(mercuryRetro && warnDiv) warnDiv.innerHTML = `⚠️ Merkuri retroqrad dövrü - müqavilələrdə diqqətli olun, texniki xətalar arta bilər.`, warnDiv.classList.remove('hidden');
+}
+renderTransits();
+
+// SİNASTRİY Uyum
+document.getElementById('calcCompatibilityBtn')?.addEventListener('click',()=>{
+    const nameA = document.getElementById('compNameA').value||"A";
+    const nameB = document.getElementById('compNameB').value||"B";
+    const score = Math.floor(Math.random()*40+60);
+    const categories = ["Sevgi","Kommunikasiya","Cinsi Kimya","Uzunmüddətli","Dəyərlər"];
+    const catScores = categories.map(()=>Math.floor(Math.random()*30+60));
+    document.getElementById('compatResult').innerHTML = `<div class="bg-mid/40 p-5"><div class="text-5xl font-heading">${score}%</div><div class="gold-border w-20"></div>${categories.map((c,i)=>`<div class="mt-3"><div>${c}</div><div class="energy-bar"><div class="energy-fill" style="width:${catScores[i]}%"></div></div></div>`).join('')}<p class="mt-4">${nameA} və ${nameB} arasında güclü sinastrik bağ mövcuddur. Karmik cəhətdən dəstəkləyici.</p><button class="btn-outline mt-4">Tam Sinastri Hesabatı Sifariş Et</button></div>`;
+});
+
+// AY TƏQVİMİ
+function moonPhase(year, month, day) { const phases = ["🌑 Yeni Ay","🌒 Artır","🌓 İlk Dörddə","🌔 Balans","🌕 Dolunay","🌖 Azalır","🌗 Son Dörddə","🌘 Sönən"]; return phases[(day+month)%phases.length]; }
+function renderLunarCalendar() {
+    const now = new Date(); const year = now.getFullYear(), month = now.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    let calHtml = `<div class="grid grid-cols-7 gap-1 mb-2">${['B.e','Ç.a','Ç','C.a','C','Ş','B'].map(d=>`<div class="text-gold text-xs">${d}</div>`).join('')}</div><div class="grid grid-cols-7 gap-1">`;
+    for(let i=0;i<firstDay;i++) calHtml+=`<div></div>`;
+    for(let d=1;d<=daysInMonth;d++){ let phase = moonPhase(year, month+1, d); calHtml+=`<div class="p-2 text-center border border-glass-border cursor-pointer hover:bg-mid/30 moon-day" data-day="${d}" data-phase="${phase}">${d}<br><span class="text-[10px]">${phase.slice(0,2)}</span></div>`;}
+    calHtml+=`</div>`;
+    document.getElementById('lunarCalendar').innerHTML = calHtml;
+    document.querySelectorAll('.moon-day').forEach(el=>el.addEventListener('click',function(){ document.getElementById('moonDetail').innerHTML = `<div class="text-gold">${this.dataset.day} günü: ${this.dataset.phase}</div><div class="text-sm">Yeni başlanğıclar üçün güclü enerji</div>`; }));
+}
+renderLunarCalendar();
+
+// TAROT
+const majorArcana = ["Ozan","Kahin","İmperatriça","İmperator","Baş Kahin","Aşiqlər","Araba","Güc","Zahid","Çarx","Ədalət","Asılmış Adam","Ölüm","Temperance","Şeytan","Qüllə","Ulduz","Ay","Günəş","Məhkəmə","Dünya"];
+function shuffleCards(){ return [...majorArcana].sort(()=>Math.random()-0.5).slice(0,3); }
+let currentTarot = shuffleCards();
+function renderTarot(){ const container = document.getElementById('tarotCards'); if(!container) return; container.innerHTML = currentTarot.map((card,i)=>`<div class="card w-32 h-40 flex flex-col items-center justify-center text-center p-3 cursor-pointer tarot-card" data-card="${card}"><div class="text-3xl mb-2">🃟</div><div class="text-xs text-gold">${i===0?"Keçmiş":i===1?"İndiki":"Gələcək"}</div><div class="font-heading text-sm mt-1">${card}</div><div class="text-[10px] text-muted mt-1 hidden tarot-text">Dərin məna: daxili səs</div></div>`); document.querySelectorAll('.tarot-card').forEach(c=>c.addEventListener('click',function(){ alert(`${this.dataset.card} — Özünü tanımaq üçün fürsət.`); })); }
+renderTarot();
+document.getElementById('reshuffleBtn')?.addEventListener('click',()=>{ currentTarot = shuffleCards(); renderTarot(); });
+
+// NUMEROLOGİYA
+document.getElementById('calcNumBtn')?.addEventListener('click',()=>{
+    let name = document.getElementById('numName').value||"İstifadəçi";
+    let dob = document.getElementById('numDob').value;
+    if(!dob) { alert("Doğum tarixi lazım"); return; }
+    let nums = dob.replace(/-/g,'').split('').map(Number).reduce((a,b)=>a+b,0);
+    while(nums>9 && nums!==11 && nums!==22 && nums!==33) nums = String(nums).split('').reduce((a,b)=>a+ +b,0);
+    document.getElementById('numResult').innerHTML = `<div class="text-6xl text-gold font-heading">${nums}</div><div>Həyat Yolu Nömrəsi</div><p class="mt-2 text-sm">${name}, bu rəqəm sənin taleyini formalaşdırır — daxili potensial, liderlik və intuitiv bilik.</p><button class="btn-outline mt-3">Tam Hesabat</button>`;
+});
+
+// ASTROLOQ PROFİLLƏRİ
+const astrologers = [
+    { name:"Zəhra Məmmədli", spec:"Natal & Karma", exp:12, price:"79 ₼", online:true, rating:4.9 },
+    { name:"Rəşad Rüstəmov", spec:"Sinastri & Münasibət", exp:8, price:"65 ₼", online:false, rating:4.8 },
+    { name:"Aygün Quliyeva", spec:"Vedik Astrologiya", exp:15, price:"99 ₼", online:true, rating:5.0 },
+    { name:"Fərid Hüseynli", spec:"Tranzit & Karyera", exp:6, price:"55 ₼", online:true, rating:4.7 },
+    { name:"Leyla Şirvani", spec:"Kabbala & Ruh", exp:20, price:"120 ₼", online:false, rating:4.9 },
+    { name:"Murad Tağızadə", spec:"Tarot & Numerologiya", exp:5, price:"49 ₼", online:true, rating:4.6 }
+];
+document.getElementById('astroProfiles').innerHTML = astrologers.map(a=>`<div class="card p-4"><div class="flex justify-between"><div><div class="font-heading text-xl">${a.name}</div><div class="text-gold-light text-xs">${a.spec}</div></div><div class="text-right"><div class="text-gold">★ ${a.rating}</div><span class="text-[10px] ${a.online?'text-green-400':'text-muted'}">${a.online?'Online':'Offline'}</span></div></div><div class="text-muted text-sm">${a.exp} il təcrübə · ${a.price}/seans</div><div class="flex gap-2 mt-3"><button class="btn-outline text-xs py-1 px-3">Görüş</button><button class="border border-glass-border text-xs py-1 px-3">Mesaj</button></div></div>`).join('');
+
+// MEDİTASİYA
+const meditations = ["Aries Meditasiya","Ay Enerjisi","Günəş Mantrası","Saturn Səbri","Venus Sevgisi","Jupiter Bolluğu"];
+document.getElementById('meditationCards').innerHTML = meditations.map(m=>`<div class="card p-4 text-center"><div class="text-3xl mb-2">🧘</div><div class="font-heading">${m}</div><div class="text-muted text-xs">10 dəq · Sakitləşdirici</div><button class="btn-outline text-xs mt-3">Başla</button></div>`).join('');
+
+// MAĞAZA & PRİCİNG
+const products = [{name:"Kristal Dəsti",price:"49 ₼"},{name:"Natal Posteri",price:"89 ₼"},{name:"Ay Gündəliyi",price:"35 ₼"},{name:"Aura Spray",price:"27 ₼"}];
+document.getElementById('shopGrid').innerHTML = products.map(p=>`<div class="card p-4"><div class="font-heading">${p.name}</div><div class="text-gold mt-2">${p.price}</div><button class="btn-outline text-xs mt-2">Səbətə Əlavə Et</button></div>`).join('');
+const pricing = [{name:"Starter",price:"49 ₼",feat:"Günlük bürc + PDF"},{name:"Pro",price:"129 ₼",feat:"Hər şey + Sinastri + Tranzit"},{name:"Elite",price:"299 ₼",feat:"VIP Astroloq + Şəxsi Lunar Plan"}];
+document.getElementById('pricingCards').innerHTML = pricing.map(p=>`<div class="card p-5 text-center"><div class="text-2xl font-heading">${p.name}</div><div class="text-gold text-3xl my-3">${p.price}</div><div class="text-sm">${p.feat}</div><button class="btn-primary w-full mt-4">Seç</button></div>`).join('');
+document.getElementById('testimonialsGrid').innerHTML = `<div class="card p-4">“Xəritəm həyatımı dəyişdi.”<div class="text-gold mt-2">★★★★★</div><div class="text-xs mt-1">— Aygün M.</div></div><div class="card p-4">“Tranzitlər çox doğru çıxdı.”<div class="text-gold mt-2">★★★★★</div><div class="text-xs mt-1">— Rəşad H.</div></div><div class="card p-4">“Sinastri hesabatı əla!”<div class="text-gold mt-2">★★★★★</div><div class="text-xs mt-1">— Sevda N.</div></div>`;
+
+// Intersection Observer fade-in
+const fadeEls = document.querySelectorAll('.fade-up');
+const observer = new IntersectionObserver((entries) => { entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); }); }, {threshold:0.1});
+document.querySelectorAll('section').forEach(s=>{ s.classList.add('fade-up'); observer.observe(s); });
+</script>
+</body>
+</html>
