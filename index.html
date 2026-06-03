@@ -27,20 +27,96 @@
     </script>
 
     <style>
-        body { background-color: #000000; color: #f5f5f7; -webkit-font-smoothing: antialiased; letter-spacing: -0.02em; overflow-x: hidden; }
+        /* Kozmik Mavi Arxa Fon - gradient dalğalar və ulduz effekti ilə */
+        body {
+            background: radial-gradient(ellipse at 20% 30%, #0a1628 0%, #030814 100%);
+            color: #f5f5f7;
+            -webkit-font-smoothing: antialiased;
+            letter-spacing: -0.02em;
+            overflow-x: hidden;
+            position: relative;
+        }
         
-        /* Apple Glassmorphism */
-        .glass-panel { background: rgba(28, 28, 30, 0.6); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; }
-        .glass-nav { background: rgba(0, 0, 0, 0.75); backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+        /* Ulduz təsiri üçün əlavə layer */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: radial-gradient(2px 2px at 15% 30%, rgba(255,255,255,0.3), transparent),
+                              radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,0.4), transparent),
+                              radial-gradient(3px 3px at 85% 70%, rgba(255,255,255,0.2), transparent),
+                              radial-gradient(1.5px 1.5px at 35% 85%, rgba(255,255,255,0.35), transparent),
+                              radial-gradient(2.5px 2.5px at 75% 15%, rgba(255,255,255,0.25), transparent);
+            background-repeat: repeat;
+            background-size: 250px 250px, 300px 350px, 400px 400px, 200px 250px, 350px 350px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+        
+        /* Bütün məzmun ulduzların üstündə görünsün */
+        .relative-container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Apple Glassmorphism - kosmik mavi tonla */
+        .glass-panel { 
+            background: rgba(10, 22, 45, 0.55); 
+            backdrop-filter: saturate(180%) blur(20px); 
+            -webkit-backdrop-filter: saturate(180%) blur(20px); 
+            border: 1px solid rgba(10, 132, 255, 0.25); 
+            border-radius: 28px; 
+        }
+        .glass-nav { 
+            background: rgba(3, 8, 20, 0.85); 
+            backdrop-filter: saturate(180%) blur(24px); 
+            border-bottom: 1px solid rgba(10, 132, 255, 0.2); 
+        }
         
         /* Inputs & Buttons */
-        .apple-input { background: #1c1c1e; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; color: white; width: 100%; transition: all 0.3s; font-size: 16px; }
-        .apple-input:focus { outline: none; border-color: #d4af37; background: #2c2c2e; }
+        .apple-input { 
+            background: rgba(28, 28, 46, 0.8); 
+            border: 1px solid rgba(10, 132, 255, 0.3); 
+            border-radius: 14px; 
+            padding: 16px; 
+            color: white; 
+            width: 100%; 
+            transition: all 0.3s; 
+            font-size: 16px; 
+        }
+        .apple-input:focus { 
+            outline: none; 
+            border-color: #d4af37; 
+            background: rgba(40, 40, 60, 0.9); 
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+        }
         
-        .apple-btn { background: #ffffff; color: #000000; font-weight: 600; border-radius: 999px; padding: 16px 24px; transition: transform 0.2s, opacity 0.2s; cursor: pointer; text-align: center; }
+        .apple-btn { 
+            background: #ffffff; 
+            color: #000000; 
+            font-weight: 600; 
+            border-radius: 999px; 
+            padding: 16px 24px; 
+            transition: transform 0.2s, opacity 0.2s; 
+            cursor: pointer; 
+            text-align: center; 
+        }
         .apple-btn:hover { transform: scale(1.02); opacity: 0.9; }
-        .apple-btn-outline { background: transparent; color: #f5f5f7; border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 500; border-radius: 999px; padding: 12px 24px; transition: 0.3s; cursor: pointer; }
-        .apple-btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
+        .apple-btn-outline { 
+            background: rgba(10, 132, 255, 0.15); 
+            color: #f5f5f7; 
+            border: 1px solid rgba(10, 132, 255, 0.5); 
+            font-weight: 500; 
+            border-radius: 999px; 
+            padding: 12px 24px; 
+            transition: 0.3s; 
+            cursor: pointer; 
+        }
+        .apple-btn-outline:hover { background: rgba(10, 132, 255, 0.3); }
 
         /* Smooth Transitions */
         .page-view { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
@@ -51,10 +127,14 @@
         /* Progress Bars */
         .progress-track { background: rgba(255, 255, 255, 0.1); border-radius: 999px; height: 6px; overflow: hidden; }
         .progress-fill { background: #d4af37; height: 100%; border-radius: 999px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); width: 0%; }
+        
+        /* Nav link hover */
+        .nav-btn:hover { color: #d4af37; }
     </style>
 </head>
 <body>
 
+<div class="relative-container">
     <!-- NAVİQASİYA -->
     <nav class="fixed top-0 w-full glass-nav z-50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -62,10 +142,10 @@
                 <span class="text-appleGold">AVC</span><span class="text-white/80 font-light">Astrologum11</span>
             </div>
             <div class="hidden md:flex gap-8 text-sm font-medium text-white/60" id="nav-links" style="display: none;">
-                <button onclick="navigate('dashboard')" class="hover:text-white transition">İdarə Paneli</button>
-                <button onclick="navigate('synastry')" class="hover:text-white transition">Sinastri (Uyğunluq)</button>
-                <button onclick="navigate('tests')" class="hover:text-white transition">Astro-Psixologiya</button>
-                <button onclick="navigate('ai')" class="hover:text-white transition">Nyx AI</button>
+                <button onclick="navigate('dashboard')" class="nav-btn hover:text-white transition">İdarə Paneli</button>
+                <button onclick="navigate('synastry')" class="nav-btn hover:text-white transition">Sinastri (Uyğunluq)</button>
+                <button onclick="navigate('tests')" class="nav-btn hover:text-white transition">Astro-Psixologiya</button>
+                <button onclick="navigate('ai')" class="nav-btn hover:text-white transition">Nyx AI</button>
             </div>
         </div>
     </nav>
@@ -141,7 +221,7 @@
                     </div>
 
                     <!-- Kainatdan Məktub -->
-                    <div class="glass-panel p-8" style="background: linear-gradient(145deg, rgba(28,28,30,0.8), rgba(10,132,255,0.1));">
+                    <div class="glass-panel p-8" style="background: linear-gradient(145deg, rgba(10, 22, 45, 0.8), rgba(10, 132, 255, 0.15));">
                         <span class="text-appleBlue text-xs font-semibold uppercase tracking-widest mb-3 block">Kainatın Gündəlik Mesajı</span>
                         <p class="text-xl font-light leading-relaxed italic" id="daily-msg">"<span class="dyn-name"></span>, bu gün keçmişdə qaldığını düşündüyün bir mövzu yenidən zehnini məşğul edə bilər. Reaksiya verməkdən qaç. Susmaq, bu gün verə biləcəyin ən güclü cavabdır."</p>
                     </div>
@@ -305,7 +385,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="mt-auto border-t border-white/10 bg-black pt-12 pb-8">
+    <footer class="mt-auto border-t border-white/10 bg-black/40 backdrop-blur-sm pt-12 pb-8">
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 text-center md:text-left">
                 <div>
@@ -326,199 +406,200 @@
             </div>
         </div>
     </footer>
+</div>
 
-    <!-- JAVASCRIPT MƏNTİQİ -->
-    <script>
-        let userName = "";
-        let userSeed = 0; // Doğum tarixinə əsaslanan deterministik rəqəm
+<!-- JAVASCRIPT MƏNTİQİ -->
+<script>
+    let userName = "";
+    let userSeed = 0; // Doğum tarixinə əsaslanan deterministik rəqəm
 
-        // 1. Apple Style Navigation
-        function navigate(viewId) {
-            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    // 1. Apple Style Navigation
+    function navigate(viewId) {
+        document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
-        // 2. Qeydiyyat & Alqoritm
-        function handleLogin(e) {
-            e.preventDefault();
-            const btn = document.getElementById('login-btn');
-            btn.innerText = "Analiz Edilir...";
-            btn.style.opacity = "0.7";
+    // 2. Qeydiyyat & Alqoritm
+    function handleLogin(e) {
+        e.preventDefault();
+        const btn = document.getElementById('login-btn');
+        btn.innerText = "Analiz Edilir...";
+        btn.style.opacity = "0.7";
 
-            userName = document.getElementById('user-name').value;
-            const dateStr = document.getElementById('user-date').value;
+        userName = document.getElementById('user-name').value;
+        const dateStr = document.getElementById('user-date').value;
+        
+        // Sadə deterministik seed (Eyni adama həmişə eyni analiz çıxsın deyə)
+        userSeed = dateStr.replace(/-/g, '').split('').reduce((a, b) => parseInt(a) + parseInt(b), 0) + userName.length;
+
+        // DOM Güncəlləmələri
+        document.querySelectorAll('.dyn-name').forEach(el => el.innerText = userName.split(' ')[0]);
+        
+        generateDeepProfile();
+
+        setTimeout(() => {
+            document.getElementById('nav-links').style.display = 'flex';
+            navigate('dashboard');
+            btn.innerText = "Sistemə Daxil Ol";
+            btn.style.opacity = "1";
+        }, 1200);
+    }
+
+    // 3. Dərin Psixoloji Profil Generasiyası
+    function generateDeepProfile() {
+        const masks = [
+            "Siz kənardan hər şeyi kontrol edən, duyğularını məntiqi ilə idarə edən və soyuqqanlı biri kimi görünürsünüz. İnsanlar sizə məsləhət almağa gəlir, çünki güclü auranız var.",
+            "Cəmiyyət içində son dərəcə uyğunlaşan, pozitiv və problemsiz biri kimi görünməyə çalışırsınız. Sizin xarici maskanız insanları rahatlatmaq üzərində qurulub.",
+            "Kənardan çox müstəqil, heç kimə ehtiyacı olmayan, azad ruhlu biri kimi görünürsünüz. Sizə yaxınlaşmaq çətindir, divarlarınız hündürdür."
+        ];
+        const shadows = [
+            "Lakin daxilinizdə böyük bir 'tərk edilmə' qorxusu var. Çox vaxt hər şeyi təkbaşına həll etmək istəyiniz, əslində insanlara güvənməkdə çətinlik çəkməyinizdən irəli gəlir.",
+            "Əslində daxildə tez-tez 'kifayət qədər yaxşı deyiləm' hissi ilə mübarizə aparırsınız. Başqalarını razı salmaq istəyiniz özünüzü unutmağınıza səbəb olur.",
+            "Daxilinizdə böyük bir aidiyyət və dərin emosional bağ qurma ehtiyacı var. Müstəqilliyiniz əslində rədd edilmək qorxusuna qarşı inkişaf etdirdiyiniz bir müdafiə mexanizmidir."
+        ];
+        const karmas = [
+            "Missiyanız: 'Nəzarəti buraxmağı' öyrənmək. Zəifliklərinizi və duyğularınızı qəbul etdiyiniz an, ən böyük mənəvi gücünüzə qovuşacaqsınız.",
+            "Missiyanız: 'Xeyr' deməyi öyrənmək. Başqalarının yükünü daşımağı buraxıb, öz sərhədlərinizi çəkdiyinizdə həyatınızın kilidi açılacaq.",
+            "Missiyanız: Emosional cəsarət. Qırılmaqdan qorxmadan insanlara içinizi açmaq və dərin bağlar qurmaq sizin ruhani inkişafınızın açarıdır."
+        ];
+        const daily = [
+            "Bu gün keçmişdə qaldığını düşündüyün bir mövzu yenidən zehnini məşğul edə bilər. Reaksiya verməkdən qaç. Susmaq, bu gün verə biləcəyin ən güclü cavabdır.",
+            "Daxili səsiniz bu gün sizə çox önəmli bir şey pıçıldayır. Məntiqlə yox, intuisiyanızla hərəkət etməli olduğunuz bir kəsişmədəsiniz.",
+            "Bu gün tələsik verilən qərarlardan uzaq durun. Gözlədiyiniz bir xəbər və ya cavab üçün səbrli olun, zaman sizin xeyrinizə işləyir."
+        ];
+
+        document.getElementById('prof-mask').innerText = masks[userSeed % masks.length];
+        document.getElementById('prof-shadow').innerText = shadows[userSeed % shadows.length];
+        document.getElementById('prof-karma').innerText = karmas[userSeed % karmas.length];
+        
+        document.getElementById('daily-msg').innerHTML = `"${userName.split(' ')[0]}, ${daily[userSeed % daily.length]}"`;
+    }
+
+    // 4. Sinastri (Sevgi Uyumu) Alqoritmi
+    function calculateSynastry() {
+        const partner = document.getElementById('syn-partner-name').value;
+        if(!partner) return alert("Zəhmət olmasa tərəfdaşın adını yazın.");
+
+        const res = document.getElementById('syn-results');
+        res.classList.remove('hidden');
+        res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Animasiyalı Doldurma
+        let total = 0;
+        const targetTotal = 75 + (userSeed % 20); // 75 - 94 arası realist rəqəm
+        
+        const int = setInterval(() => {
+            if(total >= targetTotal) clearInterval(int);
+            else { total++; document.getElementById('syn-total').innerText = total + "%"; }
+        }, 20);
+
+        // Barlar
+        setTimeout(() => {
+            const scores = [targetTotal + 5, targetTotal - 8, targetTotal + 12, targetTotal - 4];
+            const bars = ['emo', 'com', 'spirit', 'long'];
             
-            // Sadə deterministik seed (Eyni adama həmişə eyni analiz çıxsın deyə)
-            userSeed = dateStr.replace(/-/g, '').split('').reduce((a, b) => parseInt(a) + parseInt(b), 0) + userName.length;
+            bars.forEach((b, i) => {
+                let val = scores[i] > 98 ? 98 : scores[i];
+                document.getElementById(`syn-${b}-val`).innerText = val + "%";
+                document.getElementById(`syn-${b}-bar`).style.width = val + "%";
+            });
 
-            // DOM Güncəlləmələri
-            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = userName.split(' ')[0]);
-            
-            generateDeepProfile();
-
-            setTimeout(() => {
-                document.getElementById('nav-links').style.display = 'flex';
-                navigate('dashboard');
-                btn.innerText = "Sistemə Daxil Ol";
-                btn.style.opacity = "1";
-            }, 1200);
-        }
-
-        // 3. Dərin Psixoloji Profil Generasiyası
-        function generateDeepProfile() {
-            const masks = [
-                "Siz kənardan hər şeyi kontrol edən, duyğularını məntiqi ilə idarə edən və soyuqqanlı biri kimi görünürsünüz. İnsanlar sizə məsləhət almağa gəlir, çünki güclü auranız var.",
-                "Cəmiyyət içində son dərəcə uyğunlaşan, pozitiv və problemsiz biri kimi görünməyə çalışırsınız. Sizin xarici maskanız insanları rahatlatmaq üzərində qurulub.",
-                "Kənardan çox müstəqil, heç kimə ehtiyacı olmayan, azad ruhlu biri kimi görünürsünüz. Sizə yaxınlaşmaq çətindir, divarlarınız hündürdür."
+            // Dərin Analiz Mətni
+            const texts = [
+                "Sizin aranızdakı bağ sıradan bir münasibətdən çox, öyrədici bir karmik təcrübədir. Tərəfdaşınızın Ay enerjisi sizin gizli qorxularınızı üzə çıxararaq sağaltmaq potensialına malikdir. İntellektual olaraq bir-birinizi tamamlayırsınız.",
+                "Bu münasibətdə emosional rezonans çox güclüdür. Siz danışmadan belə bir-birinizin nə hiss etdiyini anlaya bilirsiniz. Lakin uzunmüddətli sabitlik üçün fərdi sərhədlərinizə hörmət etməyiniz mütləqdir."
             ];
-            const shadows = [
-                "Lakin daxilinizdə böyük bir 'tərk edilmə' qorxusu var. Çox vaxt hər şeyi təkbaşına həll etmək istəyiniz, əslində insanlara güvənməkdə çətinlik çəkməyinizdən irəli gəlir.",
-                "Əslində daxildə tez-tez 'kifayət qədər yaxşı deyiləm' hissi ilə mübarizə aparırsınız. Başqalarını razı salmaq istəyiniz özünüzü unutmağınıza səbəb olur.",
-                "Daxilinizdə böyük bir aidiyyət və dərin emosional bağ qurma ehtiyacı var. Müstəqilliyiniz əslində rədd edilmək qorxusuna qarşı inkişaf etdirdiyiniz bir müdafiə mexanizmidir."
-            ];
-            const karmas = [
-                "Missiyanız: 'Nəzarəti buraxmağı' öyrənmək. Zəifliklərinizi və duyğularınızı qəbul etdiyiniz an, ən böyük mənəvi gücünüzə qovuşacaqsınız.",
-                "Missiyanız: 'Xeyr' deməyi öyrənmək. Başqalarının yükünü daşımağı buraxıb, öz sərhədlərinizi çəkdiyinizdə həyatınızın kilidi açılacaq.",
-                "Missiyanız: Emosional cəsarət. Qırılmaqdan qorxmadan insanlara içinizi açmaq və dərin bağlar qurmaq sizin ruhani inkişafınızın açarıdır."
-            ];
-            const daily = [
-                "Bu gün keçmişdə qaldığını düşündüyün bir mövzu yenidən zehnini məşğul edə bilər. Reaksiya verməkdən qaç. Susmaq, bu gün verə biləcəyin ən güclü cavabdır.",
-                "Daxili səsiniz bu gün sizə çox önəmli bir şey pıçıldayır. Məntiqlə yox, intuisiyanızla hərəkət etməli olduğunuz bir kəsişmədəsiniz.",
-                "Bu gün tələsik verilən qərarlardan uzaq durun. Gözlədiyiniz bir xəbər və ya cavab üçün səbrli olun, zaman sizin xeyrinizə işləyir."
-            ];
+            document.getElementById('syn-text').innerText = texts[userSeed % 2];
+        }, 500);
+    }
 
-            document.getElementById('prof-mask').innerText = masks[userSeed % masks.length];
-            document.getElementById('prof-shadow').innerText = shadows[userSeed % shadows.length];
-            document.getElementById('prof-karma').innerText = karmas[userSeed % karmas.length];
-            
-            document.getElementById('daily-msg').innerHTML = `"${userName.split(' ')[0]}, ${daily[userSeed % daily.length]}"`;
-        }
+    // 5. Psixoloji Test Sistemi
+    const questions = [
+        { q: "Stressli və böhranlı bir vəziyyətdə ilk reaksiyanız nə olur?", o: ["Məntiqimi işə salıb həll axtarıram (Duyğuları basdırıram)", "Tək qalmaq və düşünmək istəyirəm (İzolyasiya)", "Məsələni paylaşmaq və dəstək axtarmaq (Bağlılıq)"] },
+        { q: "İnsanlarla münasibətdə gizli qorxunuz nədir?", o: ["İdarəni itirmək və zəif görünmək", "Səhv başa düşülmək və ya dəyərsiz hiss etmək", "Tərk edilmək və tək qalmaq"] },
+        { q: "Özünüzü ən çox nə vaxt günahkar hiss edirsiniz?", o: ["Qoyduğum hədəflərə çata bilməyəndə", "Kiməsə 'Yox' deyəndə və ya qəlbini qıranda", "Özümə vaxt ayırıb heç nə etməyəndə"] }
+    ];
+    
+    let currentQ = 0;
+    let answers = [];
 
-        // 4. Sinastri (Sevgi Uyumu) Alqoritmi
-        function calculateSynastry() {
-            const partner = document.getElementById('syn-partner-name').value;
-            if(!partner) return alert("Zəhmət olmasa tərəfdaşın adını yazın.");
+    function startTest() {
+        document.getElementById('test-intro').classList.add('hidden');
+        document.getElementById('test-q-area').classList.remove('hidden');
+        currentQ = 0; answers = [];
+        loadQuestion();
+    }
 
-            const res = document.getElementById('syn-results');
-            res.classList.remove('hidden');
-            res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    function loadQuestion() {
+        if(currentQ >= questions.length) { showTestResult(); return; }
+        
+        document.getElementById('q-counter').innerText = `Sual ${currentQ + 1} / 3`;
+        document.getElementById('q-text').innerText = questions[currentQ].q;
+        
+        let html = '';
+        questions[currentQ].o.forEach((opt, idx) => {
+            html += `<button onclick="answerQ(${idx})" class="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition font-light">${opt}</button>`;
+        });
+        document.getElementById('q-options').innerHTML = html;
+    }
 
-            // Animasiyalı Doldurma
-            let total = 0;
-            const targetTotal = 75 + (userSeed % 20); // 75 - 94 arası realist rəqəm
-            
-            const int = setInterval(() => {
-                if(total >= targetTotal) clearInterval(int);
-                else { total++; document.getElementById('syn-total').innerText = total + "%"; }
-            }, 20);
+    function answerQ(val) {
+        answers.push(val);
+        currentQ++;
+        loadQuestion();
+    }
 
-            // Barlar
-            setTimeout(() => {
-                const scores = [targetTotal + 5, targetTotal - 8, targetTotal + 12, targetTotal - 4];
-                const bars = ['emo', 'com', 'spirit', 'long'];
-                
-                bars.forEach((b, i) => {
-                    let val = scores[i] > 98 ? 98 : scores[i];
-                    document.getElementById(`syn-${b}-val`).innerText = val + "%";
-                    document.getElementById(`syn-${b}-bar`).style.width = val + "%";
-                });
-
-                // Dərin Analiz Mətni
-                const texts = [
-                    "Sizin aranızdakı bağ sıradan bir münasibətdən çox, öyrədici bir karmik təcrübədir. Tərəfdaşınızın Ay enerjisi sizin gizli qorxularınızı üzə çıxararaq sağaltmaq potensialına malikdir. İntellektual olaraq bir-birinizi tamamlayırsınız.",
-                    "Bu münasibətdə emosional rezonans çox güclüdür. Siz danışmadan belə bir-birinizin nə hiss etdiyini anlaya bilirsiniz. Lakin uzunmüddətli sabitlik üçün fərdi sərhədlərinizə hörmət etməyiniz mütləqdir."
-                ];
-                document.getElementById('syn-text').innerText = texts[userSeed % 2];
-            }, 500);
-        }
-
-        // 5. Psixoloji Test Sistemi
-        const questions = [
-            { q: "Stressli və böhranlı bir vəziyyətdə ilk reaksiyanız nə olur?", o: ["Məntiqimi işə salıb həll axtarıram (Duyğuları basdırıram)", "Tək qalmaq və düşünmək istəyirəm (İzolyasiya)", "Məsələni paylaşmaq və dəstək axtarmaq (Bağlılıq)"] },
-            { q: "İnsanlarla münasibətdə gizli qorxunuz nədir?", o: ["İdarəni itirmək və zəif görünmək", "Səhv başa düşülmək və ya dəyərsiz hiss etmək", "Tərk edilmək və tək qalmaq"] },
-            { q: "Özünüzü ən çox nə vaxt günahkar hiss edirsiniz?", o: ["Qoyduğum hədəflərə çata bilməyəndə", "Kiməsə 'Yox' deyəndə və ya qəlbini qıranda", "Özümə vaxt ayırıb heç nə etməyəndə"] }
+    function showTestResult() {
+        document.getElementById('test-q-area').classList.add('hidden');
+        const resArea = document.getElementById('test-result');
+        resArea.classList.remove('hidden');
+        
+        // Məntiqi olaraq yalandan hesablama (daha inandırıcı mətnlər)
+        const sum = answers.reduce((a, b) => a + b, 0);
+        
+        const results = [
+            { t: "Nəzarətçi (The Controller)", d: "İçinizdə hər şeyi mükəmməl etmək istəyən, zəiflik göstərməkdən dəhşətə gələn bir kölgə var. Emosiyaları zəiflik kimi görürsünüz. Buraxmağı və sərbəst qalmağı öyrənməlisiniz." },
+            { t: "Fədakar Qurban (The Martyr)", d: "Başqalarının ehtiyaclarını özünüzdən üstün tutursunuz. 'Xeyr' deyə bilməməyiniz əslində sevilməmək qorxusudur. Öz dəyərinizi başqalarına etdiyiniz xidmətlərlə ölçməyi dayandırın." },
+            { t: "Tərk Edilmiş Uşaq (The Orphan)", d: "Daxilinizdə daim aidiyyət axtaran bir boşluq var. İnsanlara ya çox tez bağlanır, ya da incinməmək üçün onları özünüzdən itələyirsiniz. Kök salmaq üçün əvvəlcə özünüzə güvənməlisiniz." }
         ];
         
-        let currentQ = 0;
-        let answers = [];
+        let res = results[sum % 3];
+        document.getElementById('res-title').innerText = res.t;
+        document.getElementById('res-desc').innerText = res.d;
+    }
 
-        function startTest() {
-            document.getElementById('test-intro').classList.add('hidden');
-            document.getElementById('test-q-area').classList.remove('hidden');
-            currentQ = 0; answers = [];
-            loadQuestion();
-        }
+    // 6. AI Chat
+    function handleChat(e) {
+        e.preventDefault();
+        const inp = document.getElementById('chat-input');
+        const msg = inp.value.trim();
+        if(!msg) return;
 
-        function loadQuestion() {
-            if(currentQ >= questions.length) { showTestResult(); return; }
-            
-            document.getElementById('q-counter').innerText = `Sual ${currentQ + 1} / 3`;
-            document.getElementById('q-text').innerText = questions[currentQ].q;
-            
-            let html = '';
-            questions[currentQ].o.forEach((opt, idx) => {
-                html += `<button onclick="answerQ(${idx})" class="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition font-light">${opt}</button>`;
-            });
-            document.getElementById('q-options').innerHTML = html;
-        }
+        const chat = document.getElementById('chat-container');
+        // User MSG
+        chat.innerHTML += `
+            <div class="flex items-start gap-4 justify-end">
+                <div class="bg-appleBlue text-white p-4 rounded-2xl rounded-tr-none font-light max-w-[80%]">${msg}</div>
+            </div>`;
+        inp.value = '';
+        chat.scrollTop = chat.scrollHeight;
 
-        function answerQ(val) {
-            answers.push(val);
-            currentQ++;
-            loadQuestion();
-        }
-
-        function showTestResult() {
-            document.getElementById('test-q-area').classList.add('hidden');
-            const resArea = document.getElementById('test-result');
-            resArea.classList.remove('hidden');
-            
-            // Məntiqi olaraq yalandan hesablama (daha inandırıcı mətnlər)
-            const sum = answers.reduce((a, b) => a + b, 0);
-            
-            const results = [
-                { t: "Nəzarətçi (The Controller)", d: "İçinizdə hər şeyi mükəmməl etmək istəyən, zəiflik göstərməkdən dəhşətə gələn bir kölgə var. Emosiyaları zəiflik kimi görürsünüz. Buraxmağı və sərbəst qalmağı öyrənməlisiniz." },
-                { t: "Fədakar Qurban (The Martyr)", d: "Başqalarının ehtiyaclarını özünüzdən üstün tutursunuz. 'Xeyr' deyə bilməməyiniz əslində sevilməmək qorxusudur. Öz dəyərinizi başqalarına etdiyiniz xidmətlərlə ölçməyi dayandırın." },
-                { t: "Tərk Edilmiş Uşaq (The Orphan)", d: "Daxilinizdə daim aidiyyət axtaran bir boşluq var. İnsanlara ya çox tez bağlanır, ya da incinməmək üçün onları özünüzdən itələyirsiniz. Kök salmaq üçün əvvəlcə özünüzə güvənməlisiniz." }
+        // AI Gözləmə
+        setTimeout(() => {
+            const aiResponses = [
+                "Göksəl mövqeyiniz göstərir ki, hazırda dəyişim astanasındasınız. Sorduğunuz mövzuda məntiqlə yox, sırf intuisiyanızla hərəkət etmək sizə düzgün yolu göstərəcək.",
+                "Xəritənizdə Saturnun təsiri bu mövzuda bir az səbrli olmağınızı tələb edir. İki həftə ərzində gözləmədiyiniz bir aydınlanma yaşayacaqsınız. Tələsməyin.",
+                "Bu məsələdə əslində cavabı daxilən bilirsiniz, sadəcə təsdiqlənməyə ehtiyacınız var. Bəli, hiss etdiyiniz o cəsarətli addımı atmaq üçün doğru zamandır."
             ];
-            
-            let res = results[sum % 3];
-            document.getElementById('res-title').innerText = res.t;
-            document.getElementById('res-desc').innerText = res.d;
-        }
-
-        // 6. AI Chat
-        function handleChat(e) {
-            e.preventDefault();
-            const inp = document.getElementById('chat-input');
-            const msg = inp.value.trim();
-            if(!msg) return;
-
-            const chat = document.getElementById('chat-container');
-            // User MSG
             chat.innerHTML += `
-                <div class="flex items-start gap-4 justify-end">
-                    <div class="bg-appleBlue text-white p-4 rounded-2xl rounded-tr-none font-light max-w-[80%]">${msg}</div>
+                <div class="flex items-start gap-4">
+                    <div class="w-8 h-8 rounded-full bg-appleGold/20 flex items-center justify-center flex-shrink-0">✨</div>
+                    <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none text-white/90 font-light max-w-[80%]">${aiResponses[userSeed % aiResponses.length]}</div>
                 </div>`;
-            inp.value = '';
             chat.scrollTop = chat.scrollHeight;
-
-            // AI Gözləmə
-            setTimeout(() => {
-                const aiResponses = [
-                    "Göksəl mövqeyiniz göstərir ki, hazırda dəyişim astanasındasınız. Sorduğunuz mövzuda məntiqlə yox, sırf intuisiyanızla hərəkət etmək sizə düzgün yolu göstərəcək.",
-                    "Xəritənizdə Saturnun təsiri bu mövzuda bir az səbrli olmağınızı tələb edir. İki həftə ərzində gözləmədiyiniz bir aydınlanma yaşayacaqsınız. Tələsməyin.",
-                    "Bu məsələdə əslində cavabı daxilən bilirsiniz, sadəcə təsdiqlənməyə ehtiyacınız var. Bəli, hiss etdiyiniz o cəsarətli addımı atmaq üçün doğru zamandır."
-                ];
-                chat.innerHTML += `
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 rounded-full bg-appleGold/20 flex items-center justify-center flex-shrink-0">✨</div>
-                        <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none text-white/90 font-light max-w-[80%]">${aiResponses[userSeed % aiResponses.length]}</div>
-                    </div>`;
-                chat.scrollTop = chat.scrollHeight;
-            }, 1200);
-        }
-    </script>
+        }, 1200);
+    }
+</script>
 </body>
 </html>
