@@ -1,490 +1,523 @@
 <!DOCTYPE html>
-<html lang="az" class="scroll-smooth">
+<html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVC | Astrologum11 - Professional Astrologiya Portalı</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>AVC | Astrologum11 - Kosmik Əməliyyat Sistemi</title>
     
-    <meta name="description" content="AVC Astrologum11 ilə fərdi natal xəritənizi yaradın, AI astroloqla danışın və astroloji potensialınızı kəşf edin.">
-    
-    <!-- Şriftlər -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind və Konfeti (Ad günü üçün) -->
+    <!-- Apple SF Pro alternativi kimi Inter şrifti -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
-                    colors: { night: '#020617', deepblue: '#0f172a', cardblue: '#1e293b', gold: '#fbbf24', textlight: '#f8fafc' }
+                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    colors: {
+                        appleDark: '#000000',
+                        appleGray: '#1c1c1e',
+                        appleLightGray: '#2c2c2e',
+                        appleGold: '#d4af37',
+                        appleBlue: '#0a84ff',
+                    }
                 }
             }
         }
     </script>
 
     <style>
-        body { 
-            background-color: #020617; color: #f8fafc; 
-            background-image: radial-gradient(circle at 15% 50%, rgba(30, 41, 59, 0.5) 0%, transparent 50%), radial-gradient(circle at 85% 10%, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
-            min-height: 100vh; overflow-x: hidden;
-        }
-        .stars {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0));
-            background-repeat: repeat; background-size: 150px 150px; opacity: 0.15; animation: twinkle 10s linear infinite;
-        }
-        @keyframes twinkle { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.25; } }
+        body { background-color: #000000; color: #f5f5f7; -webkit-font-smoothing: antialiased; letter-spacing: -0.02em; overflow-x: hidden; }
         
-        .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; transition: transform 0.3s ease, border-color 0.3s; }
-        .glass-card:hover { border-color: rgba(251, 191, 36, 0.3); }
-        .input-avc { background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; transition: 0.3s; width: 100%; padding: 12px 16px; font-size: 15px; }
-        .input-avc:focus { border-color: #fbbf24; outline: none; box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2); }
-        .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; font-weight: 600; border-radius: 8px; transition: 0.3s; cursor: pointer; }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
-        .btn-outline { border: 1px solid #fbbf24; color: #fbbf24; border-radius: 8px; transition: 0.3s; }
-        .btn-outline:hover { background: rgba(251, 191, 36, 0.1); }
+        /* Apple Glassmorphism */
+        .glass-panel { background: rgba(28, 28, 30, 0.6); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 28px; }
+        .glass-nav { background: rgba(0, 0, 0, 0.75); backdrop-filter: saturate(180%) blur(24px); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
         
-        .ad-slot { background: #0f172a; border: 1px dashed #334155; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 12px; border-radius: 8px; margin: 24px 0; text-transform: uppercase; letter-spacing: 1px; }
-        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Inputs & Buttons */
+        .apple-input { background: #1c1c1e; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 16px; color: white; width: 100%; transition: all 0.3s; font-size: 16px; }
+        .apple-input:focus { outline: none; border-color: #d4af37; background: #2c2c2e; }
         
-        /* Timeline */
-        .timeline-node { width: 16px; height: 16px; border-radius: 50%; background: #fbbf24; position: relative; z-index: 10; box-shadow: 0 0 10px #fbbf24; }
-        .timeline-line { position: absolute; left: 7px; top: 16px; bottom: -30px; width: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
+        .apple-btn { background: #ffffff; color: #000000; font-weight: 600; border-radius: 999px; padding: 16px 24px; transition: transform 0.2s, opacity 0.2s; cursor: pointer; text-align: center; }
+        .apple-btn:hover { transform: scale(1.02); opacity: 0.9; }
+        .apple-btn-outline { background: transparent; color: #f5f5f7; border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 500; border-radius: 999px; padding: 12px 24px; transition: 0.3s; cursor: pointer; }
+        .apple-btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
+
+        /* Smooth Transitions */
+        .page-view { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
+        .page-view.active { display: block; opacity: 1; animation: slideUp 0.5s ease-out; }
         
-        /* Level Bar */
-        .level-progress { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); overflow: hidden; margin-top: 8px; }
-        .level-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 45%; }
-        
-        /* Chat UI */
-        .chat-bubble-user { background: #334155; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 80%; align-self: flex-end; }
-        .chat-bubble-ai { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #f8fafc; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 80%; align-self: flex-start; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Progress Bars */
+        .progress-track { background: rgba(255, 255, 255, 0.1); border-radius: 999px; height: 6px; overflow: hidden; }
+        .progress-fill { background: #d4af37; height: 100%; border-radius: 999px; transition: width 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); width: 0%; }
     </style>
 </head>
 <body>
 
-    <div class="stars"></div>
-
     <!-- NAVİQASİYA -->
-    <nav class="border-b border-white/5 bg-night/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="#" onclick="navigate('dashboard-section')" class="font-serif text-2xl font-bold tracking-wide flex items-center gap-2">
-                <span class="text-gold">AVC</span> <span class="text-lg font-sans font-light text-white/80">| Astrologum11</span>
-            </a>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-white/70" id="main-nav" style="display: none;">
-                <button onclick="navigate('dashboard-section')" class="hover:text-gold transition">Profil & Günlük</button>
-                <button onclick="navigate('ai-section')" class="hover:text-gold transition">AI Astroloq</button>
-                <button onclick="navigate('synastry-section')" class="hover:text-gold transition">Sevgi Uyumu</button>
-                <button onclick="navigate('timeline-section')" class="hover:text-gold transition">Zaman Xətti</button>
-                <button onclick="navigate('tests-section')" class="hover:text-gold transition">Astro Testlər</button>
+    <nav class="fixed top-0 w-full glass-nav z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 font-semibold tracking-tight text-xl cursor-pointer" onclick="navigate('dashboard')">
+                <span class="text-appleGold">AVC</span><span class="text-white/80 font-light">Astrologum11</span>
+            </div>
+            <div class="hidden md:flex gap-8 text-sm font-medium text-white/60" id="nav-links" style="display: none;">
+                <button onclick="navigate('dashboard')" class="hover:text-white transition">İdarə Paneli</button>
+                <button onclick="navigate('synastry')" class="hover:text-white transition">Sinastri (Uyğunluq)</button>
+                <button onclick="navigate('tests')" class="hover:text-white transition">Astro-Psixologiya</button>
+                <button onclick="navigate('ai')" class="hover:text-white transition">Nyx AI</button>
             </div>
         </div>
     </nav>
 
-    <!-- SƏHİFƏLƏR KONTEYNERİ -->
-    <div id="app-container">
+    <!-- KONTENT KONTEYNERİ -->
+    <div class="pt-24 pb-12 min-h-screen flex flex-col">
 
         <!-- 1. QEYDİYYAT (ONBOARDING) -->
-        <main class="page-section max-w-6xl mx-auto px-4 py-16" id="onboarding-section">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="fade-in">
-                    <span class="text-gold font-medium tracking-wider text-sm uppercase mb-3 block">Kosmik Səyahətə Başla</span>
-                    <h1 class="text-5xl font-serif font-bold leading-tight mb-6">Öz Ulduz Xəritənizi Kəşf Edin</h1>
-                    <p class="text-white/60 text-lg mb-8 leading-relaxed">Astrologum11 sisteminə xoş gəlmisiniz. Şəxsi xarakterinizi, potensialınızı, gizli qabiliyyətlərinizi və gələcək dövrlərinizi kəşf etmək üçün qeydiyyatdan keçin.</p>
+        <main id="onboarding" class="page-view active max-w-5xl mx-auto px-6 w-full flex-1 flex flex-col justify-center">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h1 class="text-5xl md:text-6xl font-semibold tracking-tighter leading-tight mb-6">Kosmik<br>DNT-nizi Kəşf Edin.</h1>
+                    <p class="text-white/50 text-lg mb-8 font-light leading-relaxed">Astrologiya gələcəyi təxmin etmək deyil, daxilinizi anlamaq sənətidir. Özünüzlə üzləşməyə hazırsınızsa, məlumatlarınızı daxil edin.</p>
                 </div>
-                <div class="glass-card p-8 fade-in">
-                    <h2 class="text-2xl font-semibold mb-6 text-center">Şəxsi Məlumatlar</h2>
-                    <form onsubmit="handleRegistration(event)" class="space-y-5">
+                <div class="glass-panel p-8 md:p-10">
+                    <form onsubmit="handleLogin(event)" class="space-y-5">
                         <div>
-                            <label class="block text-sm text-white/60 mb-2">Adınız</label>
-                            <input type="text" id="reg-name" placeholder="Məsələn: Aqşin" required class="input-avc">
+                            <label class="block text-xs text-white/50 uppercase tracking-widest mb-2 font-medium">Tam Adınız</label>
+                            <input type="text" id="user-name" required class="apple-input" placeholder="Məs: Aqşin Əhmədli">
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm text-white/60 mb-2">Doğum Tarixi</label>
-                                <input type="date" id="reg-date" required class="input-avc text-white/70">
+                                <label class="block text-xs text-white/50 uppercase tracking-widest mb-2 font-medium">Doğum Tarixi</label>
+                                <input type="date" id="user-date" required class="apple-input">
                             </div>
                             <div>
-                                <label class="block text-sm text-white/60 mb-2">Doğum Saatı</label>
-                                <input type="time" class="input-avc text-white/70">
+                                <label class="block text-xs text-white/50 uppercase tracking-widest mb-2 font-medium">Doğum Saatı</label>
+                                <input type="time" id="user-time" required class="apple-input">
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm text-white/60 mb-2">Doğulduğunuz Şəhər</label>
-                            <input type="text" placeholder="Bakı" required class="input-avc">
+                            <label class="block text-xs text-white/50 uppercase tracking-widest mb-2 font-medium">Məkan</label>
+                            <input type="text" id="user-city" required class="apple-input" placeholder="Doğulduğunuz Şəhər">
                         </div>
-                        <button type="submit" class="btn-gold w-full py-4 mt-2 text-lg" id="reg-btn">Sistemə Daxil Ol</button>
+                        <button type="submit" class="apple-btn w-full mt-4 text-lg" id="login-btn">Sistemə Daxil Ol</button>
                     </form>
                 </div>
             </div>
         </main>
 
-        <!-- 2. ƏSAS PANEL (DASHBOARD) -->
-        <main class="page-section hidden max-w-7xl mx-auto px-4 py-10" id="dashboard-section">
+        <!-- 2. İDARƏ PANELİ (DASHBOARD) -->
+        <main id="dashboard" class="page-view max-w-7xl mx-auto px-6 w-full">
             
-            <!-- 4. Ad Günü Sürprizi Banneri -->
-            <div id="birthday-banner" class="hidden glass-card p-6 mb-8 text-center border-gold/50 bg-gold/10 fade-in">
-                <h2 class="text-3xl font-serif text-gold mb-2">🎂 Doğum Gününüz Mübarək, <span class="dyn-name"></span>!</h2>
-                <p class="text-white/80">Sizin üçün hazırladığımız xüsusi "Yeni Yaş" astroloji hesabatı aktivləşdirildi. Bu il karyera və şəxsi yüksəliş iliniz olacaq.</p>
-            </div>
-
-            <!-- Üst Panel: Məktub, Titul və Səviyyə -->
-            <div class="grid lg:grid-cols-3 gap-6 mb-8">
-                <!-- 10. Kainatdan Məktub -->
-                <div class="glass-card p-6 lg:col-span-2 flex flex-col justify-center border-l-4 border-l-gold fade-in">
-                    <span class="text-gold text-xs tracking-widest uppercase mb-2">Kainatdan Sənə Məktub 💌</span>
-                    <p class="text-lg text-white/90 font-serif italic leading-relaxed">"<span class="dyn-name"></span>, bu gün Mars sənə böyük cəsarət verir. Uzun müddətdir düşündüyün o önəmli addımı atmaq üçün kosmik enerji sənin tərəfindədir. İntuisiyana güvən."</p>
-                </div>
-                <!-- 6. Titul və 8. Səviyyə -->
-                <div class="glass-card p-6 text-center fade-in">
-                    <div class="inline-block bg-white/5 border border-white/10 rounded-full px-4 py-1 text-xs text-white/50 mb-4">Astro Səviyyə Sistemi</div>
-                    <h3 class="text-2xl font-serif text-gold mb-1" id="dyn-title">Kosmik Kəşfiyyatçı</h3>
-                    <p class="text-sm text-white/60 mb-4">Mövcud Titulunuz</p>
-                    <div class="text-left text-xs text-white/50 flex justify-between"><span>Səviyyə 4</span><span>450 / 1000 XP</span></div>
-                    <div class="level-progress"><div class="level-fill"></div></div>
-                </div>
+            <div class="mb-12">
+                <h2 class="text-4xl font-semibold tracking-tight mb-2">Xoş gəldiniz, <span class="dyn-name text-appleGold"></span>.</h2>
+                <p class="text-white/50 text-lg font-light">Sistem məlumatlarınızı analiz etdi. Bu, sizin psixoloji portretinizdir.</p>
             </div>
 
             <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Sol Sütun -->
+                <!-- Sol: Dərin Analiz -->
                 <div class="lg:col-span-2 space-y-8">
-                    <!-- 1. Fərdi Astroloji Profil -->
-                    <div class="glass-card p-8 fade-in">
-                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">✨</span><h2 class="text-2xl font-semibold">Fərdi Astroloji Profiliniz</h2></div>
-                        <div class="grid sm:grid-cols-2 gap-6">
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Xarakter Analizi</h4>
-                                <p class="text-sm text-white/60">Analitik düşüncə, yüksək empatiya və dərin hissiyyat. Siz hadisələrin görünməyən tərəflərini hiss edirsiniz.</p>
+                    <!-- Psixoloji Profil -->
+                    <div class="glass-panel p-8 md:p-10">
+                        <div class="flex items-center gap-3 mb-8">
+                            <svg class="w-6 h-6 text-appleGold" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            <h3 class="text-2xl font-semibold">Dərin Psixoloji Portret</h3>
+                        </div>
+                        
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-2">Maskanız (Ascendant)</h4>
+                                <p class="text-white/80 leading-relaxed font-light" id="prof-mask">Siz kənardan güclü, hər şeyi idarə edən və soyuqqanlı biri kimi görünməyə çalışırsınız. İnsanlar ilk görüşdə sizin ciddiyyətinizdən çəkinə bilər.</p>
                             </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Güclü & Zəif Tərəflər</h4>
-                                <p class="text-sm text-white/60"><span class="text-green-400">Güclü:</span> Böhran idarəetməsi, sədaqət.<br><span class="text-red-400">Zəif:</span> Həddindən artıq düşünmək (Overthinking).</p>
+                            <div>
+                                <h4 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-2">Kölgə Tərəfiniz (İç Dünya)</h4>
+                                <p class="text-white/80 leading-relaxed font-light" id="prof-shadow">Lakin daxilinizdə böyük bir 'tərk edilmə' və ya 'kifayət qədər yaxşı olmama' qorxusu yatır. Çox vaxt hər şeyi təkbaşına həll etmək istəyiniz, əslində insanlara güvənməkdə çətinlik çəkməyinizdən irəli gəlir.</p>
                             </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Gizli Potensial</h4>
-                                <p class="text-sm text-white/60">İnsanları sağaltmaq və ya onlara psixoloji yol göstərmək (Healer arxetipi).</p>
-                            </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Həyat Missiyası</h4>
-                                <p class="text-sm text-white/60">Köhnə strukturları yıxıb, cəmiyyət üçün yeni, daha ədalətli sistemlər qurmaq.</p>
+                            <div>
+                                <h4 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-2">Karmik Missiyanız</h4>
+                                <p class="text-appleGold leading-relaxed font-medium" id="prof-karma">Sizin əsas missiyanız 'nəzarəti buraxmağı' öyrənməkdir. Zəifliklərinizi qəbul etdiyiniz an, ən böyük gücünüzə qovuşacaqsınız.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 2. Bu gün Sənin Üçün -->
-                    <div class="glass-card p-8 fade-in">
-                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">🌙</span><h2 class="text-2xl font-semibold">Bu Gün Sənin Üçün</h2></div>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">⚡</div><div class="text-xs text-white/50 uppercase mb-1">Enerji</div><div class="text-lg font-bold text-gold">85%</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">🍀</div><div class="text-xs text-white/50 uppercase mb-1">Uğurlu Saat</div><div class="text-lg font-bold text-white">14:00 - 16:30</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">⚠️</div><div class="text-xs text-white/50 uppercase mb-1">Diqqət Et</div><div class="text-sm font-medium text-white/80">Maddi xərclər</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">🎨</div><div class="text-xs text-white/50 uppercase mb-1">Günün Rəngi</div><div class="text-lg font-bold text-indigo-400">İndiqo</div>
-                            </div>
-                        </div>
+                    <!-- Kainatdan Məktub -->
+                    <div class="glass-panel p-8" style="background: linear-gradient(145deg, rgba(28,28,30,0.8), rgba(10,132,255,0.1));">
+                        <span class="text-appleBlue text-xs font-semibold uppercase tracking-widest mb-3 block">Kainatın Gündəlik Mesajı</span>
+                        <p class="text-xl font-light leading-relaxed italic" id="daily-msg">"<span class="dyn-name"></span>, bu gün keçmişdə qaldığını düşündüyün bir mövzu yenidən zehnini məşğul edə bilər. Reaksiya verməkdən qaç. Susmaq, bu gün verə biləcəyin ən güclü cavabdır."</p>
                     </div>
-                    
-                    <!-- AdSense Banner -->
-                    <div class="ad-slot h-[90px] w-full">Google AdSense - Banner (728x90)</div>
                 </div>
 
-                <!-- Sağ Sütun -->
-                <div class="space-y-6">
-                    <!-- Qısa Menyu -->
-                    <div class="glass-card p-6 fade-in">
-                        <h3 class="font-medium mb-4 text-white/80">Sürətli Keçidlər</h3>
-                        <div class="space-y-3">
-                            <button onclick="navigate('ai-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>🔮 AI Astroloq</span> <span>→</span></button>
-                            <button onclick="navigate('synastry-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>❤️ Sevgi Uyğunluğu</span> <span>→</span></button>
-                            <button onclick="navigate('timeline-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📜 Həyat Zaman Xətti</span> <span>→</span></button>
-                            <button onclick="navigate('tests-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📊 Özünü Tanıma Testləri</span> <span>→</span></button>
+                <!-- Sağ: Real Time Məlumatlar -->
+                <div class="space-y-8">
+                    <!-- Ay Fazası -->
+                    <div class="glass-panel p-8">
+                        <h3 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-6">Səmada Hazırkı Vəziyyət</h3>
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <div class="text-4xl mb-2">🌖</div>
+                                <div class="font-semibold text-lg">Azalan Ay</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-light">84%</div>
+                                <div class="text-xs text-white/50 uppercase">İşıqlanma</div>
+                            </div>
                         </div>
+                        <p class="text-sm text-white/50 font-light">Bu faza detoks, lazımsız insanları həyatdan çıxarmaq və daxili təmizlik üçün idealdır.</p>
                     </div>
 
-                    <!-- AdSense Kvadrat -->
-                    <div class="glass-card p-4 flex justify-center bg-deepblue">
-                        <div class="ad-slot h-[250px] w-[300px] m-0">AdSense (300x250)</div>
+                    <!-- Aktual Tranzitlər -->
+                    <div class="glass-panel p-8">
+                        <h3 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-6">Planetar Tranzitlər</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                <div class="flex items-center gap-3"><span class="text-lg">☿</span><span class="text-sm">Merkuri</span></div>
+                                <span class="text-xs px-2 py-1 bg-red-500/20 text-red-400 rounded-md">Retroqrad</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-white/5 pb-3">
+                                <div class="flex items-center gap-3"><span class="text-lg">♀</span><span class="text-sm">Venera</span></div>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-md">Əkizlərdə</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center gap-3"><span class="text-lg">♂</span><span class="text-sm">Mars</span></div>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-md">Qoçda</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- 3. AI ASTROLOQ -->
-        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="ai-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="glass-card overflow-hidden flex flex-col h-[600px]">
-                <div class="bg-cardblue p-6 border-b border-white/10 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-2xl">🔮</div>
-                    <div><h2 class="font-serif text-xl font-semibold">Nyx AI</h2><p class="text-xs text-white/50">Sizin fərdi astroloji assistentiniz. Göydəki ulduzlara əsasən cavab verir.</p></div>
+        <!-- 3. SİNASTRİ (SEVGİ UYUMU) -->
+        <main id="synastry" class="page-view max-w-5xl mx-auto px-6 w-full">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-semibold tracking-tight mb-4">Kosmik Sinastri</h2>
+                <p class="text-white/50 text-lg font-light">İki ruhun astroloji kəsişmə nöqtələrini və uyğunluq dinamikasını analiz edin.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-10">
+                <div class="glass-panel p-8">
+                    <h3 class="text-lg font-medium mb-6">Birinci Şəxs (Siz)</h3>
+                    <input type="text" class="apple-input mb-4 text-white/50 bg-black/20" disabled title="Məlumatlar profilinizdən alınır" value="Sizin Məlumatlarınız">
                 </div>
-                <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-4" id="chat-box">
-                    <div class="chat-bubble-ai fade-in">Salam, <span class="dyn-name"></span>. Mən sizin natal xəritənizi oxuya bilirəm. Məndən kariyeranız, münasibətləriniz və ya gələcək dövrlər barədə sual soruşa bilərsiniz.<br><br><span class="text-xs opacity-70">Nümunə: "Bu il iş dəyişməliyəm?" və ya "Münasibətim necə davam edəcək?"</span></div>
+                <div class="glass-panel p-8 border-t border-appleGold">
+                    <h3 class="text-lg font-medium mb-6">İkinci Şəxs (Tərəfdaş)</h3>
+                    <input type="text" id="syn-partner-name" placeholder="Adı" class="apple-input mb-4">
+                    <input type="date" id="syn-partner-date" class="apple-input">
                 </div>
-                <div class="p-4 border-t border-white/10 bg-cardblue/50">
-                    <form onsubmit="handleChat(event)" class="flex gap-2">
-                        <input type="text" id="chat-input" placeholder="Sualınızı bura yazın..." class="input-avc flex-1" autocomplete="off">
-                        <button type="submit" class="btn-gold px-6 rounded-lg">Göndər</button>
+            </div>
+            
+            <div class="text-center">
+                <button onclick="calculateSynastry()" class="apple-btn px-12 py-4">Uyğunluğu Hesabla</button>
+            </div>
+
+            <!-- Nəticə -->
+            <div id="syn-results" class="hidden mt-12 glass-panel p-8 md:p-12">
+                <div class="text-center mb-10">
+                    <div class="text-6xl font-semibold text-appleGold mb-2" id="syn-total">0%</div>
+                    <div class="text-sm text-white/50 uppercase tracking-widest">Sistem Uyğunluğu İndeksi</div>
+                </div>
+                
+                <div class="space-y-8 max-w-2xl mx-auto">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium"><span>Emosional Rezonans (Ay Uyumları)</span><span id="syn-emo-val">0%</span></div>
+                        <div class="progress-track"><div class="progress-fill" id="syn-emo-bar"></div></div>
+                        <p class="text-xs text-white/50 mt-2 font-light">Bir-birinizin ehtiyaclarını sözsüz anlama potensialınız.</p>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium"><span>İntellektual Ünsiyyət (Merkuri)</span><span id="syn-com-val">0%</span></div>
+                        <div class="progress-track"><div class="progress-fill" id="syn-com-bar" style="background: #0a84ff;"></div></div>
+                        <p class="text-xs text-white/50 mt-2 font-light">Problemləri müzakirə edərkən yaranan zehni harmoniya.</p>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium"><span>Mənəvi və Ruhani Bağ (Neptun/Düyünlər)</span><span id="syn-spirit-val">0%</span></div>
+                        <div class="progress-track"><div class="progress-fill" id="syn-spirit-bar" style="background: #bf5af2;"></div></div>
+                        <p class="text-xs text-white/50 mt-2 font-light">Bu əlaqənin sadəcə fiziki deyil, karmik və öyrədici tərəfi.</p>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium"><span>Uzunmüddətli Sabitlik (Saturn)</span><span id="syn-long-val">0%</span></div>
+                        <div class="progress-track"><div class="progress-fill" id="syn-long-bar" style="background: #32d74b;"></div></div>
+                        <p class="text-xs text-white/50 mt-2 font-light">Çətinliklər qarşısında bir yerdə qala bilmə iradəniz.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 p-6 bg-black/30 rounded-2xl border border-white/5">
+                    <h4 class="text-sm font-semibold text-white/70 uppercase tracking-widest mb-3">Astroloji Xülasə</h4>
+                    <p class="text-white/80 font-light leading-relaxed" id="syn-text"></p>
+                </div>
+            </div>
+        </main>
+
+        <!-- 4. ASTRO-PSİXOLOGİYA (TESTLƏR) -->
+        <main id="tests" class="page-view max-w-5xl mx-auto px-6 w-full">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-semibold tracking-tight mb-4">Astro-Psixoloji Analiz</h2>
+                <p class="text-white/50 text-lg font-light">Şüuraltınızı kəşf etmək üçün xüsusi dizayn edilmiş Yunq arxetipləri testi.</p>
+            </div>
+
+            <div id="test-intro" class="glass-panel p-10 text-center max-w-2xl mx-auto">
+                <div class="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl">🎭</div>
+                <h3 class="text-2xl font-semibold mb-4">Kölgə Şəxsiyyət (Shadow Self) Kəşfi</h3>
+                <p class="text-white/60 mb-8 font-light">Özünüzdən belə gizlətdiyiniz, lakin qərarlarınızı idarə edən qaranlıq tərəfinizi tapın. Test 3 dərin sualdan ibarətdir.</p>
+                <button onclick="startTest()" class="apple-btn px-10">Testə Başla</button>
+            </div>
+
+            <div id="test-q-area" class="hidden glass-panel p-10 max-w-2xl mx-auto">
+                <div class="text-xs text-white/40 uppercase tracking-widest mb-4 font-semibold" id="q-counter">Sual 1 / 3</div>
+                <h3 class="text-2xl font-medium mb-8 leading-tight" id="q-text"></h3>
+                <div class="space-y-4" id="q-options"></div>
+            </div>
+
+            <div id="test-result" class="hidden glass-panel p-10 max-w-2xl mx-auto text-center border-t-2 border-appleGold">
+                <span class="text-appleGold text-xs uppercase tracking-widest font-semibold mb-2 block">Sizin Kölgə Arxotipiniz</span>
+                <h3 class="text-4xl font-semibold mb-6" id="res-title"></h3>
+                <p class="text-white/80 font-light leading-relaxed mb-8" id="res-desc"></p>
+                <button onclick="navigate('dashboard')" class="apple-btn-outline">Ana Panelə Qayıt</button>
+            </div>
+        </main>
+
+        <!-- 5. AI ASTROLOQ -->
+        <main id="ai" class="page-view max-w-4xl mx-auto px-6 w-full h-full flex flex-col flex-1">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-semibold tracking-tight mb-2">Nyx AI</h2>
+                <p class="text-white/50 font-light">Süni İntellektlə dəstəklənən fərdi bələdçiniz.</p>
+            </div>
+            
+            <div class="glass-panel flex flex-col flex-1 max-h-[600px] overflow-hidden">
+                <div class="flex-1 overflow-y-auto p-6 space-y-6" id="chat-container">
+                    <!-- Mesajlar Bura Düşəcək -->
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-appleGold/20 flex items-center justify-center flex-shrink-0">✨</div>
+                        <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none text-white/90 font-light max-w-[80%]">
+                            Salam, <span class="dyn-name"></span>. Mən sizin məlumatlarınızı analiz etdim. Kariyeranız, münasibətləriniz və ya qərarsız qaldığınız mövzular barədə mənə sual verə bilərsiniz.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t border-white/10 bg-black/20">
+                    <form onsubmit="handleChat(event)" class="flex gap-3">
+                        <input type="text" id="chat-input" placeholder="Sualınızı bura yazın..." class="apple-input !py-3 !rounded-xl flex-1" autocomplete="off">
+                        <button type="submit" class="bg-white text-black px-6 rounded-xl font-semibold hover:bg-white/90 transition">Sor</button>
                     </form>
                 </div>
             </div>
-        </main>
-
-        <!-- 5. SEVGİ UYĞUNLUĞU -->
-        <main class="page-section hidden max-w-5xl mx-auto px-4 py-10" id="synastry-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-serif text-gold mb-4">Kosmik Sinastri</h2>
-                <p class="text-white/60">İki fərqli xəritənin toqquşmasından yaranan enerjini kəşf edin.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-6 mb-10">
-                <div class="glass-card p-6 border-t-2 border-t-gold">
-                    <h3 class="text-lg font-semibold mb-4">Siz (<span class="dyn-name"></span>)</h3>
-                    <input type="date" class="input-avc text-white/50 mb-3" disabled title="Sizin məlumatlarınız avtomatik götürülür">
-                </div>
-                <div class="glass-card p-6 border-t-2 border-t-indigo-400">
-                    <h3 class="text-lg font-semibold mb-4">Tərəfdaşınız</h3>
-                    <input type="text" id="partner-name" placeholder="Adı" required class="input-avc mb-3">
-                    <input type="date" id="partner-date" required class="input-avc text-white/70">
-                </div>
-            </div>
-            <div class="text-center mb-10">
-                <button onclick="calculateSynastry()" class="btn-gold px-10 py-4 text-lg">Uyğunluğu Analiz Et</button>
-            </div>
-
-            <!-- Uyğunluq Nəticəsi -->
-            <div id="synastry-results" class="hidden glass-card p-8 fade-in">
-                <h3 class="text-2xl font-serif text-center mb-8">Nəticə: <span class="text-gold">Güclü Karmik Bağ</span></h3>
-                <div class="space-y-6 max-w-2xl mx-auto">
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Sevgi Potensialı</span><span>85%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-pink-500 h-2 rounded-full" style="width: 85%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Dostluq & Anlayış</span><span>92%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-blue-400 h-2 rounded-full" style="width: 92%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Evlilik / Uzunmüddətlilik</span><span>78%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-gold h-2 rounded-full" style="width: 78%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Seksual Kimya</span><span>95%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-red-500 h-2 rounded-full" style="width: 95%"></div></div>
-                    </div>
-                </div>
-                <p class="mt-8 text-center text-white/60 text-sm">Sizin aranızda dərin bir empatiya və anlayış var. Tərəfdaşınızın Ay bürcü sizin Günəşinizə müsbət bucaq altındadır.</p>
-            </div>
-        </main>
-
-        <!-- 7. HƏYAT ZAMAN XƏTTİ -->
-        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="timeline-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <h2 class="text-4xl font-serif text-gold mb-12 text-center">Həyatınızın Astroloji Dövrləri</h2>
-            
-            <div class="glass-card p-10 relative">
-                <div class="absolute left-[45px] top-10 bottom-10 w-0.5 bg-white/10"></div>
-                
-                <div class="flex gap-8 mb-12 relative fade-in">
-                    <div class="timeline-node mt-1 opacity-50 bg-white shadow-none"></div>
-                    <div>
-                        <span class="text-xs text-white/40 uppercase tracking-widest">Keçmiş (2020 - 2023)</span>
-                        <h3 class="text-xl font-semibold mb-2">Saturn Sınaqları</h3>
-                        <p class="text-white/60 text-sm">Həyatınızda struktur qurmaq və yalançı insanları ələmək dövrü idi. Çoxlu dərslər aldınız.</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-8 mb-12 relative fade-in" style="animation-delay: 0.2s">
-                    <div class="timeline-node mt-1"></div>
-                    <div>
-                        <span class="text-xs text-gold uppercase tracking-widest font-bold">Hazırkı Dövr (İndi)</span>
-                        <h3 class="text-xl font-semibold mb-2">Yupiter Bərəkəti</h3>
-                        <p class="text-white/80 text-sm">Şans planeti Jüpiter sizin xəritənizdə xeyirli bucaqdadır. Yeni imkanlara, səyahətlərə və təhsilə açıq olun.</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-8 relative fade-in" style="animation-delay: 0.4s">
-                    <div class="timeline-node mt-1 opacity-50 bg-indigo-400 shadow-none"></div>
-                    <div>
-                        <span class="text-xs text-indigo-300 uppercase tracking-widest">Gələcək Pəncərə (2027)</span>
-                        <h3 class="text-xl font-semibold mb-2">Uran Dəyişimi</h3>
-                        <p class="text-white/60 text-sm">Gözlənilməz karyera sıçrayışı və ya yaşayış yeri dəyişikliyi ehtimalı yüksəkdir.</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- 9. ÖZÜNÜ TANIMA TESTLƏRİ -->
-        <main class="page-section hidden max-w-6xl mx-auto px-4 py-10" id="tests-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-serif text-gold mb-4">Astro-Psixoloji Testlər</h2>
-                <p class="text-white/60">Sual-cavab əsasında dərin astroloji xarakter analizi.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Şəxsiyyət testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">🎭</div>
-                    <h3 class="text-lg font-semibold mb-2">Kölqə Şəxsiyyət Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">İçinizdəki gizli qorxuları və idarəedici gücləri kəşf edin.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Münasibət testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">💞</div>
-                    <h3 class="text-lg font-semibold mb-2">Bağlanma Tərzi Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">Venera bürcünüzə uyğun olaraq münasibətlərdə necə davrandığınızı tapın.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Karyera testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">📈</div>
-                    <h3 class="text-lg font-semibold mb-2">Astro-Karyera Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">10-cu evinizin enerjisinə ən uyğun olan peşə sahəsini tapın.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-            </div>
-            <div class="ad-slot h-[90px] w-full mt-10">Google AdSense - Banner (728x90)</div>
         </main>
 
     </div>
 
     <!-- FOOTER -->
-    <footer class="border-t border-white/10 bg-night py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
-            <div class="col-span-2">
-                <div class="font-serif text-2xl font-bold text-white mb-4">AVC | Astrologum11</div>
-                <p class="text-white/50 text-sm max-w-sm">Astrologiya ilə psixologiyanın rəqəmsal görüş nöqtəsi. Kainatın sirləri artıq sizin ixtiyarınızdadır.</p>
+    <footer class="mt-auto border-t border-white/10 bg-black pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 text-center md:text-left">
+                <div>
+                    <div class="text-xl font-semibold tracking-tight mb-2">AVC Astrologum11</div>
+                    <p class="text-white/40 text-sm font-light">Rəqəmsal dövrün elmi astrologiya bələdçisi.</p>
+                </div>
+                <div class="flex gap-6 text-sm text-white/50 font-light">
+                    <a href="#" class="hover:text-white transition">Məxfilik Siyasəti</a>
+                    <a href="#" class="hover:text-white transition">İstifadə Şərtləri</a>
+                    <a href="#" class="hover:text-white transition">Əlaqə</a>
+                </div>
             </div>
-            <div>
-                <h4 class="text-white font-semibold mb-4">Linklər</h4>
-                <ul class="space-y-2 text-sm text-white/50">
-                    <li><a href="#" class="hover:text-gold">Ana Səhifə</a></li>
-                    <li><a href="#" class="hover:text-gold">Haqqımızda</a></li>
-                </ul>
+            <div class="text-center pt-8 border-t border-white/5">
+                <p class="text-white/30 text-xs tracking-widest uppercase mb-2">© 2026 AVC | Astrologum11. Bütün hüquqlar qorunur.</p>
+                <div class="inline-block px-4 py-1 border border-white/10 rounded-full bg-white/5 mt-2">
+                    <span class="text-xs text-white/60 font-light">Engineered & Designed by <strong class="text-white/90 font-medium">Agshin Ahmadli</strong></span>
+                </div>
             </div>
-            <div>
-                <h4 class="text-white font-semibold mb-4">Hüquqi</h4>
-                <ul class="space-y-2 text-sm text-white/50">
-                    <li><a href="#" class="hover:text-gold">Məxfilik Siyasəti</a></li>
-                    <li><a href="#" class="hover:text-gold">İstifadə Şərtləri</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-white/5 text-center text-white/40 text-sm tracking-widest uppercase">
-            © 2026 AVC | Astrologum11 <br>
-            <span class="block mt-3 text-gold/70 text-xs normal-case tracking-normal">by Agshin Ahmadli</span>
         </div>
     </footer>
 
-    <!-- LOGIKA (JS) -->
+    <!-- JAVASCRIPT MƏNTİQİ -->
     <script>
-        let currentUser = "";
+        let userName = "";
+        let userSeed = 0; // Doğum tarixinə əsaslanan deterministik rəqəm
 
-        // 1. Səhifə Naviqasiyası (SPA Routing)
-        function navigate(pageId) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
+        // 1. Apple Style Navigation
+        function navigate(viewId) {
+            document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 2. Qeydiyyat İşləmi & Fərdi Özəlliklərin Yüklənməsi
-        function handleRegistration(e) {
+        // 2. Qeydiyyat & Alqoritm
+        function handleLogin(e) {
             e.preventDefault();
-            const btn = document.getElementById('reg-btn');
-            btn.innerHTML = 'Kainatın Qapıları Açılır...';
+            const btn = document.getElementById('login-btn');
+            btn.innerText = "Analiz Edilir...";
+            btn.style.opacity = "0.7";
+
+            userName = document.getElementById('user-name').value;
+            const dateStr = document.getElementById('user-date').value;
             
-            currentUser = document.getElementById('reg-name').value;
-            const dateInput = document.getElementById('reg-date').value;
+            // Sadə deterministik seed (Eyni adama həmişə eyni analiz çıxsın deyə)
+            userSeed = dateStr.replace(/-/g, '').split('').reduce((a, b) => parseInt(a) + parseInt(b), 0) + userName.length;
 
-            // Bütün hədəf yerlərinə istifadəçi adını yaz (Features 1, 10, etc)
-            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = currentUser);
-
-            // 6. Titul Verilməsi
-            const titles = ["Kosmik Lider", "Ayın Mühafizəçisi", "Enerji Memarı", "Ulduz Səyyahı", "Mistika Ustası"];
-            const randomTitle = titles[currentUser.length % titles.length];
-            document.getElementById('dyn-title').innerText = randomTitle;
+            // DOM Güncəlləmələri
+            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = userName.split(' ')[0]);
+            
+            generateDeepProfile();
 
             setTimeout(() => {
-                document.getElementById('main-nav').style.display = 'flex'; // Menyu göstər
-                navigate('dashboard-section');
-                
-                // 4. Ad Günü Yoxlanışı (Sürpriz)
-                checkBirthday(dateInput);
-                
-                btn.innerHTML = 'Sistemə Daxil Ol';
-            }, 1000);
+                document.getElementById('nav-links').style.display = 'flex';
+                navigate('dashboard');
+                btn.innerText = "Sistemə Daxil Ol";
+                btn.style.opacity = "1";
+            }, 1200);
         }
 
-        // 4. Ad Günü Sürprizi Yoxlanışı
-        function checkBirthday(birthDateString) {
-            if(!birthDateString) return;
-            const bDate = new Date(birthDateString);
-            const today = new Date(); // Today is conceptually June 3
+        // 3. Dərin Psixoloji Profil Generasiyası
+        function generateDeepProfile() {
+            const masks = [
+                "Siz kənardan hər şeyi kontrol edən, duyğularını məntiqi ilə idarə edən və soyuqqanlı biri kimi görünürsünüz. İnsanlar sizə məsləhət almağa gəlir, çünki güclü auranız var.",
+                "Cəmiyyət içində son dərəcə uyğunlaşan, pozitiv və problemsiz biri kimi görünməyə çalışırsınız. Sizin xarici maskanız insanları rahatlatmaq üzərində qurulub.",
+                "Kənardan çox müstəqil, heç kimə ehtiyacı olmayan, azad ruhlu biri kimi görünürsünüz. Sizə yaxınlaşmaq çətindir, divarlarınız hündürdür."
+            ];
+            const shadows = [
+                "Lakin daxilinizdə böyük bir 'tərk edilmə' qorxusu var. Çox vaxt hər şeyi təkbaşına həll etmək istəyiniz, əslində insanlara güvənməkdə çətinlik çəkməyinizdən irəli gəlir.",
+                "Əslində daxildə tez-tez 'kifayət qədər yaxşı deyiləm' hissi ilə mübarizə aparırsınız. Başqalarını razı salmaq istəyiniz özünüzü unutmağınıza səbəb olur.",
+                "Daxilinizdə böyük bir aidiyyət və dərin emosional bağ qurma ehtiyacı var. Müstəqilliyiniz əslində rədd edilmək qorxusuna qarşı inkişaf etdirdiyiniz bir müdafiə mexanizmidir."
+            ];
+            const karmas = [
+                "Missiyanız: 'Nəzarəti buraxmağı' öyrənmək. Zəifliklərinizi və duyğularınızı qəbul etdiyiniz an, ən böyük mənəvi gücünüzə qovuşacaqsınız.",
+                "Missiyanız: 'Xeyr' deməyi öyrənmək. Başqalarının yükünü daşımağı buraxıb, öz sərhədlərinizi çəkdiyinizdə həyatınızın kilidi açılacaq.",
+                "Missiyanız: Emosional cəsarət. Qırılmaqdan qorxmadan insanlara içinizi açmaq və dərin bağlar qurmaq sizin ruhani inkişafınızın açarıdır."
+            ];
+            const daily = [
+                "Bu gün keçmişdə qaldığını düşündüyün bir mövzu yenidən zehnini məşğul edə bilər. Reaksiya verməkdən qaç. Susmaq, bu gün verə biləcəyin ən güclü cavabdır.",
+                "Daxili səsiniz bu gün sizə çox önəmli bir şey pıçıldayır. Məntiqlə yox, intuisiyanızla hərəkət etməli olduğunuz bir kəsişmədəsiniz.",
+                "Bu gün tələsik verilən qərarlardan uzaq durun. Gözlədiyiniz bir xəbər və ya cavab üçün səbrli olun, zaman sizin xeyrinizə işləyir."
+            ];
+
+            document.getElementById('prof-mask').innerText = masks[userSeed % masks.length];
+            document.getElementById('prof-shadow').innerText = shadows[userSeed % shadows.length];
+            document.getElementById('prof-karma').innerText = karmas[userSeed % karmas.length];
             
-            // Demo məqsədi ilə: Əgər gün və ay eynidirsə konfeti patlat. 
-            // Və ya istəyirsinizsə testi görmək üçün if şərtini silib hər giriştə konfeti partlada bilərsiniz.
-            if(bDate.getMonth() === today.getMonth() && bDate.getDate() === today.getDate()) {
-                document.getElementById('birthday-banner').classList.remove('hidden');
-                triggerConfetti();
-            } else {
-                // Test üçün aktiv edirik ki, funksiya görsənsin (Canlıda silinə bilər)
-                document.getElementById('birthday-banner').classList.remove('hidden');
-                triggerConfetti();
-            }
+            document.getElementById('daily-msg').innerHTML = `"${userName.split(' ')[0]}, ${daily[userSeed % daily.length]}"`;
         }
 
-        function triggerConfetti() {
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#f8fafc'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#f8fafc'] });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
+        // 4. Sinastri (Sevgi Uyumu) Alqoritmi
+        function calculateSynastry() {
+            const partner = document.getElementById('syn-partner-name').value;
+            if(!partner) return alert("Zəhmət olmasa tərəfdaşın adını yazın.");
+
+            const res = document.getElementById('syn-results');
+            res.classList.remove('hidden');
+            res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            // Animasiyalı Doldurma
+            let total = 0;
+            const targetTotal = 75 + (userSeed % 20); // 75 - 94 arası realist rəqəm
+            
+            const int = setInterval(() => {
+                if(total >= targetTotal) clearInterval(int);
+                else { total++; document.getElementById('syn-total').innerText = total + "%"; }
+            }, 20);
+
+            // Barlar
+            setTimeout(() => {
+                const scores = [targetTotal + 5, targetTotal - 8, targetTotal + 12, targetTotal - 4];
+                const bars = ['emo', 'com', 'spirit', 'long'];
+                
+                bars.forEach((b, i) => {
+                    let val = scores[i] > 98 ? 98 : scores[i];
+                    document.getElementById(`syn-${b}-val`).innerText = val + "%";
+                    document.getElementById(`syn-${b}-bar`).style.width = val + "%";
+                });
+
+                // Dərin Analiz Mətni
+                const texts = [
+                    "Sizin aranızdakı bağ sıradan bir münasibətdən çox, öyrədici bir karmik təcrübədir. Tərəfdaşınızın Ay enerjisi sizin gizli qorxularınızı üzə çıxararaq sağaltmaq potensialına malikdir. İntellektual olaraq bir-birinizi tamamlayırsınız.",
+                    "Bu münasibətdə emosional rezonans çox güclüdür. Siz danışmadan belə bir-birinizin nə hiss etdiyini anlaya bilirsiniz. Lakin uzunmüddətli sabitlik üçün fərdi sərhədlərinizə hörmət etməyiniz mütləqdir."
+                ];
+                document.getElementById('syn-text').innerText = texts[userSeed % 2];
+            }, 500);
         }
 
-        // 3. AI Astroloq Söhbət Məntiqi
+        // 5. Psixoloji Test Sistemi
+        const questions = [
+            { q: "Stressli və böhranlı bir vəziyyətdə ilk reaksiyanız nə olur?", o: ["Məntiqimi işə salıb həll axtarıram (Duyğuları basdırıram)", "Tək qalmaq və düşünmək istəyirəm (İzolyasiya)", "Məsələni paylaşmaq və dəstək axtarmaq (Bağlılıq)"] },
+            { q: "İnsanlarla münasibətdə gizli qorxunuz nədir?", o: ["İdarəni itirmək və zəif görünmək", "Səhv başa düşülmək və ya dəyərsiz hiss etmək", "Tərk edilmək və tək qalmaq"] },
+            { q: "Özünüzü ən çox nə vaxt günahkar hiss edirsiniz?", o: ["Qoyduğum hədəflərə çata bilməyəndə", "Kiməsə 'Yox' deyəndə və ya qəlbini qıranda", "Özümə vaxt ayırıb heç nə etməyəndə"] }
+        ];
+        
+        let currentQ = 0;
+        let answers = [];
+
+        function startTest() {
+            document.getElementById('test-intro').classList.add('hidden');
+            document.getElementById('test-q-area').classList.remove('hidden');
+            currentQ = 0; answers = [];
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if(currentQ >= questions.length) { showTestResult(); return; }
+            
+            document.getElementById('q-counter').innerText = `Sual ${currentQ + 1} / 3`;
+            document.getElementById('q-text').innerText = questions[currentQ].q;
+            
+            let html = '';
+            questions[currentQ].o.forEach((opt, idx) => {
+                html += `<button onclick="answerQ(${idx})" class="w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition font-light">${opt}</button>`;
+            });
+            document.getElementById('q-options').innerHTML = html;
+        }
+
+        function answerQ(val) {
+            answers.push(val);
+            currentQ++;
+            loadQuestion();
+        }
+
+        function showTestResult() {
+            document.getElementById('test-q-area').classList.add('hidden');
+            const resArea = document.getElementById('test-result');
+            resArea.classList.remove('hidden');
+            
+            // Məntiqi olaraq yalandan hesablama (daha inandırıcı mətnlər)
+            const sum = answers.reduce((a, b) => a + b, 0);
+            
+            const results = [
+                { t: "Nəzarətçi (The Controller)", d: "İçinizdə hər şeyi mükəmməl etmək istəyən, zəiflik göstərməkdən dəhşətə gələn bir kölgə var. Emosiyaları zəiflik kimi görürsünüz. Buraxmağı və sərbəst qalmağı öyrənməlisiniz." },
+                { t: "Fədakar Qurban (The Martyr)", d: "Başqalarının ehtiyaclarını özünüzdən üstün tutursunuz. 'Xeyr' deyə bilməməyiniz əslində sevilməmək qorxusudur. Öz dəyərinizi başqalarına etdiyiniz xidmətlərlə ölçməyi dayandırın." },
+                { t: "Tərk Edilmiş Uşaq (The Orphan)", d: "Daxilinizdə daim aidiyyət axtaran bir boşluq var. İnsanlara ya çox tez bağlanır, ya da incinməmək üçün onları özünüzdən itələyirsiniz. Kök salmaq üçün əvvəlcə özünüzə güvənməlisiniz." }
+            ];
+            
+            let res = results[sum % 3];
+            document.getElementById('res-title').innerText = res.t;
+            document.getElementById('res-desc').innerText = res.d;
+        }
+
+        // 6. AI Chat
         function handleChat(e) {
             e.preventDefault();
-            const inputField = document.getElementById('chat-input');
-            const msg = inputField.value.trim();
+            const inp = document.getElementById('chat-input');
+            const msg = inp.value.trim();
             if(!msg) return;
 
-            const chatBox = document.getElementById('chat-box');
-            // İstifadəçi mesajı
-            chatBox.innerHTML += `<div class="chat-bubble-user fade-in">${msg}</div>`;
-            inputField.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+            const chat = document.getElementById('chat-container');
+            // User MSG
+            chat.innerHTML += `
+                <div class="flex items-start gap-4 justify-end">
+                    <div class="bg-appleBlue text-white p-4 rounded-2xl rounded-tr-none font-light max-w-[80%]">${msg}</div>
+                </div>`;
+            inp.value = '';
+            chat.scrollTop = chat.scrollHeight;
 
             // AI Gözləmə
             setTimeout(() => {
                 const aiResponses = [
-                    "Sizin doğum xəritənizə əsasən, gələn ay karyera evinizdə Venera tranziti olacaq. Dəyişiklik üçün çox müsbət vaxtdır.",
-                    "Ayın hazırkı fazası sizdən keçmişlə bağları qoparmağı tələb edir. Sualınızla bağlı narahatlığa səbəb yoxdur, axışa buraxın.",
-                    "Saturnun mövqeyinə görə maliyyə məsələlərində risk etməmək daha yaxşıdır. Səbrli olun."
+                    "Göksəl mövqeyiniz göstərir ki, hazırda dəyişim astanasındasınız. Sorduğunuz mövzuda məntiqlə yox, sırf intuisiyanızla hərəkət etmək sizə düzgün yolu göstərəcək.",
+                    "Xəritənizdə Saturnun təsiri bu mövzuda bir az səbrli olmağınızı tələb edir. İki həftə ərzində gözləmədiyiniz bir aydınlanma yaşayacaqsınız. Tələsməyin.",
+                    "Bu məsələdə əslində cavabı daxilən bilirsiniz, sadəcə təsdiqlənməyə ehtiyacınız var. Bəli, hiss etdiyiniz o cəsarətli addımı atmaq üçün doğru zamandır."
                 ];
-                const reply = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-                chatBox.innerHTML += `<div class="chat-bubble-ai fade-in">✨ ${reply}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1500);
-        }
-
-        // 5. Sevgi Uyğunluğu
-        function calculateSynastry() {
-            const partnerName = document.getElementById('partner-name').value;
-            if(!partnerName) { alert("Zəhmət olmasa tərəfdaşınızın adını daxil edin."); return; }
-            
-            const resultBox = document.getElementById('synastry-results');
-            resultBox.classList.remove('hidden');
-            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                chat.innerHTML += `
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-appleGold/20 flex items-center justify-center flex-shrink-0">✨</div>
+                        <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none text-white/90 font-light max-w-[80%]">${aiResponses[userSeed % aiResponses.length]}</div>
+                    </div>`;
+                chat.scrollTop = chat.scrollHeight;
+            }, 1200);
         }
     </script>
 </body>
