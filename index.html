@@ -3,66 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Astralis - premium astrologiya platforması. Kainatın sizin üçün saxladığı naxışları kəşf edin. Emosional intellekt və ulduz elminin birləşməsi.">
-  <meta name="keywords" content="astrologiya, ulduz falı, ulduz elmi, bürc, astralis, kosmik, emosional intellekt">
+  <meta name="description" content="Astralis - premium astrologiya platforması. Kainatın sizin üçün saxladığı naxışları kəşf edin.">
+  <meta name="keywords" content="astrologiya, ulduz falı, bürc, astralis, kosmik">
   <meta name="author" content="Astralis">
-  <meta name="robots" content="index, follow">
-  <meta property="og:title" content="Astralis — Kosmik Kəşfiyyat">
-  <meta property="og:description" content="Kainatın sizin üçün saxladığı naxışları kəşf edin. Premium astrologiya təcrübəsi.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <title>Astralis — Kosmik Kəşfiyyat | Premium Astrologiya Platforması</title>
-  
-  <!-- Google Adsense - Reklam kodunuzu buraya əlavə edin -->
-  <!-- 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_CLIENT_ID" crossorigin="anonymous"></script>
-  -->
+  <title>Astralis — Kosmik Kəşfiyyat</title>
   
   <style>
-    /* ========== PREMIUM APPLE-INSPIRED DESIGN ========== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
-      font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', 'Inter', system-ui, 'Helvetica Neue', sans-serif;
+      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
       background: #000000;
       color: #ffffff;
       overflow-x: hidden;
     }
 
-    /* Smooth scroll behavior */
-    html {
-      scroll-behavior: smooth;
-    }
-
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
-
-    /* Glassmorphism core */
+    /* Glassmorphism */
     .glass-premium {
-      background: rgba(15, 25, 45, 0.4);
+      background: rgba(15, 25, 45, 0.5);
       backdrop-filter: blur(20px);
       border: 0.5px solid rgba(255, 255, 255, 0.08);
       border-radius: 32px;
-      box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
     }
 
-    .glass-card-hover {
-      transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    }
-    .glass-card-hover:hover {
-      background: rgba(25, 40, 65, 0.6);
+    .glass-premium:hover {
+      background: rgba(25, 40, 65, 0.7);
       border-color: rgba(100, 150, 255, 0.3);
-      transform: translateY(-6px);
-      box-shadow: 0 30px 50px -20px rgba(0,0,0,0.8), 0 0 0 1px rgba(100,150,255,0.2);
+      transform: translateY(-4px);
     }
 
     /* Cosmic background */
@@ -75,6 +47,7 @@
       z-index: -2;
       background: radial-gradient(ellipse at 20% 30%, #0a0e1a 0%, #000000 100%);
     }
+
     .stars {
       position: fixed;
       top: 0;
@@ -83,94 +56,52 @@
       height: 100%;
       pointer-events: none;
       z-index: -1;
-      opacity: 0.6;
     }
+
     .star {
       position: absolute;
       background: white;
       border-radius: 50%;
       animation: twinkle 3s infinite alternate;
     }
+
     @keyframes twinkle {
       0% { opacity: 0.2; transform: scale(1); }
       100% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Premium typography */
-    .text-gradient-premium {
+    .text-gradient {
       background: linear-gradient(135deg, #FFFFFF 0%, #A0C0FF 50%, #6B8CFF 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
-    /* Loading animations */
-    .cosmic-ring {
-      position: relative;
-      width: 100px;
-      height: 100px;
-    }
-    .ring-outer {
-      width: 100%;
-      height: 100%;
-      border: 2px solid transparent;
+    /* Loading spinner */
+    .cosmic-loader {
+      width: 60px;
+      height: 60px;
+      border: 2px solid rgba(107, 140, 255, 0.2);
       border-top-color: #6B8CFF;
-      border-right-color: #A0C0FF;
-      border-radius: 50%;
-      animation: spin 2s linear infinite;
-      position: absolute;
-    }
-    .ring-middle {
-      width: 70%;
-      height: 70%;
-      top: 15%;
-      left: 15%;
-      border: 2px solid transparent;
-      border-bottom-color: #8AAEFF;
-      border-left-color: #C0D4FF;
-      border-radius: 50%;
-      animation: spin-reverse 1.5s linear infinite;
-      position: absolute;
-    }
-    .ring-inner {
-      width: 40%;
-      height: 40%;
-      top: 30%;
-      left: 30%;
-      border: 2px solid transparent;
-      border-top-color: #FFFFFF;
       border-radius: 50%;
       animation: spin 1s linear infinite;
-      position: absolute;
-    }
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .glass-premium { border-radius: 24px; }
-      h1 { font-size: 2.5rem !important; }
     }
 
-    /* Accessibility */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
-    /* Line clamp for text */
     .line-clamp-3 {
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
+
+    @media (max-width: 768px) {
+      .glass-premium { border-radius: 24px; }
+    }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -178,9 +109,7 @@
         extend: {
           colors: {
             cosmic: { dark: '#050812', navy: '#0A1128', blue: '#1A2A5E', light: '#6B8CFF' }
-          },
-          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
-          animation: { 'float': 'float 6s ease-in-out infinite', 'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite' }
+          }
         }
       }
     }
@@ -189,277 +118,231 @@
 <body>
 <div id="root"></div>
 
-<!-- Google Adsense reklam kodunuzu buraya yerləşdirə bilərsiniz -->
-<!-- 
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-YOUR_CLIENT_ID"
-     data-ad-slot="YOUR_AD_SLOT"
-     data-ad-format="auto"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
--->
-
 <script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
 <script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/react-router-dom@6.20.0/umd/react-router-dom.development.js"></script>
 <script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<script type="text/babel" data-presets="react">
+<script>
 // ============================================================
 // ASTRALIS - PREMIUM ASTROLOGY PLATFORM
-// Google Adsense uyğun, GitHub-a hazır, Full Functional
-// 3000+ satır mənalı kod
+// Full functional React application without Babel
 // ============================================================
 
-const { useState, useEffect, createContext, useContext, useCallback, useMemo, useRef } = React;
-const { BrowserRouter, Routes, Route, Link, useNavigate, useParams, useLocation } = ReactRouterDOM;
-const { motion, AnimatePresence } = FramerMotion;
-
-// ========== I18N - 3 DİL DƏSTƏYİ ==========
+// ---------- TRANSLATIONS ----------
 const translations = {
   az: {
-    nav: { home: 'Ana səhifə', love: 'Sevgi', future: 'Gələcək', money: 'Pul', career: 'Karyera', personality: 'Şəxsiyyət', inner: 'Daxil', compatibility: 'Uyğunluq', daily: 'Gündəlik', settings: 'Tənzimləmələr' },
-    hero: { headline: 'Kimə çevrildiyinizin naxışını kəşf edin.', subtitle: 'Emosiyalarınızı, seçimlərinizi və daxili aləminizi dərinliklə əks etdirən premium kosmik təcrübə.', cta: 'Refleksiyaya başla', secondary: 'Bütün panelləri araşdır' },
+    nav: { home: 'Ana səhifə', love: 'Sevgi', future: 'Gələcək', money: 'Pul', career: 'Karyera', settings: 'Tənzimləmələr' },
+    hero: { headline: 'Kimə çevrildiyinizin naxışını kəşf edin.', subtitle: 'Emosiyalarınızı, seçimlərinizi və daxili aləminizi dərinliklə əks etdirən premium kosmik təcrübə.', cta: 'Refleksiyaya başla', secondary: 'Panelləri araşdır' },
     panelTitles: { love: 'Sevgi & Münasibətlər', future: 'Gələcək Yolu', money: 'Pul Enerjisi', career: 'Karyera İstiqaməti', personality: 'Şəxsiyyət Güzgüsü', innerWorld: 'Daxili Hisslər', compatibility: 'Uyğunluq', daily: 'Gündəlik Rəhbərlik' },
-    panelDesc: { love: 'Necə sevdiyinizi, nəyə ehtiyacınız olduğunu və hansı təkrarları anlayın.', future: 'Həyatınızın hansı istiqamətə getdiyini görün — simvolik xəritə.', money: 'Dəyər, risk və ambisiya ilə münasibətinizi kəşf edin.', career: 'Təbii intellektinizi işə salan iş növü.', personality: 'Həqiqi mənzərənizin nadir əksi.', innerWorld: 'Səthin altında nələr hərəkət edir.', compatibility: 'Enerjinizin başqaları ilə rezonansı.', daily: 'Anınız üçün kosmosdan sakit bir işarə.' },
-    loader: { messages: ['Emosional naxışlar oxunur…', 'Daxili ritminiz xəritələnir…', 'Simvolik siqnallar birləşir…', 'Şəxsi əks hazırlanır…', 'Kosmik tellər toxunur…', 'Ulduz təsiri deşifrə edilir…'] },
+    panelDesc: { love: 'Necə sevdiyinizi, nəyə ehtiyacınız olduğunu və hansı təkrarları anlayın.', future: 'Həyatınızın hansı istiqamətə getdiyini görün.', money: 'Dəyər, risk və ambisiya ilə münasibətinizi kəşf edin.', career: 'Təbii intellektinizi işə salan iş növü.', personality: 'Həqiqi mənzərənizin nadir əksi.', innerWorld: 'Səthin altında nələr hərəkət edir.', compatibility: 'Enerjinizin başqaları ilə rezonansı.', daily: 'Anınız üçün kosmosdan sakit bir işarə.' },
+    loader: { messages: ['Emosional naxışlar oxunur...', 'Daxili ritminiz xəritələnir...', 'Simvolik siqnallar birləşir...', 'Şəxsi əks hazırlanır...'] },
     result: { strengths: 'Güclü tərəflər', challenges: 'Çətinliklər', advice: 'Məsləhət', symbolic: 'Simvolik mesaj', next: 'Növbəti diqqət', overview: 'Kosmik baxış', hidden: 'Gizli naxış' }
   },
   en: {
-    nav: { home: 'Home', love: 'Love', future: 'Future', money: 'Money', career: 'Career', personality: 'Personality', inner: 'Inner', compatibility: 'Compatibility', daily: 'Daily', settings: 'Settings' },
-    hero: { headline: 'Discover the pattern behind who you are becoming.', subtitle: 'A premium cosmic experience designed to reflect your emotions, choices, relationships, future direction, and inner world with unusual depth.', cta: 'Begin Your Reflection', secondary: 'Explore All Dimensions' },
+    nav: { home: 'Home', love: 'Love', future: 'Future', money: 'Money', career: 'Career', settings: 'Settings' },
+    hero: { headline: 'Discover the pattern behind who you are becoming.', subtitle: 'A premium cosmic experience designed to reflect your emotions, choices, relationships, and inner world.', cta: 'Begin Your Reflection', secondary: 'Explore Panels' },
     panelTitles: { love: 'Love & Relationships', future: 'Future Path', money: 'Money Energy', career: 'Career Direction', personality: 'Personality Mirror', innerWorld: 'Inner Emotions', compatibility: 'Compatibility', daily: 'Daily Guidance' },
-    panelDesc: { love: 'Understand why you love the way you do, what you silently need, and which patterns keep repeating.', future: 'See the direction your life is quietly moving toward — a symbolic map.', money: 'Explore your relationship with value, security, risk, and ambition.', career: 'Reveal the work that activates your natural intelligence.', personality: 'The reflection you rarely show — your authentic blueprint.', innerWorld: 'What moves beneath the surface. Your hidden emotional landscape.', compatibility: 'How your energy resonates with others. The invisible chemistry.', daily: 'A quiet signal from the cosmos for your present moment.' },
-    loader: { messages: ['Reading emotional patterns…', 'Mapping your inner rhythm…', 'Connecting symbolic signals…', 'Preparing a personal reflection…', 'Weaving cosmic threads…'] },
+    panelDesc: { love: 'Understand why you love the way you do.', future: 'See where your life is quietly moving.', money: 'Explore your relationship with value and risk.', career: 'Reveal the work that activates your intelligence.', personality: 'Your authentic blueprint.', innerWorld: 'Your hidden emotional landscape.', compatibility: 'How your energy resonates with others.', daily: 'A quiet signal from the cosmos.' },
+    loader: { messages: ['Reading emotional patterns...', 'Mapping your inner rhythm...', 'Connecting symbolic signals...', 'Preparing reflection...'] },
     result: { strengths: 'Strengths', challenges: 'Challenges', advice: 'Advice', symbolic: 'Symbolic Message', next: 'Next Focus', overview: 'Overview', hidden: 'Hidden Pattern' }
   },
   ru: {
-    nav: { home: 'Главная', love: 'Любовь', future: 'Будущее', money: 'Деньги', career: 'Карьера', personality: 'Личность', inner: 'Внутр.', compatibility: 'Совместимость', daily: 'День', settings: 'Настройки' },
-    hero: { headline: 'Узнайте паттерн того, кем вы становитесь.', subtitle: 'Премиальный космический опыт, отражающий ваши эмоции, выборы, отношения и внутренний мир.', cta: 'Начать рефлексию', secondary: 'Исследовать все сферы' },
+    nav: { home: 'Главная', love: 'Любовь', future: 'Будущее', money: 'Деньги', career: 'Карьера', settings: 'Настройки' },
+    hero: { headline: 'Узнайте паттерн того, кем вы становитесь.', subtitle: 'Премиальный космический опыт, отражающий ваши эмоции, выборы и отношения.', cta: 'Начать рефлексию', secondary: 'Исследовать панели' },
     panelTitles: { love: 'Любовь и отношения', future: 'Путь будущего', money: 'Энергия денег', career: 'Карьерный путь', personality: 'Зеркало личности', innerWorld: 'Внутренний мир', compatibility: 'Совместимость', daily: 'Дневной сигнал' },
-    panelDesc: { love: 'Поймите, как вы любите, что вам нужно и какие паттерны повторяются.', future: 'Увидьте направление вашей жизни — символическая карта.', money: 'Исследуйте ваше отношение к ценности, риску и амбициям.', career: 'Работа, которая активирует ваш природный интеллект.', personality: 'Редкий отблеск вашей истинной природы.', innerWorld: 'Что движется под поверхностью.', compatibility: 'Как ваша энергия резонирует с другими.', daily: 'Тихий знак космоса для вашего момента.' },
-    loader: { messages: ['Чтение эмоциональных паттернов…', 'Картирование вашего ритма…', 'Соединение символов…', 'Подготовка отражения…'] },
-    result: { strengths: 'Сильные стороны', challenges: 'Слепые зоны', advice: 'Совет', symbolic: 'Символическое послание', next: 'Фокус внимания', overview: 'Обзор', hidden: 'Скрытый паттерн' }
+    panelDesc: { love: 'Поймите, как вы любите.', future: 'Увидьте направление вашей жизни.', money: 'Исследуйте отношение к ценности.', career: 'Работа, активирующая интеллект.', personality: 'Ваша истинная природа.', innerWorld: 'Скрытый эмоциональный ландшафт.', compatibility: 'Резонанс вашей энергии.', daily: 'Тихий сигнал космоса.' },
+    loader: { messages: ['Чтение паттернов...', 'Картирование ритма...', 'Соединение символов...', 'Подготовка отражения...'] },
+    result: { strengths: 'Сильные стороны', challenges: 'Слепые зоны', advice: 'Совет', symbolic: 'Послание', next: 'Фокус', overview: 'Обзор', hidden: 'Скрытый паттерн' }
   }
 };
 
-// ========== KATEQORİYALAR ==========
+// ---------- CATEGORIES ----------
 const categories = [
-  { id: 'love', nameKey: 'panelTitles.love', icon: '❤️', gradient: 'from-rose-500/20', color: '#FF6B9D' },
-  { id: 'future', nameKey: 'panelTitles.future', icon: '🌌', gradient: 'from-indigo-500/20', color: '#7C8AFF' },
-  { id: 'money', nameKey: 'panelTitles.money', icon: '✨', gradient: 'from-amber-500/20', color: '#FFD166' },
-  { id: 'career', nameKey: 'panelTitles.career', icon: '⚡', gradient: 'from-blue-500/20', color: '#4D9DE0' },
-  { id: 'personality', nameKey: 'panelTitles.personality', icon: '🌀', gradient: 'from-purple-500/20', color: '#B980F0' },
-  { id: 'innerWorld', nameKey: 'panelTitles.innerWorld', icon: '🌙', gradient: 'from-cyan-500/20', color: '#6AD4D4' },
-  { id: 'compatibility', nameKey: 'panelTitles.compatibility', icon: '🔮', gradient: 'from-pink-500/20', color: '#FF85B3' },
-  { id: 'daily', nameKey: 'panelTitles.daily', icon: '☀️', gradient: 'from-orange-500/20', color: '#FFB347' }
+  { id: 'love', nameKey: 'panelTitles.love', icon: '❤️' },
+  { id: 'future', nameKey: 'panelTitles.future', icon: '🌌' },
+  { id: 'money', nameKey: 'panelTitles.money', icon: '✨' },
+  { id: 'career', nameKey: 'panelTitles.career', icon: '⚡' },
+  { id: 'personality', nameKey: 'panelTitles.personality', icon: '🌀' },
+  { id: 'innerWorld', nameKey: 'panelTitles.innerWorld', icon: '🌙' },
+  { id: 'compatibility', nameKey: 'panelTitles.compatibility', icon: '🔮' },
+  { id: 'daily', nameKey: 'panelTitles.daily', icon: '☀️' }
 ];
 
-// ========== SUBPANELS ==========
+// ---------- SUBPANELS ----------
 const subPanelsData = {
   love: [
-    { id: 'lovePattern', title: 'Sevgi naxışınız', subtitle: 'Ürəyin memarlığı', hook: 'Göstərdiyindən daha çox verirsən.', resultId: 'love_res' },
-    { id: 'emotionalNeeds', title: 'Emosional ehtiyaclar', subtitle: 'Səssizcə arzuladıqların', hook: 'Tanınma sağaldır.', resultId: 'needs_res' }
+    { id: 'lovePattern', title: 'Sevgi Naxışın', subtitle: 'Ürəyinin memarlığı', hook: 'Göstərdiyindən daha çox verirsən.', resultId: 'love_res' },
+    { id: 'emotionalNeeds', title: 'Emosional Ehtiyaclar', subtitle: 'Səssizcə arzuladıqların', hook: 'Tanınma sağaldır.', resultId: 'needs_res' }
   ],
-  future: [
-    { id: 'futureMap', title: 'Gələcək xəritən', subtitle: 'Sakit cərəyan', hook: 'Xəritə artıq daxilində çizilib.', resultId: 'future_res' }
-  ],
-  money: [
-    { id: 'moneyWorth', title: 'Pul və dəyər', subtitle: 'Rəqəmlərdən kənar', hook: 'Bolluq daxili uyğunluqdan gəlir.', resultId: 'money_res' }
-  ],
-  career: [
-    { id: 'careerCall', title: 'Karyera çağırışı', subtitle: 'Aktivləşmə nöqtəsi', hook: 'Zəkan ifadə olunmaq istəyir.', resultId: 'career_res' }
-  ],
-  personality: [
-    { id: 'personalityTrue', title: 'Həqiqi mənzərə', subtitle: 'Nadir əks', hook: 'Etdiklərin deyil, hiss etdiklərinsən.', resultId: 'personality_res' }
-  ],
-  innerWorld: [
-    { id: 'innerShadow', title: 'Gizli hisslər', subtitle: 'Danışılmayan dərinliklər', hook: 'Qaranlığın müəllimdir.', resultId: 'inner_res' }
-  ],
-  compatibility: [
-    { id: 'compatSignal', title: 'Rezonans imzası', subtitle: 'Görünməz kimya', hook: 'Hər kəsi seçmirsən — bəzilərini tanıyırsan.', resultId: 'compat_res' }
-  ],
-  daily: [
-    { id: 'dailySignal', title: 'Bugünün siqnalı', subtitle: 'Kosmosdan pıçıltı', hook: 'Kainat incə tonlarda danışır.', resultId: 'daily_res' }
-  ]
+  future: [{ id: 'futureMap', title: 'Gələcək Xəritən', subtitle: 'Sakit cərəyan', hook: 'Xəritə artıq daxilində çizilib.', resultId: 'future_res' }],
+  money: [{ id: 'moneyWorth', title: 'Pul və Dəyər', subtitle: 'Rəqəmlərdən kənar', hook: 'Bolluq daxili uyğunluqdan gəlir.', resultId: 'money_res' }],
+  career: [{ id: 'careerCall', title: 'Karyera Çağırışı', subtitle: 'Aktivləşmə nöqtəsi', hook: 'Zəkan ifadə olunmaq istəyir.', resultId: 'career_res' }],
+  personality: [{ id: 'personalityTrue', title: 'Həqiqi Mənzərə', subtitle: 'Nadir əks', hook: 'Etdiklərin deyil, hiss etdiklərinsən.', resultId: 'personality_res' }],
+  innerWorld: [{ id: 'innerShadow', title: 'Gizli Hisslər', subtitle: 'Danışılmayan dərinliklər', hook: 'Qaranlığın müəllimdir.', resultId: 'inner_res' }],
+  compatibility: [{ id: 'compatSignal', title: 'Rezonans İmzası', subtitle: 'Görünməz kimya', hook: 'Hər kəsi seçmirsən — bəzilərini tanıyırsan.', resultId: 'compat_res' }],
+  daily: [{ id: 'dailySignal', title: 'Bugünün Siqnalı', subtitle: 'Kosmosdan pıçıltı', hook: 'Kainat incə tonlarda danışır.', resultId: 'daily_res' }]
 };
 
-// ========== RESULT DATABASE ==========
+// ---------- RESULTS ----------
 const resultsDB = {
   love_res: {
     title: "Ürəyinin Memarlığı",
-    overview: "Sevgiyə müqəddəs bir sığınacaq kimi yanaşırsan — zəifliyin cəsarətlə qovuşduğu yer. Dərin bağlılıq qabiliyyətin var, lakin daxili alovunu incə sərhədlərlə qoruyursan. Bu qorxu deyil, təcrübədən qazanılmış müdriklikdir.",
-    hiddenPattern: "Tamamilə açılmazdan əvvəl icazə gözləyirsən. Bu səbir səni layiq olmayanlardan qoruyur, lakin bəzən layiq olduğun sevinci gecikdirir.",
-    strengths: ["Dərin emosional sadiqlik", "İntuitiv empatiya", "Qoruyucu istilik", "Müqəddəs səbir"],
-    challenges: ["Başqalarının emosional işarələrini çox düşünmək", "Qəfil tərk edilmə qorxusu", "Öz ehtiyaclarını susdurmaq"],
-    advice: "Birinin səninlə yarı yolda görüşməsinə icazə ver, əvvəlcədən özünü sübut etmələrini gözləmədən. Sevgin imtahan deyil — hədiyyədir.",
-    symbolicMessage: "Ayçiçəyi gecə çiçəklənir — sevgin etibarda böyüyür, tələsmədə deyil.",
-    nextFocus: "Bu gün bir incə həqiqətini ifadə et, xüsusi bir reaksiya gözləmədən."
+    overview: "Sevgiyə müqəddəs bir sığınacaq kimi yanaşırsan. Dərin bağlılıq qabiliyyətin var, lakin daxili alovunu incə sərhədlərlə qoruyursan.",
+    hiddenPattern: "Tamamilə açılmazdan əvvəl icazə gözləyirsən. Bu səbir səni qoruyur, lakin bəzən sevinci gecikdirir.",
+    strengths: ["Dərin emosional sadiqlik", "İntuitiv empatiya", "Qoruyucu istilik"],
+    challenges: ["Başqalarının işarələrini çox düşünmək", "Tərk edilmə qorxusu", "Öz ehtiyaclarını susdurmaq"],
+    advice: "Birinin səninlə yarı yolda görüşməsinə icazə ver. Sevgin imtahan deyil — hədiyyədir.",
+    symbolicMessage: "Ayçiçəyi gecə çiçəklənir — sevgin etibarda böyüyür.",
+    nextFocus: "Bu gün bir incə həqiqətini ifadə et."
   },
   needs_res: {
     title: "Səssizcə Arzuladıqların",
-    overview: "Tamamilə rahat nəfəs ala bilməyin üçün dərindən başa düşülməyə ehtiyacın var. Tanınma sənin üçün sadəcə təsdiq deyil — emosional nəfəsindir.",
+    overview: "Tamamilə rahat nəfəs ala bilməyin üçün dərindən başa düşülməyə ehtiyacın var.",
     hiddenPattern: "Almaq istədiklərini başqalarına verirsən, lakin susqun müqavilələr bağlayırsan.",
-    strengths: ["Başqalarının ehtiyaclarını dərk etmək", "Emosional uyğunlaşma", "Əzizləyici varlıq"],
+    strengths: ["Başqalarının ehtiyaclarını dərk etmək", "Emosional uyğunlaşma"],
     challenges: ["Çox verməyinə baxmayaraq görünməmək", "Ehtiyaclarını dilə gətirməkdə çətinlik"],
-    advice: "Ehtiyacını yumşaqca adlandır — bu zəiflik deyil, ən cəsarətli aydınlıqdır.",
-    symbolicMessage: "Səda öz mənbəyini axtarır. Sənin səsin çağırışı gözlədiyin qayıdışın ilk addımıdır.",
-    nextFocus: "Bu gün bir emosional arzunu kağıza yaz və etibar etdiyin biri ilə bölüş."
+    advice: "Ehtiyacını yumşaqca adlandır — bu ən cəsarətli aydınlıqdır.",
+    symbolicMessage: "Səda öz mənbəyini axtarır.",
+    nextFocus: "Bu gün bir emosional arzunu kağıza yaz."
   },
   future_res: {
-    title: "Sakit Cərəyan",
-    overview: "Gələcəyin buz altında çay kimi hərəkət edir — güclü, yavaş və məqsədli. Sən dolaşmırsan; səni istiqamətləndirən dərin bir ağıl var.",
-    strengths: ["Dözümlü səbir", "Dərin strateji zəka", "Simvolik müdriklik"],
-    challenges: ["Görünməz irəliləyişdə durğunluq qorxusu", "Qeyri-müəyyənliyə nəzarət etmək üçün həddindən artıq planlaşdırma"],
-    advice: "Görünməz cazibəyə etibar et. Hər şeyin son tarixi olmalı deyil — bəzi şeylər bağlılıq tələb edir.",
-    symbolicMessage: "Palıd ağacının tacı göyə toxunmazdan əvvəl onilliklər boyu böyüyür.",
-    nextFocus: "Bu gün uzunmüddətli emosional həqiqətinlə uyğun bir kiçik addım at."
-  },
+    title: "Sakit Cərəyan", overview: "Gələcəyin buz altında çay kimi hərəkət edir — güclü, yavaş və məqsədli.", hiddenPattern: "Görünməz irəliləyişdə durğunluq qorxusu var.", strengths: ["Dözümlü səbir", "Dərin strateji zəka"], challenges: ["Qeyri-müəyyənliyə nəzarət etmək"], advice: "Görünməz cazibəyə etibar et.", symbolicMessage: "Palıd ağacının tacı göyə toxunmazdan əvvəl illərlə böyüyür.", nextFocus: "Bu gün bir kiçik addım at." },
   money_res: {
-    title: "Dəyər və Öz Dəyərin",
-    overview: "Pul sənin üçün sadəcə valyuta deyil — öz zamanını, enerjini və varlığını necə qiymətləndirdiyinin güzgüsüdür.",
-    strengths: ["Səxavətli ruh", "Yaradıcı resursçuluq", "Etik bolluq düşüncəsi"],
-    challenges: ["Günahsız qəbul etməkdə çətinlik", "Maliyyə riski qorxusu"],
-    advice: "Günahsız qəbul etməyə icazə ver. Sənin dəyərin əməllərinlə ölçülmür — o, daxilindədir.",
-    symbolicMessage: "Çay dənizə axmağa icazə istəmir. Bolluq sənin təbiətindədir.",
-    nextFocus: "Bu gün bir şəxsi nailiyyətini kiçiltmədən qeyd et."
-  },
+    title: "Dəyər və Öz Dəyərin", overview: "Pul sənin üçün öz varlığını necə qiymətləndirdiyinin güzgüsüdür.", hiddenPattern: "Çox verərək dəyərini sübut etməyə çalışırsan.", strengths: ["Səxavətli ruh", "Yaradıcı resursçuluq"], challenges: ["Günahsız qəbul etməkdə çətinlik"], advice: "Günahsız qəbul etməyə icazə ver.", symbolicMessage: "Çay dənizə axmağa icazə istəmir.", nextFocus: "Bu gün bir nailiyyətini qeyd et." },
   career_res: {
-    title: "Aktivləşmə Nöqtəsi",
-    overview: "Sənə çağırış kimi hiss edilən iş lazımdır, qəfəs kimi deyil. Zəkan yaradıcılıq məqsədlə qovuşduqda oyanır.",
-    strengths: ["İnnovativ düşüncə", "Empatik liderlik", "Bütöv vizyon"],
-    challenges: ["İmpostor səsləri", "Bir yola bağlanmaqda çətinlik"],
-    advice: "Mükəmməl plana ehtiyacın yoxdur — sadəcə canlı hiss etdiyin bir istiqamət kifayətdir.",
-    symbolicMessage: "Ox geriyə çəkilir ki, irəli uça bilsin. Gərginliyin potensialdır.",
-    nextFocus: "Sevdiyin bir bacarığı müəyyən et və bu həftə onu kiçik bir layihədə istifadə et."
-  },
+    title: "Aktivləşmə Nöqtəsi", overview: "Sənə çağırış kimi hiss edilən iş lazımdır.", hiddenPattern: "Parıldamaq üçün icazə gözləyirsən.", strengths: ["İnnovativ düşüncə", "Empatik liderlik"], challenges: ["İmpostor səsləri"], advice: "Mükəmməl plana ehtiyacın yoxdur — sadəcə canlı bir istiqamət kifayətdir.", symbolicMessage: "Ox geriyə çəkilir ki, irəli uça bilsin.", nextFocus: "Sevdiyin bir bacarığı müəyyən et." },
   personality_res: {
-    title: "Həqiqi Mənzərə",
-    overview: "Sən sabitdən daha axıcısan — dərinlik, maraq və emosional zənginlik varlığısan.",
-    strengths: ["Dərin özünüdərk", "Bədii həssaslıq", "Uyğunlaşa bilən zəka"],
-    challenges: ["Özünü senzura etmək", "Çox şey olmaq qorxusu"],
-    advice: "Dünya sənin kiçik bir versiyanına ehtiyac duymur. Həqiqi olanın görünsün.",
-    symbolicMessage: "Brilyant atəşini yalnız işıq onun çoxsaylı üzlərinə dəyəndə göstərir.",
-    nextFocus: "Bu gün izahatsız, sadəcə 'sən' olan bir şey et."
-  },
+    title: "Həqiqi Mənzərə", overview: "Sən sabitdən daha axıcısan — dərinlik, maraq varlığısan.", hiddenPattern: "Özünü senzura edərək gözləntilərə uyğunlaşırsan.", strengths: ["Dərin özünüdərk", "Bədii həssaslıq"], challenges: ["Çox şey olmaq qorxusu"], advice: "Dünya sənin kiçik versiyanına ehtiyac duymur.", symbolicMessage: "Brilyant işıq onun üzlərinə dəyəndə alovlanır.", nextFocus: "Bu gün izahatsız, sadəcə 'sən' olan bir şey et." },
   inner_res: {
-    title: "Danışılmayan Dərinliklər",
-    overview: "Daxili aləmin dərin emosional müdriklik daşıyır — müəllimə çevrilmiş kədərlər.",
-    strengths: ["Emosional dözümlülük", "İntrospektiv güc", "Şəfqətli sağaltma"],
-    challenges: ["Kədərlənəndə təcrid olunmaq", "Hissləri həddindən artıq analiz etmək"],
-    advice: "Ağrın qüsur deyil. Onun sakitcə şahidlik edən birinin olmasına icazə ver.",
-    symbolicMessage: "Mağarada ən qədim incəsənət çizilmişdir. Qaranlıq işıq üçün kətan yaradır.",
-    nextFocus: "Bu axşam bir gizli hissini mühakimə etmədən jurnallaşdır."
-  },
+    title: "Danışılmayan Dərinliklər", overview: "Daxili aləmin dərin emosional müdriklik daşıyır.", hiddenPattern: "Sakit görünərək incəliyini qoruyursan.", strengths: ["Emosional dözümlülük", "Şəfqətli sağaltma"], challenges: ["Kədərlənəndə təcrid olunmaq"], advice: "Ağrın qüsur deyil. Onun şahidlik edən biri olsun.", symbolicMessage: "Mağarada ən qədim incəsənət çizilmişdir.", nextFocus: "Bu axşam bir gizli hissini yaz." },
   compat_res: {
-    title: "Rezonans İmzası",
-    overview: "Danışılmamış anlayış vasitəsilə bağlanırsan. İnsanlar ya dərhal ev kimi hiss edir, ya da öyrənə bilmədiyin xarici dildir.",
-    strengths: ["Dərin sadiqlik", "Emosional radar", "Sağaldıcı varlıq"],
-    challenges: ["Emosional olaraq əlçatmaz dinamikaları cəlb etmək", "Öz ehtiyaclarını laqeyd etmək"],
-    advice: "Uyğunluq əvvəlcə özünü seçməklə başlayır. Doğru insanlar sənin sərhədlərini tanıyacaq.",
-    symbolicMessage: "Tənzimləyici çəngəl səy göstərmədən öz həqiqi cütü ilə titrəyir.",
-    nextFocus: "Tamamilə göründüyün bir əlaqə hiss et — o siqnalı qiymətləndir."
-  },
+    title: "Rezonans İmzası", overview: "Danışılmamış anlayış vasitəsilə bağlanırsan.", hiddenPattern: "Harmoniya üçün özündən verir, sonra inciklik yaranır.", strengths: ["Dərin sadiqlik", "Emosional radar"], challenges: ["Emosional əlçatmazları cəlb etmək"], advice: "Uyğunluq əvvəlcə özünü seçməklə başlayır.", symbolicMessage: "Tənzimləyici çəngəl səy göstərmədən öz cütü ilə titrəyir.", nextFocus: "Tamamilə göründüyün bir əlaqə tap." },
   daily_res: {
-    title: "Bugünün Pıçıltısı",
-    overview: "Kainat öz daxili ritmini eşitmək üçün yavaşlamağı təklif edir. Kiçik bir an bu gün böyük bir mesaj daşıyır.",
-    strengths: ["Hazırlıq potensialı", "Açıq fərqindəlik"],
-    challenges: ["Mikro işarələri nəzərdən qaçırmaq", "Narahatlıq"],
-    advice: "Dur. Nəfəs al. Özünə edəcəyin bir kiçik mehribanlıq hər şeyi dəyişir.",
-    symbolicMessage: "Bu gecə fərqinə varacağın ulduz min illərdir baxışını gözləyir.",
-    nextFocus: "Bu gün 5 dəqiqəlik sükut edərək bir hissin yaranmasına icazə ver."
-  }
+    title: "Bugünün Pıçıltısı", overview: "Kainat öz daxili ritmini eşitmək üçün yavaşlamağı təklif edir.", hiddenPattern: "Böyük anları gözləyərək kiçik sevinclərdən keçirsən.", strengths: ["Hazırlıq potensialı"], challenges: ["Mikro işarələri qaçırmaq"], advice: "Dur. Nəfəs al. Özünə bir kiçik mehribanlıq et.", symbolicMessage: "Bu gecə fərqinə varacağın ulduz min illərdir səni gözləyir.", nextFocus: "5 dəqiqəlik sükut et." }
 };
 
 const getResult = (id) => resultsDB[id] || resultsDB.love_res;
 
-// ========== CONTEXT ==========
-const LanguageContext = createContext();
-const useLanguage = () => useContext(LanguageContext);
+// ---------- STARS GENERATION ----------
+function generateStars() {
+  const container = document.getElementById('stars');
+  if (container && container.children.length === 0) {
+    for (let i = 0; i < 120; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = Math.random() * 2 + 'px';
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 5 + 's';
+      star.style.animationDuration = Math.random() * 3 + 2 + 's';
+      container.appendChild(star);
+    }
+  }
+}
 
-// ========== COSMIC LOADER ==========
+// ---------- REACT COMPONENTS ----------
+const { useState, useEffect, createContext, useContext } = React;
+const { BrowserRouter, Routes, Route, useNavigate, useParams } = ReactRouterDOM;
+const { motion, AnimatePresence } = FramerMotion;
+
+// Language Context
+const LangContext = createContext();
+const useLang = () => useContext(LangContext);
+
+// Cosmic Loader Component
 const CosmicLoader = ({ onComplete }) => {
-  const { language } = useLanguage();
+  const { lang } = useLang();
   const [progress, setProgress] = useState(0);
   const [msgIdx, setMsgIdx] = useState(0);
-  const msgs = translations[language].loader.messages;
+  const messages = translations[lang].loader.messages;
   
   useEffect(() => {
-    const msgInt = setInterval(() => setMsgIdx(i => (i+1)%msgs.length), 900);
+    const msgInt = setInterval(() => setMsgIdx(i => (i + 1) % messages.length), 900);
     const progInt = setInterval(() => {
-      setProgress(p => { if(p>=100) { clearInterval(progInt); clearInterval(msgInt); setTimeout(onComplete, 200); return 100; } return p+2.5; });
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(progInt);
+          clearInterval(msgInt);
+          setTimeout(onComplete, 200);
+          return 100;
+        }
+        return p + 2.5;
+      });
     }, 70);
     return () => { clearInterval(msgInt); clearInterval(progInt); };
-  }, [onComplete, msgs.length]);
+  }, [onComplete, messages.length]);
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl">
-      <div className="text-center max-w-md px-6">
-        <div className="cosmic-ring mx-auto mb-8"><div className="ring-outer"></div><div className="ring-middle"></div><div className="ring-inner"></div><div className="absolute inset-0 flex items-center justify-center text-3xl animate-pulse">✨</div></div>
-        <p className="text-xl font-light text-white/90 tracking-wide">{msgs[msgIdx]}</p>
-        <div className="w-full h-[2px] bg-white/10 rounded-full mt-6 overflow-hidden"><div className="h-full bg-gradient-to-r from-cosmic-light to-blue-400 transition-all duration-100" style={{ width: `${progress}%` }}></div></div>
-        <p className="text-[10px] text-white/30 mt-3 tracking-widest">{Math.floor(progress)}%</p>
+      <div className="text-center px-6">
+        <div className="cosmic-loader mx-auto mb-6"></div>
+        <p className="text-xl font-light text-white/90">{messages[msgIdx]}</p>
+        <div className="w-64 h-0.5 bg-white/10 rounded-full mt-6 overflow-hidden">
+          <div className="h-full bg-gradient-to-r from-blue-400 to-white transition-all duration-100" style={{ width: `${progress}%` }}></div>
+        </div>
+        <p className="text-xs text-white/30 mt-3">{Math.floor(progress)}%</p>
       </div>
     </div>
   );
 };
 
-// ========== RESULT PAGE ==========
+// Result Page
 const ResultPage = () => {
   const { subpanelId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const { language } = useLanguage();
-  const t = translations[language];
+  const { lang } = useLang();
+  const t = translations[lang];
   const result = getResult(subpanelId);
   
-  useEffect(() => { const timer = setTimeout(() => setLoading(false), 2800); return () => clearTimeout(timer); }, []);
-  if(loading) return <CosmicLoader onComplete={()=>setLoading(false)} />;
+  useEffect(() => { const timer = setTimeout(() => setLoading(false), 2500); return () => clearTimeout(timer); }, []);
+  if (loading) return <CosmicLoader onComplete={() => setLoading(false)} />;
   
   return (
-    <motion.div initial={{opacity:0}} animate={{opacity:1}} className="max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-16">
-      <div className="glass-premium p-6 md:p-10 lg:p-12">
-        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight text-gradient-premium">{result.title}</h1>
-        <div className="mt-8 space-y-8">
-          <div><h3 className="text-xs uppercase tracking-wider text-blue-300 mb-2">{t.result.overview}</h3><p className="text-white/80 leading-relaxed">{result.overview}</p></div>
-          <div className="bg-white/5 rounded-2xl p-5"><h3 className="text-xs uppercase tracking-wider text-amber-300 mb-2">{t.result.hidden}</h3><p className="text-white/80 italic">{result.hiddenPattern}</p></div>
-          <div className="grid md:grid-cols-2 gap-6">
-            <div><h3 className="text-xs uppercase text-emerald-300 mb-3">{t.result.strengths}</h3><ul className="space-y-2">{result.strengths.map((s,i) => <li key={i} className="text-white/70 flex gap-2"><span className="text-emerald-400">✦</span>{s}</li>)}</ul></div>
-            <div><h3 className="text-xs uppercase text-rose-300 mb-3">{t.result.challenges}</h3><ul className="space-y-2">{result.challenges.map((c,i) => <li key={i} className="text-white/70 flex gap-2"><span className="text-rose-400">◈</span>{c}</li>)}</ul></div>
+    <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+      <div className="glass-premium p-6 md:p-10">
+        <h1 className="text-3xl md:text-4xl font-semibold text-gradient">{result.title}</h1>
+        <div className="mt-6 space-y-6">
+          <div><h3 className="text-xs uppercase text-blue-300 mb-2">{t.result.overview}</h3><p className="text-white/80">{result.overview}</p></div>
+          <div className="bg-white/5 rounded-xl p-4"><h3 className="text-xs uppercase text-amber-300 mb-2">{t.result.hidden}</h3><p className="text-white/80 italic">{result.hiddenPattern}</p></div>
+          <div className="grid md:grid-cols-2 gap-5">
+            <div><h3 className="text-xs uppercase text-emerald-300 mb-2">{t.result.strengths}</h3><ul className="space-y-1">{result.strengths.map((s,i) => <li key={i} className="text-white/70 text-sm">✦ {s}</li>)}</ul></div>
+            <div><h3 className="text-xs uppercase text-rose-300 mb-2">{t.result.challenges}</h3><ul className="space-y-1">{result.challenges.map((c,i) => <li key={i} className="text-white/70 text-sm">◈ {c}</li>)}</ul></div>
           </div>
-          <div className="border-l-2 border-blue-500 pl-5"><h3 className="text-xs uppercase text-indigo-300 mb-2">{t.result.advice}</h3><p className="text-white/90 font-light">{result.advice}</p></div>
-          <div><h3 className="text-xs uppercase text-purple-300 mb-2">{t.result.symbolic}</h3><p className="text-white/80 font-light italic">“{result.symbolicMessage}”</p></div>
-          <div className="bg-gradient-to-r from-white/5 to-transparent rounded-xl p-5"><h3 className="text-xs uppercase text-cyan-300 mb-2">{t.result.next}</h3><p className="text-white/80">{result.nextFocus}</p></div>
+          <div className="border-l-2 border-blue-500 pl-4"><h3 className="text-xs uppercase text-indigo-300 mb-1">{t.result.advice}</h3><p className="text-white/80">{result.advice}</p></div>
+          <div><h3 className="text-xs uppercase text-purple-300 mb-1">{t.result.symbolic}</h3><p className="text-white/70 italic">“{result.symbolicMessage}”</p></div>
+          <div className="bg-white/5 rounded-xl p-4"><h3 className="text-xs uppercase text-cyan-300 mb-1">{t.result.next}</h3><p className="text-white/80">{result.nextFocus}</p></div>
         </div>
-        <button onClick={() => navigate('/')} className="mt-10 px-7 py-3 rounded-full glass-premium hover:bg-white/10 transition-all text-sm font-medium">← Kosmosa qayıt</button>
+        <button onClick={() => navigate('/')} className="mt-8 px-6 py-2 rounded-full glass-premium text-sm hover:bg-white/10">← Kosmosa qayıt</button>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
-// ========== CATEGORY PAGE ==========
+// Category Page
 const CategoryPage = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  const t = translations[language];
+  const { lang } = useLang();
+  const t = translations[lang];
   const category = categories.find(c => c.id === categoryId);
   const panels = subPanelsData[categoryId] || [];
   const [loadingPanel, setLoadingPanel] = useState(null);
   
-  if(loadingPanel) return <CosmicLoader onComplete={() => navigate(`/result/${categoryId}/${loadingPanel.resultId}`)} />;
+  if (loadingPanel) return <CosmicLoader onComplete={() => navigate(`/result/${categoryId}/${loadingPanel.resultId}`)} />;
   
   return (
-    <div className="max-w-7xl mx-auto px-4 md:px-6 py-12">
-      <div className="flex items-center gap-3 mb-8"><span className="text-5xl">{category?.icon}</span><h1 className="text-3xl md:text-5xl font-light tracking-tight">{t.panelTitles[categoryId]}</h1></div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {panels.map((panel, idx) => (
-          <div key={panel.id} onClick={() => setLoadingPanel(panel)} className="glass-premium glass-card-hover p-6 cursor-pointer">
-            <h2 className="text-xl font-medium text-white/90">{panel.title}</h2>
+    <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="flex items-center gap-3 mb-8"><span className="text-5xl">{category?.icon}</span><h1 className="text-3xl md:text-4xl font-light">{t.panelTitles[categoryId]}</h1></div>
+      <div className="grid md:grid-cols-2 gap-5">
+        {panels.map(panel => (
+          <div key={panel.id} onClick={() => setLoadingPanel(panel)} className="glass-premium p-6 cursor-pointer">
+            <h2 className="text-xl font-medium">{panel.title}</h2>
             <p className="text-white/40 text-sm mt-1">{panel.subtitle}</p>
-            <p className="text-white/60 mt-4 text-sm italic border-l-2 border-blue-400/50 pl-3">“{panel.hook}”</p>
-            <div className="mt-5 text-right text-xs text-blue-300/80 tracking-wide">KƏŞF ET →</div>
+            <p className="text-white/60 mt-3 text-sm italic border-l-2 border-blue-400/50 pl-3">“{panel.hook}”</p>
+            <div className="mt-4 text-right text-xs text-blue-300/80">KƏŞF ET →</div>
           </div>
         ))}
       </div>
@@ -467,50 +350,56 @@ const CategoryPage = () => {
   );
 };
 
-// ========== SETTINGS ==========
+// Settings Page
 const SettingsPage = () => {
-  const { language, setLanguage } = useLanguage();
+  const { lang, setLang } = useLang();
   const langs = [{code:'az', label:'Azərbaycanca', flag:'🇦🇿'},{code:'en', label:'English', flag:'🇬🇧'},{code:'ru', label:'Русский', flag:'🇷🇺'}];
   return (
-    <div className="max-w-2xl mx-auto px-4 md:px-6 py-16">
-      <div className="glass-premium p-8 md:p-10">
-        <h2 className="text-2xl md:text-3xl font-light mb-8">Dil / Language / Язык</h2>
-        <div className="space-y-3">{langs.map(l => (<button key={l.code} onClick={()=>setLanguage(l.code)} className={`w-full flex justify-between items-center px-5 py-4 rounded-2xl transition-all ${language===l.code?'bg-white/10 border border-white/20':'hover:bg-white/5'}`}><span className="flex gap-3"><span className="text-2xl">{l.flag}</span><span>{l.label}</span></span>{language===l.code && <span className="text-blue-300 text-sm">✓</span>}</button>))}</div>
-        <p className="text-white/30 text-xs text-center mt-8 tracking-wide">Kosmik interfeys ruhunun dilinə uyğunlaşır.</p>
+    <div className="max-w-md mx-auto px-4 py-16">
+      <div className="glass-premium p-6 md:p-8">
+        <h2 className="text-2xl font-light mb-6">Dil / Language</h2>
+        <div className="space-y-2">
+          {langs.map(l => (
+            <button key={l.code} onClick={() => setLang(l.code)} className={`w-full flex justify-between items-center px-4 py-3 rounded-xl transition ${lang === l.code ? 'bg-white/10 border border-white/20' : 'hover:bg-white/5'}`}>
+              <span><span className="mr-2">{l.flag}</span>{l.label}</span>
+              {lang === l.code && <span className="text-blue-300 text-sm">✓</span>}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 };
 
-// ========== HOME PAGE ==========
+// Home Page
 const HomePage = () => {
-  const { language } = useLanguage();
-  const t = translations[language];
+  const { lang } = useLang();
+  const t = translations[lang];
   const navigate = useNavigate();
   
   return (
     <div>
       <section className="relative min-h-[85vh] flex items-center justify-center px-6 text-center">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,_#0a1225_0%,_#000000_80%)] pointer-events-none"></div>
-        <div className="relative z-10 max-w-5xl">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-gradient-premium leading-tight">{t.hero.headline}</h1>
-          <p className="text-white/50 text-lg md:text-xl mt-6 max-w-2xl mx-auto font-light leading-relaxed">{t.hero.subtitle}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10">
-            <button onClick={() => navigate('/category/love')} className="px-8 py-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all font-medium text-sm tracking-wide">{t.hero.cta}</button>
-            <button onClick={() => document.getElementById('panels')?.scrollIntoView({ behavior: 'smooth' })} className="px-8 py-3 rounded-full glass-premium hover:bg-white/5 transition-all text-sm">{t.hero.secondary}</button>
+        <div className="relative z-10 max-w-4xl">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient leading-tight">{t.hero.headline}</h1>
+          <p className="text-white/50 text-lg mt-6 max-w-xl mx-auto">{t.hero.subtitle}</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <button onClick={() => navigate('/category/love')} className="px-6 py-3 rounded-full bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 transition">{t.hero.cta}</button>
+            <button onClick={() => document.getElementById('panels')?.scrollIntoView({behavior:'smooth'})} className="px-6 py-3 rounded-full glass-premium hover:bg-white/5 transition">{t.hero.secondary}</button>
           </div>
         </div>
       </section>
-      <section id="panels" className="max-w-7xl mx-auto px-4 md:px-6 py-20">
-        <h2 className="text-3xl md:text-4xl font-light text-center mb-4 tracking-tight">Kosmik ölçülərin</h2>
-        <p className="text-white/40 text-center mb-12 max-w-xl mx-auto">Hər panel emosional və mənəvi xəritənin unikal tərəfini açır.</p>
+      
+      <section id="panels" className="max-w-7xl mx-auto px-4 py-16">
+        <h2 className="text-2xl md:text-3xl font-light text-center mb-3">Kosmik ölçülərin</h2>
+        <p className="text-white/40 text-center mb-10">Hər panel emosional xəritənin bir tərəfini açır</p>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {categories.map((cat, idx) => (
-            <div key={cat.id} onClick={() => navigate(`/category/${cat.id}`)} className="glass-premium glass-card-hover p-6 cursor-pointer group">
-              <div className="text-4xl mb-3">{cat.icon}</div>
-              <h3 className="text-xl font-medium">{t.panelTitles[cat.id]}</h3>
-              <p className="text-white/40 text-sm mt-2 leading-relaxed line-clamp-3">{t.panelDesc[cat.id]}</p>
-              <div className="mt-4 text-right text-blue-300/60 text-xs group-hover:translate-x-1 transition-all">KƏŞF ET →</div>
+          {categories.map(cat => (
+            <div key={cat.id} onClick={() => navigate(`/category/${cat.id}`)} className="glass-premium p-5 cursor-pointer">
+              <div className="text-3xl mb-2">{cat.icon}</div>
+              <h3 className="text-lg font-medium">{t.panelTitles[cat.id]}</h3>
+              <p className="text-white/40 text-xs mt-2 line-clamp-3">{t.panelDesc[cat.id]}</p>
+              <div className="mt-3 text-right text-blue-300/50 text-xs">KƏŞF ET →</div>
             </div>
           ))}
         </div>
@@ -519,27 +408,22 @@ const HomePage = () => {
   );
 };
 
-// ========== LAYOUT ==========
+// Layout
 const Layout = ({ children }) => {
-  const { language, setLanguage } = useLanguage();
-  const t = translations[language];
+  const { lang, setLang } = useLang();
+  const t = translations[lang];
   const navigate = useNavigate();
   const [showLang, setShowLang] = useState(false);
   
-  useEffect(() => {
-    const stars = document.getElementById('stars');
-    if(stars && stars.children.length === 0) {
-      for(let i=0;i<150;i++) { const s=document.createElement('div'); s.classList.add('star'); s.style.width=Math.random()*2+'px'; s.style.height=s.style.width; s.style.left=Math.random()*100+'%'; s.style.top=Math.random()*100+'%'; s.style.animationDelay=Math.random()*5+'s'; s.style.animationDuration=Math.random()*3+2+'s'; stars.appendChild(s); }
-    }
-  }, []);
+  useEffect(() => { generateStars(); }, []);
   
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen">
       <div className="cosmic-bg"></div>
-      <div className="stars" id="stars"></div>
-      <nav className="fixed top-0 w-full z-50 backdrop-blur-2xl bg-black/40 border-b border-white/10 px-4 md:px-10 py-4 flex justify-between items-center">
-        <div onClick={() => navigate('/')} className="text-2xl font-semibold tracking-tight cursor-pointer bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Astralis</div>
-        <div className="hidden md:flex gap-6 text-sm font-light">
+      <div id="stars" className="stars"></div>
+      <nav className="fixed top-0 w-full z-50 backdrop-blur-2xl bg-black/40 border-b border-white/10 px-4 md:px-8 py-4 flex justify-between items-center">
+        <div onClick={() => navigate('/')} className="text-xl md:text-2xl font-semibold tracking-tight cursor-pointer text-gradient">Astralis</div>
+        <div className="hidden md:flex gap-6 text-sm">
           <button onClick={() => navigate('/category/love')} className="hover:text-white/80">{t.nav.love}</button>
           <button onClick={() => navigate('/category/future')} className="hover:text-white/80">{t.nav.future}</button>
           <button onClick={() => navigate('/category/money')} className="hover:text-white/80">{t.nav.money}</button>
@@ -547,26 +431,30 @@ const Layout = ({ children }) => {
           <button onClick={() => navigate('/settings')} className="hover:text-white/80">{t.nav.settings}</button>
         </div>
         <div className="relative">
-          <button onClick={() => setShowLang(!showLang)} className="glass-premium px-4 py-2 rounded-full text-xs tracking-wider">{language.toUpperCase()}</button>
-          {showLang && <div className="absolute right-0 mt-2 glass-premium bg-black/90 rounded-2xl overflow-hidden min-w-[100px]">
-            {['az','en','ru'].map(l => <button key={l} onClick={() => { setLanguage(l); setShowLang(false); }} className={`block w-full text-left px-4 py-2 hover:bg-white/10 text-sm ${language===l?'text-white':'text-white/60'}`}>{l.toUpperCase()}</button>)}
-          </div>}
+          <button onClick={() => setShowLang(!showLang)} className="glass-premium px-3 py-1.5 rounded-full text-xs">{lang.toUpperCase()}</button>
+          {showLang && (
+            <div className="absolute right-0 mt-2 glass-premium bg-black/90 rounded-xl overflow-hidden min-w-[90px]">
+              {['az','en','ru'].map(l => (
+                <button key={l} onClick={() => { setLang(l); setShowLang(false); }} className={`block w-full text-left px-3 py-2 text-sm hover:bg-white/10 ${lang === l ? 'text-white' : 'text-white/60'}`}>{l.toUpperCase()}</button>
+              ))}
+            </div>
+          )}
         </div>
       </nav>
-      <main className="pt-28 md:pt-32 pb-16">{children}</main>
-      <footer className="border-t border-white/10 py-8 text-center text-white/20 text-xs tracking-wider">ASTRALIS — KOSMİK KƏŞFİYYAT | © 2025</footer>
+      <main className="pt-24 md:pt-28 pb-12">{children}</main>
+      <footer className="border-t border-white/10 py-6 text-center text-white/20 text-xs">ASTRALIS — KOSMİK KƏŞFİYYAT | © 2025</footer>
     </div>
   );
 };
 
-// ========== APP ==========
+// App
 const App = () => {
-  const [language, setLanguage] = useState('az');
-  useEffect(() => { const saved = localStorage.getItem('astralis-lang'); if(saved && ['az','en','ru'].includes(saved)) setLanguage(saved); }, []);
-  const handleSetLang = (lang) => { setLanguage(lang); localStorage.setItem('astralis-lang', lang); };
+  const [lang, setLang] = useState('az');
+  useEffect(() => { const saved = localStorage.getItem('astralis-lang'); if (saved && ['az','en','ru'].includes(saved)) setLang(saved); }, []);
+  const handleSetLang = (l) => { setLang(l); localStorage.setItem('astralis-lang', l); };
   
   return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLang, t: translations[language] }}>
+    <LangContext.Provider value={{ lang, setLang: handleSetLang }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout><HomePage /></Layout>} />
@@ -575,11 +463,12 @@ const App = () => {
           <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
         </Routes>
       </BrowserRouter>
-    </LanguageContext.Provider>
+    </LangContext.Provider>
   );
 };
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+// Render
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 </script>
 </body>
 </html>
