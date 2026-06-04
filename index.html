@@ -1,26 +1,40 @@
-Tam olaraq istədiyin premium dizaynı, bütün səhifələri (Home, Login, Dashboard, Karyera, Sinastri, Doğum xəritəsi, AI Chat), fırlanan kosmik yüklənmə animasiyasını və **AZ / EN** dilləri arasında səhifə yenilənmədən keçid edən sistemi tək bir `.html` faylında yığdım.
-
-Burada React əvəzinə təmiz **Vanilla JavaScript** və **Tailwind CSS** istifadə olunub. Kodu sadəcə `index.html` olaraq yaddaşda saxlayıb brauzerdə aça bilərsən.
-
 ```html
 <!DOCTYPE html>
-<html lang="az">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astrologum - Kosmik Platforma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Astrologum | Cinematic Astrology</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+                    },
                     colors: {
-                        cosmic: { dark: '#030814', blue: '#0a1628' },
-                        accent: { blue: '#0a84ff', gold: '#d4af37' }
+                        cosmic: {
+                            black: '#02040A',
+                            navy: '#08111F',
+                            gray: '#1C1C1E'
+                        },
+                        apple: {
+                            blue: '#0A84FF',
+                            gray: '#A1A1AA'
+                        },
+                        premium: {
+                            gold: '#D4AF37'
+                        }
+                    },
+                    backgroundImage: {
+                        'cosmic-gradient': 'radial-gradient(ellipse at top, #08111F 0%, #02040A 100%)',
+                        'glass-gradient': 'linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%)'
                     }
                 }
             }
@@ -28,513 +42,599 @@ Burada React əvəzinə təmiz **Vanilla JavaScript** və **Tailwind CSS** istif
     </script>
 
     <style>
-        :root {
-            --cosmic-dark: #030814;
-            --cosmic-blue: #0a1628;
-            --accent-blue: #0a84ff;
-            --accent-gold: #d4af37;
-        }
-
+        /* Cosmic Background & Parallax */
         body {
-            background: radial-gradient(ellipse at 50% 0%, var(--cosmic-blue) 0%, var(--cosmic-dark) 100%);
-            color: #f5f5f7;
+            background-color: #02040A;
+            color: #F5F5F7;
             overflow-x: hidden;
-            background-attachment: fixed;
-            min-height: 100vh;
-            margin: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Yavaş Hərəkət Edən Ulduzlar */
-        .stars-container {
+        .cosmic-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
             z-index: -1;
-            background-image: 
-                radial-gradient(2px 2px at 15% 30%, rgba(255,255,255,0.3), transparent),
-                radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,0.4), transparent),
-                radial-gradient(3px 3px at 85% 70%, rgba(255,255,255,0.2), transparent);
-            background-size: 400px 400px;
-            animation: cosmicDrift 120s linear infinite;
+            background: radial-gradient(ellipse at 50% -20%, #08111F 0%, #02040A 100%);
         }
 
-        @keyframes cosmicDrift {
-            0% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-100px) scale(1.05); }
-            100% { transform: translateY(-200px) scale(1); }
+        .stars {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 200%;
+            background-image: 
+                radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.3), transparent),
+                radial-gradient(2px 2px at 90px 40px, rgba(255,255,255,0.2), transparent);
+            background-repeat: repeat;
+            background-size: 250px 250px;
+            animation: starDrift 150s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes starDrift {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
         }
 
         /* Glassmorphism */
-        .glass-panel {
-            background: rgba(10, 22, 45, 0.45);
-            backdrop-filter: blur(24px) saturate(150%);
-            -webkit-backdrop-filter: blur(24px) saturate(150%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        .glass-nav {
+            background: rgba(2, 4, 10, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .glass-panel:hover {
-            border-color: rgba(10, 132, 255, 0.3);
-            background: rgba(10, 22, 45, 0.6);
+        .glass-card {
+            background: var(--glass-gradient);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        .glass-card:hover {
+            transform: scale(1.02) translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        /* Form Inputs */
         .apple-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 16px;
-            color: white;
+            border-radius: 12px;
+            padding: 16px 20px;
+            color: #F5F5F7;
+            font-size: 17px;
             transition: all 0.3s ease;
-            margin-bottom: 1rem;
         }
 
         .apple-input:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            background: rgba(10, 132, 255, 0.05);
-            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #0A84FF;
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
         }
 
-        /* Kosmik Yüklənmə Animasiyası */
-        .orbit-spinner {
+        /* Loading Animation */
+        .cosmic-loader {
             position: relative;
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.1);
+            width: 160px;
+            height: 160px;
             margin: 0 auto;
         }
-        .orbit-core {
+
+        .star-core {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px; height: 20px;
-            background: var(--accent-gold);
+            width: 24px; height: 24px;
+            background: #D4AF37;
             border-radius: 50%;
-            box-shadow: 0 0 20px var(--accent-gold);
+            box-shadow: 0 0 30px #D4AF37, 0 0 60px rgba(212, 175, 55, 0.4);
         }
-        .orbit-planet {
+
+        .orbit {
             position: absolute;
-            top: -6px; left: 50%;
-            width: 12px; height: 12px;
-            background: var(--accent-blue);
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            transform-origin: 0 66px;
-            animation: orbitSpin 2s linear infinite;
+            animation: spin 4s linear infinite;
+        }
+        
+        .orbit-2 {
+            width: 120px; height: 120px;
+            top: 20px; left: 20px;
+            animation: spin 3s linear infinite reverse;
         }
 
-        @keyframes orbitSpin {
-            100% { transform: rotate(360deg); }
+        .planet {
+            position: absolute;
+            top: -5px; left: 50%;
+            transform: translateX(-50%);
+            width: 10px; height: 10px;
+            background: #0A84FF;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #0A84FF;
         }
 
-        /* View Keçidləri */
-        .view-section {
-            display: none;
+        .planet-2 { background: #F5F5F7; box-shadow: 0 0 15px #F5F5F7; width: 8px; height: 8px; top: -4px; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* Modals and Overlays */
+        #analysis-modal {
             opacity: 0;
-            transform: translateY(15px);
-            animation: fadeUp 0.6s forwards;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
         }
-        .view-section.active {
-            display: flex;
+        #analysis-modal.active {
+            opacity: 1;
+            pointer-events: auto;
         }
-        @keyframes fadeUp {
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeUpAnim {
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #02040A; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
     </style>
 </head>
-<body class="flex flex-col items-center">
+<body class="antialiased selection:bg-apple-blue selection:text-white">
 
-    <div class="stars-container"></div>
+    <div class="cosmic-bg"><div class="stars"></div></div>
 
-    <nav class="fixed top-0 w-full glass-panel !rounded-none !border-t-0 !border-l-0 !border-r-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="handleTransition('home', false)">
-                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">A</div>
-                <span class="font-semibold tracking-tight text-xl">Astrologum</span>
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between h-16 md:h-20">
+            <a href="#" class="text-xl font-semibold tracking-tight text-white flex items-center gap-2 hover:opacity-80 transition">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Astrologum
+            </a>
+
+            <div class="hidden lg:flex items-center gap-8 text-[13px] font-medium tracking-wide text-apple-gray">
+                <a href="#features" class="hover:text-white transition-colors" data-i18n="nav_compatibility">Compatibility</a>
+                <a href="#features" class="hover:text-white transition-colors" data-i18n="nav_future">Future Analysis</a>
+                <a href="#features" class="hover:text-white transition-colors" data-i18n="nav_career">Career & Wealth</a>
+                <a href="#features" class="hover:text-white transition-colors" data-i18n="nav_chart">Birth Chart</a>
+                <a href="#blog" class="hover:text-white transition-colors" data-i18n="nav_blog">Blog</a>
             </div>
-            
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex gap-6 text-sm font-medium text-white/60">
-                    <button onclick="handleTransition('dash', false)" class="hover:text-white transition" id="nav-dash">Panel</button>
-                    <button onclick="handleTransition('ai', false)" class="hover:text-white transition" id="nav-ai">Nyx AI</button>
+
+            <div class="flex items-center gap-4">
+                <div class="hidden md:flex bg-white/5 rounded-full p-1 border border-white/10">
+                    <button onclick="setLanguage('az')" id="lang-az" class="px-3 py-1 rounded-full text-xs font-semibold text-white/50 hover:text-white transition">AZ</button>
+                    <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 rounded-full text-xs font-semibold bg-white text-black transition">EN</button>
+                    <button onclick="setLanguage('ru')" id="lang-ru" class="px-3 py-1 rounded-full text-xs font-semibold text-white/50 hover:text-white transition">RU</button>
                 </div>
-                
-                <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/10 text-xs font-medium">
-                    <button onclick="setLang('az')" id="btn-lang-az" class="px-3 py-1 rounded-full uppercase transition bg-white text-black">AZ</button>
-                    <button onclick="setLang('en')" id="btn-lang-en" class="px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white">EN</button>
-                </div>
-                
-                <button onclick="handleTransition('auth', false)" id="nav-login" class="hidden md:block bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full text-sm font-medium transition border border-white/10">
-                    Daxil ol
-                </button>
+                <button class="text-[13px] font-medium text-white hover:text-apple-gray transition hidden sm:block" data-i18n="nav_login">Sign In</button>
+                <button onclick="openModal('form')" class="bg-white text-black text-[13px] font-semibold px-5 py-2 rounded-full hover:scale-105 transition-transform" data-i18n="nav_start">Start Analysis</button>
             </div>
         </div>
     </nav>
 
-    <main class="flex-1 w-full max-w-7xl px-6 pt-32 pb-20 flex flex-col items-center justify-center">
-
-        <div id="view-home" class="view-section active flex-col items-center w-full max-w-4xl text-center">
-            <h1 id="hero-title" class="text-5xl md:text-7xl font-bold tracking-tighter mb-6 leading-tight">Ulduzların sənə nə demək istədiyini kəşf et.</h1>
-            <p id="hero-sub" class="text-xl text-white/50 font-light mb-12 max-w-2xl mx-auto leading-relaxed">Şəxsi doğum məlumatlarına əsaslanan sadə, aydın və vizual astroloji analiz platforması.</p>
-            <button onclick="handleTransition('auth', false)" id="hero-btn" class="bg-white text-black font-semibold rounded-full px-10 py-5 text-lg hover:scale-105 transition duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                Analizə başla
-            </button>
-        </div>
-
-        <div id="view-auth" class="view-section flex-col items-center w-full max-w-md">
-            <div class="glass-panel p-10 w-full">
-                <h2 id="auth-title" class="text-2xl font-semibold mb-8 text-center">Kosmik sistemə qoşul</h2>
-                <input type="text" id="auth-name" placeholder="Adınız" class="apple-input" />
-                <div class="grid grid-cols-2 gap-4">
-                    <input type="date" class="apple-input text-white/70 !mb-0" />
-                    <input type="time" class="apple-input text-white/70 !mb-0" />
-                </div>
-                <input type="text" id="auth-city" placeholder="Doğum Yeri" class="apple-input mt-4" />
-                
-                <button onclick="handleTransition('dash', true)" id="auth-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-2xl py-4 mt-2 transition shadow-[0_0_20px_rgba(10,132,255,0.3)]">
-                    Qeydiyyatdan Keç
-                </button>
-            </div>
-        </div>
-
-        <div id="view-dash" class="view-section flex-col w-full">
-            <h2 id="dash-title" class="text-3xl font-semibold mb-12 text-center text-white/90">Salam, ulduz xəritəni araşdırmağa hazırsan?</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div onclick="handleTransition('synastry', false)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
-                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">✧</div>
-                    <h3 id="card-syn-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Münasibət Uyğunluğu</h3>
-                    <p id="card-syn-desc" class="text-white/50 font-light text-sm flex-1">Partnerinlə uyğunluğunu yoxla</p>
-                </div>
-                <div onclick="handleTransition('career', false)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
-                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">⚸</div>
-                    <h3 id="card-car-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Karyera & Sərvət</h3>
-                    <p id="card-car-desc" class="text-white/50 font-light text-sm flex-1">Pul və karyera yolunda səni nə gözləyir?</p>
-                </div>
-                <div onclick="handleTransition('chart', true)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
-                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">⚷</div>
-                    <h3 id="card-chart-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Doğum Xəritəsi</h3>
-                    <p id="card-chart-desc" class="text-white/50 font-light text-sm flex-1">Şəxsi astro-panelini kəşf et</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="view-synastry" class="view-section flex-col items-center w-full max-w-4xl">
-            <div class="text-center mb-10">
-                <h2 id="syn-title" class="text-4xl font-semibold mb-3">Sinastri Analizi</h2>
-                <p id="syn-sub" class="text-white/50">İki xəritənin kəsişməsi</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-6 mb-8 w-full">
-                <div class="glass-panel p-8 border-t-2 border-t-blue-500">
-                    <h3 id="syn-p1" class="text-sm uppercase tracking-widest text-blue-400 mb-6 font-semibold">Sizin Məlumatlar</h3>
-                    <input type="text" disabled value="Profil Data" class="apple-input opacity-50 cursor-not-allowed" />
-                </div>
-                <div class="glass-panel p-8 border-t-2 border-t-purple-500">
-                    <h3 id="syn-p2" class="text-sm uppercase tracking-widest text-purple-400 mb-6 font-semibold">Partnerin Məlumatları</h3>
-                    <input type="text" id="syn-p2-name" placeholder="Adı" class="apple-input" />
-                    <input type="date" class="apple-input text-white/70" />
-                    <input type="time" class="apple-input text-white/70" />
-                </div>
-            </div>
-            <button onclick="handleTransition('synastry-result', true)" id="syn-btn" class="bg-white text-black px-12 py-4 rounded-full font-semibold hover:scale-105 transition">
-                Uyğunluğu Hesabla
-            </button>
-        </div>
-
-        <div id="view-career" class="view-section flex-col items-center w-full max-w-2xl">
-            <div class="glass-panel p-10 w-full">
-                <div class="text-center mb-8">
-                    <h2 id="car-title" class="text-3xl font-semibold mb-3">Karyera və Sərvət Analizi</h2>
-                    <p id="car-sub" class="text-white/50">Potensialını kəşf et</p>
-                </div>
-                <input type="text" id="car-field" placeholder="Hazırki Sahəniz" class="apple-input" />
-                <input type="text" id="car-interest" placeholder="Maraqlandığınız Sahə" class="apple-input" />
-                <select class="apple-input appearance-none text-white/70 bg-black/50">
-                    <option id="car-risk-low" value="low">Aşağı (Stabil) Risk</option>
-                    <option id="car-risk-med" value="med">Orta (Hesablanmış) Risk</option>
-                    <option id="car-risk-high" value="high">Yüksək Risk</option>
-                </select>
-                <button onclick="handleTransition('dash', true)" id="car-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-2xl py-4 mt-6 transition shadow-lg">
-                    Karyeranı Analiz Et
-                </button>
-            </div>
-        </div>
-
-        <div id="view-loading" class="view-section flex-col items-center justify-center w-full h-64">
-            <div class="orbit-spinner mb-12">
-                <div class="orbit-core"></div>
-                <div class="orbit-planet"></div>
-            </div>
-            <p id="loading-text" class="text-xl font-light text-white/80 animate-pulse tracking-wide text-center">
-                Doğum məlumatların analiz olunur...
+    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="max-w-[1000px] mx-auto px-6 text-center z-10 fade-up">
+            <h1 id="hero-title" class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter leading-[1.05] mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
+                Discover What The Stars Reveal About You.
+            </h1>
+            <p id="hero-sub" class="text-lg md:text-2xl text-apple-gray font-light max-w-3xl mx-auto mb-12 leading-relaxed">
+                Personalized astrology insights presented with clarity, simplicity, and modern technology.
             </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button onclick="openModal('form')" class="w-full sm:w-auto bg-white text-black text-lg font-semibold px-10 py-4 rounded-full hover:scale-105 transition-transform duration-300 shadow-[0_0_40px_rgba(255,255,255,0.15)]" data-i18n="hero_primary">
+                    Start Analysis
+                </button>
+                <a href="#features" class="w-full sm:w-auto glass-card text-white text-lg font-medium px-10 py-4 rounded-full hover:bg-white/10 transition-colors" data-i18n="hero_secondary">
+                    Explore Features
+                </a>
+            </div>
         </div>
+    </header>
 
-        <div id="view-synastry-result" class="view-section flex-col items-center w-full max-w-3xl">
-            <div class="glass-panel p-8 md:p-12 w-full">
-                <div class="text-center mb-12">
-                    <div class="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-blue-400 to-purple-600 mb-2">87%</div>
-                    <div id="res-total" class="text-xs text-white/50 uppercase tracking-widest">Ümumi Uyğunluq İndeksi</div>
-                </div>
+    <section id="features" class="py-32 relative z-10">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div class="mb-20">
+                <h2 class="text-3xl md:text-5xl font-semibold tracking-tight mb-4" data-i18n="feat_title">An Ecosystem of Insights.</h2>
+                <p class="text-xl text-apple-gray font-light" data-i18n="feat_sub">Precision calculations mapped to your exact coordinates.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <div class="space-y-8 max-w-xl mx-auto w-full">
+                <div onclick="openModal('form')" class="glass-card rounded-[32px] p-10 cursor-pointer lg:col-span-2 min-h-[350px] flex flex-col justify-between group">
                     <div>
-                        <div class="flex justify-between text-sm mb-2 font-medium">
-                            <span id="res-emo">Emosional Rezonans (Ay)</span><span>92%</span>
+                        <div class="w-12 h-12 rounded-full bg-apple-blue/20 flex items-center justify-center mb-8 text-apple-blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                         </div>
-                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 92%"></div></div>
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-3" data-i18n="card1_title">Relationship Compatibility</h3>
+                        <p class="text-apple-gray text-lg font-light max-w-md" data-i18n="card1_desc">Deep dive into emotional connection, communication dynamics, and long-term potential.</p>
                     </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-2 font-medium">
-                            <span id="res-int">İntellektual Sinxronluq (Merkuri)</span><span>85%</span>
-                        </div>
-                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full" style="width: 85%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-2 font-medium">
-                            <span id="res-long">Uzunmüddətli Öhdəlik (Saturn)</span><span>78%</span>
-                        </div>
-                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width: 78%"></div></div>
+                    <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-apple-blue font-medium">
+                        <span data-i18n="btn_explore">Explore</span> &rarr;
                     </div>
                 </div>
 
-                <div class="mt-12 p-6 bg-black/40 rounded-2xl border border-white/5 text-sm font-light leading-relaxed text-white/80">
-                    <span id="res-expert" class="font-semibold text-blue-400 block mb-2">Astroloq Rəyi:</span>
-                    <span id="res-desc">Göstəricilər bu münasibətin olduqca sağlam emosional təmələ dayandığını göstərir. Tərəflər arasında ünsiyyət axıcıdır. Lakin uzunmüddətli maddi və ya ailəvi öhdəliklərdə (Saturn aspekti) kompromisə getmək vacib olacaq.</span>
+                <div onclick="openModal('form')" class="glass-card rounded-[32px] p-10 cursor-pointer min-h-[350px] flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mb-8 text-purple-400">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3" data-i18n="card2_title">Future Life Analysis</h3>
+                        <p class="text-apple-gray font-light" data-i18n="card2_desc">Predictive modeling for your upcoming year's core energy.</p>
+                    </div>
+                    <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-purple-400 font-medium">
+                        <span data-i18n="btn_explore">Explore</span> &rarr;
+                    </div>
                 </div>
 
-                <div id="res-disc" class="mt-8 text-center text-xs text-white/30 px-10">
-                    Bu analiz əyləncə və şəxsi düşüncə məqsədi daşıyır.
+                <div onclick="openModal('form')" class="glass-card rounded-[32px] p-10 cursor-pointer min-h-[350px] flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-premium-gold/20 flex items-center justify-center mb-8 text-premium-gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3" data-i18n="card3_title">Wealth & Career</h3>
+                        <p class="text-apple-gray font-light" data-i18n="card3_desc">Discover your professional trajectory and financial architecture.</p>
+                    </div>
+                    <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-premium-gold font-medium">
+                        <span data-i18n="btn_explore">Explore</span> &rarr;
+                    </div>
                 </div>
 
-                <button onclick="handleTransition('dash', false)" class="mt-10 mx-auto block text-sm text-white/50 hover:text-white transition">← Panelə Qayıt</button>
+                <div onclick="openModal('form')" class="glass-card rounded-[32px] p-10 cursor-pointer lg:col-span-2 min-h-[350px] flex flex-col justify-between group">
+                    <div>
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center mb-8 text-emerald-400">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-semibold mb-3" data-i18n="card4_title">Personal Birth Chart</h3>
+                        <p class="text-apple-gray text-lg font-light max-w-md" data-i18n="card4_desc">The complete blueprint of your cosmic DNA mapped with extreme precision.</p>
+                    </div>
+                    <div class="mt-8 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-2 text-emerald-400 font-medium">
+                        <span data-i18n="btn_explore">Explore</span> &rarr;
+                    </div>
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <div id="view-chart" class="view-section flex-col md:flex-row items-center gap-10 w-full max-w-5xl glass-panel p-10">
-            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border border-white/20 bg-black/30 relative flex items-center justify-center shadow-[0_0_50px_rgba(10,132,255,0.1)]">
-                <div class="absolute w-full h-[1px] bg-white/10 rotate-45"></div>
-                <div class="absolute w-full h-[1px] bg-white/10 -rotate-45"></div>
-                <div class="absolute w-[1px] h-full bg-white/10"></div>
-                <div class="absolute w-full h-[1px] bg-white/10"></div>
-                <div class="text-center z-10">
-                    <div class="text-3xl text-yellow-500 mb-2">☉</div>
-                    <div class="text-xs uppercase tracking-widest text-white/50">Mərkəz</div>
-                </div>
+    <section id="blog" class="py-32 bg-cosmic-navy/30 relative z-10 border-t border-white/5">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+            <div class="mb-16">
+                <h2 class="text-3xl font-semibold tracking-tight mb-2" data-i18n="blog_title">Cosmic Editorial.</h2>
+                <p class="text-apple-gray" data-i18n="blog_sub">The latest insights from our astrology architects.</p>
             </div>
             
-            <div class="flex-1 space-y-6 w-full">
-                <h2 id="chart-title" class="text-3xl font-semibold mb-6">Şəxsi Astro-Profiliniz</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-                        <div id="ch-1-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Günəş (Özək)</div>
-                        <div class="text-lg font-semibold text-white mb-1">Qoç ♈</div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <article class="group cursor-pointer">
+                    <div class="aspect-[4/3] rounded-2xl bg-white/5 mb-6 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-apple-blue/20 to-transparent"></div>
                     </div>
-                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-                        <div id="ch-2-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Ay (Emosiya)</div>
-                        <div class="text-lg font-semibold text-white mb-1">Əqrəb ♏</div>
+                    <div class="text-[11px] font-bold tracking-widest text-apple-blue uppercase mb-3">Astrology Basics</div>
+                    <h3 class="text-xl font-semibold mb-2 group-hover:text-apple-blue transition-colors">The Architecture of the 12 Houses</h3>
+                    <p class="text-apple-gray text-sm line-clamp-2 font-light">Understanding the fundamental structure of your birth chart and how it dictates different areas of life.</p>
+                </article>
+
+                <article class="group cursor-pointer">
+                    <div class="aspect-[4/3] rounded-2xl bg-white/5 mb-6 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-transparent"></div>
                     </div>
-                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-                        <div id="ch-3-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Yüksələn</div>
-                        <div class="text-lg font-semibold text-white mb-1">Şir ♌</div>
+                    <div class="text-[11px] font-bold tracking-widest text-purple-400 uppercase mb-3">Relationships</div>
+                    <h3 class="text-xl font-semibold mb-2 group-hover:text-purple-400 transition-colors">Mercury Retrograde & Communication</h3>
+                    <p class="text-apple-gray text-sm line-clamp-2 font-light">How to navigate intellectual synchrony when the planets shift into challenging alignments.</p>
+                </article>
+
+                <article class="group cursor-pointer">
+                    <div class="aspect-[4/3] rounded-2xl bg-white/5 mb-6 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-br from-premium-gold/20 to-transparent"></div>
                     </div>
-                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
-                        <div id="ch-4-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Element</div>
-                        <div class="text-lg font-semibold text-white mb-1">Od 🔥</div>
-                    </div>
-                </div>
-                <button onclick="handleTransition('dash', false)" class="mt-4 text-sm text-blue-400 hover:text-white transition">← Panelə Qayıt</button>
+                    <div class="text-[11px] font-bold tracking-widest text-premium-gold uppercase mb-3">Wealth</div>
+                    <h3 class="text-xl font-semibold mb-2 group-hover:text-premium-gold transition-colors">Jupiter's Return: A Financial Guide</h3>
+                    <p class="text-apple-gray text-sm line-clamp-2 font-light">Capitalizing on astrological cycles for career advancement and wealth accumulation.</p>
+                </article>
             </div>
         </div>
+    </section>
 
-        <div id="view-ai" class="view-section flex-col w-full max-w-3xl glass-panel h-[600px]">
-            <div class="p-6 border-b border-white/10 flex items-center justify-between">
-                <div>
-                    <h3 class="font-semibold text-lg">Nyx AI</h3>
-                    <p id="ai-sub" class="text-xs text-white/50 font-light">Şəxsi Astroloji Bələdçiniz</p>
-                </div>
-                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#32d74b] animate-pulse"></div>
+    <footer class="py-12 border-t border-white/10 relative z-10 bg-cosmic-black">
+        <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-xl font-semibold tracking-tight text-white flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Astrologum
             </div>
             
-            <div class="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col" id="ai-chat-box">
-                <div class="flex gap-4">
-                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">✨</div>
-                    <div id="ai-welcome" class="bg-white/5 p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-white/90">
-                        Salam! Sizin doğum məlumatlarınızı analiz etdim. Karyera keçidləri, spesifik evlilik tarixləri və ya hazırki planetar tranzitlərinizlə bağlı nə öyrənmək istəyirsiniz?
-                    </div>
-                </div>
+            <div class="flex gap-8 text-sm text-apple-gray">
+                <a href="#" class="hover:text-white transition">About</a>
+                <a href="#" class="hover:text-white transition">Privacy</a>
+                <a href="#" class="hover:text-white transition">Terms</a>
+                <a href="#" class="hover:text-white transition">Contact</a>
             </div>
 
-            <div class="p-4 border-t border-white/10 bg-black/20">
-                <div class="relative">
-                    <input type="text" id="ai-input" placeholder="Sualınızı bura yazın..." class="w-full bg-black/40 border border-white/10 rounded-full py-4 pl-6 pr-16 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
-                    <button onclick="sendAiMsg()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 rounded-full flex items-center justify-center hover:scale-105 transition font-bold">
-                        ↑
+            <div class="text-xs text-white/30 tracking-wide">
+                Created by Agshin Ahmadli
+            </div>
+        </div>
+    </footer>
+
+
+    <div id="analysis-modal" class="fixed inset-0 z-[100] flex items-center justify-center">
+        <div class="absolute inset-0 bg-cosmic-black/80 backdrop-blur-xl" onclick="closeModal()"></div>
+        
+        <div class="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto px-4">
+            
+            <div id="view-form" class="glass-card p-8 md:p-12 rounded-[32px] w-full hidden">
+                <div class="flex justify-between items-start mb-10">
+                    <div>
+                        <h2 class="text-3xl font-semibold tracking-tight mb-2" data-i18n="modal_title">Initiate Sequence</h2>
+                        <p class="text-apple-gray font-light" data-i18n="modal_sub">Enter your exact parameters for calculation.</p>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition text-white">&times;</button>
+                </div>
+
+                <form onsubmit="startAnalysis(event)" class="space-y-6">
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-apple-gray mb-2 font-semibold">Full Name</label>
+                        <input type="text" required class="apple-input" placeholder="e.g. Agshin Ahmadli">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-apple-gray mb-2 font-semibold">Date of Birth</label>
+                            <input type="date" required class="apple-input text-white/70">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] uppercase tracking-widest text-apple-gray mb-2 font-semibold">Time (Optional)</label>
+                            <input type="time" class="apple-input text-white/70">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] uppercase tracking-widest text-apple-gray mb-2 font-semibold">Birth Location</label>
+                        <input type="text" required class="apple-input" placeholder="City or Coordinates">
+                    </div>
+
+                    <button type="submit" class="w-full bg-white text-black text-lg font-semibold py-4 rounded-xl hover:scale-[1.02] transition-transform mt-4" data-i18n="btn_compute">
+                        Compute Alignment
                     </button>
-                </div>
+                </form>
             </div>
-        </div>
 
-    </main>
+            <div id="view-loading" class="p-12 rounded-[32px] w-full text-center hidden">
+                <div class="cosmic-loader mb-12">
+                    <div class="orbit"><div class="planet"></div></div>
+                    <div class="orbit orbit-2"><div class="planet planet-2"></div></div>
+                    <div class="star-core"></div>
+                </div>
+                <h3 id="loading-text" class="text-2xl font-semibold tracking-tight text-white mb-2 transition-opacity duration-500">
+                    Analyzing birth data...
+                </h3>
+                <p class="text-apple-gray font-light">Establishing secure connection to ephemeris servers.</p>
+            </div>
+
+            <div id="view-results" class="glass-card p-8 md:p-12 rounded-[32px] w-full hidden">
+                <div class="flex justify-between items-start border-b border-white/10 pb-8 mb-8">
+                    <div>
+                        <div class="text-[11px] font-bold tracking-widest text-apple-blue uppercase mb-2">Analysis Complete</div>
+                        <h2 class="text-3xl font-semibold tracking-tight" data-i18n="res_title">Compatibility Matrix</h2>
+                    </div>
+                    <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition text-white">&times;</button>
+                </div>
+
+                <div class="text-center mb-12">
+                    <div class="text-7xl font-bold tracking-tighter text-white mb-2">92<span class="text-4xl text-white/40">%</span></div>
+                    <div class="text-sm font-medium text-apple-gray uppercase tracking-widest">Overall Synergy Score</div>
+                </div>
+
+                <div class="space-y-6 max-w-lg mx-auto">
+                    
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span class="text-white">Emotional Connection</span>
+                            <span class="text-apple-gray">95%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-apple-blue rounded-full" style="width: 95%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span class="text-white">Intellectual Communication</span>
+                            <span class="text-apple-gray">88%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 rounded-full" style="width: 88%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span class="text-white">Shared Values</span>
+                            <span class="text-apple-gray">90%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-premium-gold rounded-full" style="width: 90%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span class="text-white">Long-term Potential</span>
+                            <span class="text-apple-gray">94%</span>
+                        </div>
+                        <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 rounded-full" style="width: 94%"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-12 p-5 rounded-2xl bg-white/5 border border-white/5 text-sm text-apple-gray font-light leading-relaxed">
+                    <strong class="text-white font-medium">Architect's Note:</strong> The geometric angles between your core planetary bodies indicate highly sustainable long-term alignment. Communication flows logically, minimizing friction during conflict resolution. 
+                </div>
+
+                <button onclick="closeModal()" class="w-full bg-white/10 text-white hover:bg-white/20 text-sm font-semibold py-4 rounded-xl transition-colors mt-8">
+                    Close Dashboard
+                </button>
+            </div>
+
+        </div>
+    </div>
+
 
     <script>
-        // Dil lüğəti
-        const dict = {
-            az: {
-                nav: { dash: "Panel", ai: "Nyx AI", login: "Daxil ol" },
-                hero: { title: "Ulduzların sənə nə demək istədiyini kəşf et.", sub: "Şəxsi doğum məlumatlarına əsaslanan sadə, aydın və vizual astroloji analiz platforması.", btn: "Analizə başla" },
-                auth: { title: "Kosmik sistemə qoşul", name: "Adınız", city: "Doğum Yeri", btn: "Qeydiyyatdan Keç" },
-                dash: { title: "Salam, ulduz xəritəni araşdırmağa hazırsan?" },
-                cards: {
-                    syn: { title: "Münasibət Uyğunluğu", desc: "Partnerinlə uyğunluğunu yoxla" },
-                    car: { title: "Karyera & Sərvət", desc: "Pul və karyera yolunda səni nə gözləyir?" },
-                    chart: { title: "Doğum Xəritəsi", desc: "Şəxsi astro-panelini kəşf et" }
-                },
-                syn: { title: "Sinastri Analizi", sub: "İki xəritənin kəsişməsi", p1: "Sizin Məlumatlar", p2: "Partnerin Məlumatları", p2Name: "Adı", btn: "Uyğunluğu Hesabla" },
-                car: { title: "Karyera və Sərvət Analizi", sub: "Potensialını kəşf et", field: "Hazırki Sahəniz", int: "Maraqlandığınız Sahə", low: "Aşağı (Stabil) Risk", med: "Orta (Hesablanmış) Risk", high: "Yüksək Risk", btn: "Karyeranı Analiz Et" },
-                res: { tot: "Ümumi Uyğunluq İndeksi", emo: "Emosional Rezonans (Ay)", int: "İntellektual Sinxronluq (Merkuri)", long: "Uzunmüddətli Öhdəlik (Saturn)", exp: "Astroloq Rəyi:", desc: "Göstəricilər bu münasibətin olduqca sağlam emosional təmələ dayandığını göstərir...", disc: "Bu analiz əyləncə və şəxsi düşüncə məqsədi daşıyır." },
-                chart: { title: "Şəxsi Astro-Profiliniz", ch1: "Günəş (Özək)", ch2: "Ay (Emosiya)", ch3: "Yüksələn", ch4: "Element" },
-                ai: { sub: "Şəxsi Astroloji Bələdçiniz", welcome: "Salam! Sizin doğum məlumatlarınızı analiz etdim...", placeholder: "Sualınızı bura yazın..." },
-                loading: ["Doğum məlumatların analiz olunur...", "Ulduz mövqeləri hesablanır...", "Nəticələr formalaşdırılır..."]
-            },
+        // --- Language Dictionary ---
+        const i18n = {
             en: {
-                nav: { dash: "Dashboard", ai: "Nyx AI", login: "Sign In" },
-                hero: { title: "Discover what the stars are telling you.", sub: "A clear, simple, and visual astrological analysis platform based on your personal birth data.", btn: "Start Analysis" },
-                auth: { title: "Join the cosmic system", name: "Your Name", city: "Birth Place", btn: "Register" },
-                dash: { title: "Hello, ready to explore your star chart?" },
-                cards: {
-                    syn: { title: "Relationship Compatibility", desc: "Check compatibility with your partner" },
-                    car: { title: "Career & Wealth", desc: "What awaits you in your career path?" },
-                    chart: { title: "Birth Chart", desc: "Discover your personal astro-panel" }
-                },
-                syn: { title: "Synastry Analysis", sub: "Intersection of two charts", p1: "Your Data", p2: "Partner's Data", p2Name: "Name", btn: "Calculate Match" },
-                car: { title: "Career & Wealth", sub: "Discover your potential", field: "Current Field", int: "Interested Field", low: "Low (Stable) Risk", med: "Medium (Calculated) Risk", high: "High Risk", btn: "Analyze Career" },
-                res: { tot: "Overall Compatibility Index", emo: "Emotional Resonance (Moon)", int: "Intellectual Synchrony (Mercury)", long: "Long-term Commitment (Saturn)", exp: "Astrologer's Note:", desc: "Indicators show a very solid emotional foundation for this relationship...", disc: "This analysis is for entertainment and personal reflection." },
-                chart: { title: "Your Astro-Profile", ch1: "Sun (Core)", ch2: "Moon (Emotion)", ch3: "Ascendant", ch4: "Element" },
-                ai: { sub: "Your Personal Astrology Guide", welcome: "Hello! I've analyzed your birth data. What would you like to know?", placeholder: "Type your question here..." },
-                loading: ["Analyzing birth data...", "Calculating star positions...", "Generating results..."]
+                nav_compatibility: "Compatibility", nav_future: "Future Analysis", nav_career: "Career & Wealth", nav_chart: "Birth Chart", nav_blog: "Blog", nav_login: "Sign In", nav_start: "Start Analysis",
+                hero_primary: "Start Analysis", hero_secondary: "Explore Features",
+                feat_title: "An Ecosystem of Insights.", feat_sub: "Precision calculations mapped to your exact coordinates.",
+                card1_title: "Relationship Compatibility", card1_desc: "Deep dive into emotional connection, communication dynamics, and long-term potential.",
+                card2_title: "Future Life Analysis", card2_desc: "Predictive modeling for your upcoming year's core energy.",
+                card3_title: "Wealth & Career", card3_desc: "Discover your professional trajectory and financial architecture.",
+                card4_title: "Personal Birth Chart", card4_desc: "The complete blueprint of your cosmic DNA mapped with extreme precision.",
+                btn_explore: "Explore",
+                blog_title: "Cosmic Editorial.", blog_sub: "The latest insights from our astrology architects.",
+                modal_title: "Initiate Sequence", modal_sub: "Enter your exact parameters for calculation.", btn_compute: "Compute Alignment",
+                res_title: "Compatibility Matrix",
+                load_1: "Analyzing birth data...", load_2: "Calculating planetary positions...", load_3: "Building your personal chart...", load_4: "Preparing insights..."
+            },
+            az: {
+                nav_compatibility: "Uyğunluq", nav_future: "Gələcək Analizi", nav_career: "Karyera və Sərvət", nav_chart: "Doğum Xəritəsi", nav_blog: "Bloq", nav_login: "Daxil ol", nav_start: "Analizə Başla",
+                hero_primary: "Analizə Başla", hero_secondary: "Xüsusiyyətləri Kəşf Et",
+                feat_title: "Dərinliklər Ekosistemi.", feat_sub: "Dəqiq koordinatlarınıza uyğun hesablamalar.",
+                card1_title: "Münasibət Uyğunluğu", card1_desc: "Emosional əlaqə, ünsiyyət dinamikası və uzunmüddətli potensialın dərin analizi.",
+                card2_title: "Gələcək Həyat Analizi", card2_desc: "Növbəti iliniz üçün əsas enerjinin proqnozlaşdırılması.",
+                card3_title: "Sərvət və Karyera", card3_desc: "Peşəkar yolunuzu və maliyyə arxitekturanızı kəşf edin.",
+                card4_title: "Şəxsi Doğum Xəritəsi", card4_desc: "Ekstremal dəqiqliklə hazırlanmış kosmik DNT-nizin tam planı.",
+                btn_explore: "Kəşf Et",
+                blog_title: "Kosmik Redaksiya.", blog_sub: "Astroloqlarımızdan ən son məqalələr.",
+                modal_title: "Sistemi Başlat", modal_sub: "Hesablama üçün dəqiq parametrləri daxil edin.", btn_compute: "Analizi Başlat",
+                res_title: "Uyğunluq Matrisi",
+                load_1: "Doğum məlumatları analiz edilir...", load_2: "Planetlərin mövqeyi hesablanır...", load_3: "Şəxsi xəritəniz qurulur...", load_4: "Nəticələr hazırlanır..."
+            },
+            ru: {
+                nav_compatibility: "Совместимость", nav_future: "Анализ будущего", nav_career: "Карьера и Богатство", nav_chart: "Натальная карта", nav_blog: "Блог", nav_login: "Войти", nav_start: "Начать Анализ",
+                hero_primary: "Начать Анализ", hero_secondary: "Обзор Функций",
+                feat_title: "Экосистема Инсайтов.", feat_sub: "Точные расчеты, привязанные к вашим координатам.",
+                card1_title: "Совместимость Отношений", card1_desc: "Глубокий анализ эмоциональной связи, динамики общения и долгосрочного потенциала.",
+                card2_title: "Анализ Будущей Жизни", card2_desc: "Прогностическое моделирование вашей энергии на предстоящий год.",
+                card3_title: "Богатство и Карьера", card3_desc: "Откройте для себя профессиональную траекторию и финансовую архитектуру.",
+                card4_title: "Личная Натальная Карта", card4_desc: "Полный чертеж вашей космической ДНК, составленный с высочайшей точностью.",
+                btn_explore: "Изучить",
+                blog_title: "Космическая Редакция.", blog_sub: "Последние статьи от наших астро-архитекторов.",
+                modal_title: "Запуск Системы", modal_sub: "Введите точные параметры для расчета.", btn_compute: "Начать Расчет",
+                res_title: "Матрица Совместимости",
+                load_1: "Анализ данных рождения...", load_2: "Расчет положения планет...", load_3: "Построение натальной карты...", load_4: "Подготовка результатов..."
             }
         };
 
-        let currentLang = 'az';
-        const views = ['view-home', 'view-auth', 'view-dash', 'view-synastry', 'view-career', 'view-chart', 'view-ai', 'view-loading', 'view-synastry-result'];
+        let currentLang = 'en';
 
-        // Səhifə Keçidləri (Loading simulyasiyası ilə)
-        function handleTransition(targetId, withLoading) {
-            views.forEach(v => document.getElementById(v).classList.remove('active'));
+        // --- Language Switcher ---
+        function setLanguage(lang) {
+            currentLang = lang;
             
-            if (!withLoading) {
-                document.getElementById('view-' + targetId).classList.add('active');
-                return;
+            // Update buttons UI
+            ['az', 'en', 'ru'].forEach(l => {
+                const btn = document.getElementById(`lang-${l}`);
+                if(l === lang) {
+                    btn.className = "px-3 py-1 rounded-full text-xs font-semibold bg-white text-black transition";
+                } else {
+                    btn.className = "px-3 py-1 rounded-full text-xs font-semibold text-white/50 hover:text-white transition";
+                }
+            });
+
+            // Update Text Elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(i18n[lang][key]) {
+                    el.innerText = i18n[lang][key];
+                }
+            });
+
+            // Update Hero Manually for HTML elements inside
+            const heroTitles = {
+                en: "Discover What The Stars Reveal About You.",
+                az: "Ulduzların Sənin Haqqında Nə Dediyini Kəşf Et.",
+                ru: "Узнай, Что Звезды Говорят О Тебе."
+            };
+            document.getElementById('hero-title').innerText = heroTitles[lang];
+        }
+
+        // --- Modal Flow Controller ---
+        const modal = document.getElementById('analysis-modal');
+        const vForm = document.getElementById('view-form');
+        const vLoad = document.getElementById('view-loading');
+        const vRes = document.getElementById('view-results');
+        const loadText = document.getElementById('loading-text');
+
+        function hideAllViews() {
+            vForm.classList.add('hidden');
+            vForm.classList.remove('fade-up');
+            vLoad.classList.add('hidden');
+            vLoad.classList.remove('fade-up');
+            vRes.classList.add('hidden');
+            vRes.classList.remove('fade-up');
+        }
+
+        function openModal(viewId) {
+            hideAllViews();
+            modal.classList.add('active');
+            
+            if(viewId === 'form') {
+                vForm.classList.remove('hidden');
+                vForm.classList.add('fade-up');
             }
+        }
 
-            // Loading simulyasiyası
-            document.getElementById('view-loading').classList.add('active');
+        function closeModal() {
+            modal.classList.remove('active');
+            setTimeout(hideAllViews, 500);
+        }
+
+        function startAnalysis(e) {
+            e.preventDefault();
+            
+            // Switch to loading
+            hideAllViews();
+            vLoad.classList.remove('hidden');
+            vLoad.classList.add('fade-up');
+
+            // Loading Text Animation based on selected language
+            const texts = [
+                i18n[currentLang].load_1,
+                i18n[currentLang].load_2,
+                i18n[currentLang].load_3,
+                i18n[currentLang].load_4
+            ];
+            
             let i = 0;
-            const texts = dict[currentLang].loading;
-            const loadTextEl = document.getElementById('loading-text');
-            loadTextEl.innerText = texts[0];
-
+            loadText.innerText = texts[0];
+            
             const interval = setInterval(() => {
                 i++;
-                if (i < texts.length) loadTextEl.innerText = texts[i];
-            }, 900);
+                if(i < texts.length) {
+                    loadText.style.opacity = 0;
+                    setTimeout(() => {
+                        loadText.innerText = texts[i];
+                        loadText.style.opacity = 1;
+                    }, 200);
+                }
+            }, 1200);
 
+            // Finish loading, show results
             setTimeout(() => {
                 clearInterval(interval);
-                document.getElementById('view-loading').classList.remove('active');
-                document.getElementById('view-' + targetId).classList.add('active');
-            }, 3000);
-        }
-
-        // Dil Dəyişmə Sistemi
-        function setLang(lang) {
-            currentLang = lang;
-            const t = dict[lang];
-
-            // Düymə stilləri
-            document.getElementById('btn-lang-az').className = lang === 'az' ? 'px-3 py-1 rounded-full uppercase transition bg-white text-black' : 'px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white';
-            document.getElementById('btn-lang-en').className = lang === 'en' ? 'px-3 py-1 rounded-full uppercase transition bg-white text-black' : 'px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white';
-
-            // Text dəyişiklikləri
-            document.getElementById('nav-dash').innerText = t.nav.dash;
-            document.getElementById('nav-ai').innerText = t.nav.ai;
-            document.getElementById('nav-login').innerText = t.nav.login;
-            
-            document.getElementById('hero-title').innerText = t.hero.title;
-            document.getElementById('hero-sub').innerText = t.hero.sub;
-            document.getElementById('hero-btn').innerText = t.hero.btn;
-            
-            document.getElementById('auth-title').innerText = t.auth.title;
-            document.getElementById('auth-name').placeholder = t.auth.name;
-            document.getElementById('auth-city').placeholder = t.auth.city;
-            document.getElementById('auth-btn').innerText = t.auth.btn;
-
-            document.getElementById('dash-title').innerText = t.dash.title;
-            document.getElementById('card-syn-title').innerText = t.cards.syn.title;
-            document.getElementById('card-syn-desc').innerText = t.cards.syn.desc;
-            document.getElementById('card-car-title').innerText = t.cards.car.title;
-            document.getElementById('card-car-desc').innerText = t.cards.car.desc;
-            document.getElementById('card-chart-title').innerText = t.cards.chart.title;
-            document.getElementById('card-chart-desc').innerText = t.cards.chart.desc;
-
-            document.getElementById('syn-title').innerText = t.syn.title;
-            document.getElementById('syn-sub').innerText = t.syn.sub;
-            document.getElementById('syn-p1').innerText = t.syn.p1;
-            document.getElementById('syn-p2').innerText = t.syn.p2;
-            document.getElementById('syn-p2-name').placeholder = t.syn.p2Name;
-            document.getElementById('syn-btn').innerText = t.syn.btn;
-
-            document.getElementById('car-title').innerText = t.car.title;
-            document.getElementById('car-sub').innerText = t.car.sub;
-            document.getElementById('car-field').placeholder = t.car.field;
-            document.getElementById('car-interest').placeholder = t.car.int;
-            document.getElementById('car-risk-low').innerText = t.car.low;
-            document.getElementById('car-risk-med').innerText = t.car.med;
-            document.getElementById('car-risk-high').innerText = t.car.high;
-            document.getElementById('car-btn').innerText = t.car.btn;
-
-            document.getElementById('res-total').innerText = t.res.tot;
-            document.getElementById('res-emo').innerText = t.res.emo;
-            document.getElementById('res-int').innerText = t.res.int;
-            document.getElementById('res-long').innerText = t.res.long;
-            document.getElementById('res-expert').innerText = t.res.exp;
-            document.getElementById('res-desc').innerText = t.res.desc;
-            document.getElementById('res-disc').innerText = t.res.disc;
-
-            document.getElementById('chart-title').innerText = t.chart.title;
-            document.getElementById('ch-1-title').innerText = t.chart.ch1;
-            document.getElementById('ch-2-title').innerText = t.chart.ch2;
-            document.getElementById('ch-3-title').innerText = t.chart.ch3;
-            document.getElementById('ch-4-title').innerText = t.chart.ch4;
-
-            document.getElementById('ai-sub').innerText = t.ai.sub;
-            document.getElementById('ai-welcome').innerText = t.ai.welcome;
-            document.getElementById('ai-input').placeholder = t.ai.placeholder;
-        }
-
-        // Bəsit AI Chat simulyasiyası
-        function sendAiMsg() {
-            const inp = document.getElementById('ai-input');
-            const val = inp.value.trim();
-            if(!val) return;
-
-            const chatBox = document.getElementById('ai-chat-box');
-            chatBox.innerHTML += `<div class="flex gap-4 flex-row-reverse fade-up mt-4">
-                <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] text-sm leading-relaxed shadow-lg">${val}</div>
-            </div>`;
-            inp.value = '';
-            
-            setTimeout(() => {
-                chatBox.innerHTML += `<div class="flex gap-4 mt-4 fade-up">
-                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">✨</div>
-                    <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-white/90">
-                        Bu barədə detallı hesablama aparıram. Ulduzların hazırki mövqeyi bu qərarın sizin üçün uyğun olduğunu göstərir.
-                    </div>
-                </div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1000);
+                hideAllViews();
+                vRes.classList.remove('hidden');
+                vRes.classList.add('fade-up');
+            }, 5000);
         }
     </script>
 </body>
