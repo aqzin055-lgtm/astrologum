@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="az" class="dark">
 <head>
@@ -6,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astrologum | Professional Kainat Analizi</title>
     
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
     
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -30,6 +31,7 @@
         }
     </script>
 
+    <!-- React, ReactDOM, Babel, Framer Motion -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -121,30 +123,140 @@
         resize(); drawStars();
     </script>
 
+    <!-- MAIN APP & TRANSLATIONS -->
     <script type="text/babel">
         const { useState, useEffect } = React;
         const { motion, AnimatePresence } = window.Motion;
 
-        // --- MOCK DATA FOR ALL 15 MODULES ---
-        const deepReadings = {
-            love: { title: "Love & Relationships", overview: "Siz dərin mənalı bağlar axtarırsınız.", deep: "Münasibətlərinizdə təkrarlanan naxışlar, tam təhlükəsiz hiss etmədən tam təslim olmamağınızdan irəli gəlir. İdeal partnyorunuz sizə intellektual meydan oxuya bilən, amma eyni zamanda azadlığınıza hörmət edən biridir.", pattern: "Duyğusal intensivlik ilə müstəqillik ehtiyacı arasındakı qaçılmaz rəqs.", advice: "Sərhədlərinizi əvvəlcədən və aydın şəkildə təyin edin." },
-            future: { title: "Future Path", overview: "Həyatınız böyük bir struktur dəyişikliyinə doğru gedir.", deep: "Keçmişdə etdiyiniz seçim və qərarlar artıq meyvəsini verir. Qarşıdakı aylarda diqqətinizi xırda detallardan çox, böyük mənzərəyə yönəltməlisiniz.", pattern: "Siz həmişə ətrafınızdakılardan daha sürətli inkişaf edirsiniz.", advice: "Yeni təcrübələrə açıq olun, komfort zonasını tərk edin." },
-            career: { title: "Career Direction", overview: "Siz sistemlərin arxitektorunuz.", deep: "Təbii istedadlarınız xaotik strukturları nizama salmaq və inovativ həllər tapmaqdır. Analitik zəkanız standart işlərdə sıxılır.", pattern: "Sistem qurulana qədər həvəsli, hər şey mükəmməl olduqda isə yorğunluq.", advice: "Liderlik rollarına və ya daimi yaradıcılıq tələb edən layihələrə cəmləşin." },
-            money: { title: "Money & Wealth", overview: "Pul sizin üçün riyazi bir azadlıqdır.", deep: "Maliyyə potensialınız olduqca yüksəkdir, lakin pulla münasibətiniz əsasən təhlükəsizlik hissinizlə bağlıdır. Risk alarkən həddindən artıq ehtiyatlı olmaq bəzən böyük sıçrayışlara mane olur.", pattern: "Zəmanət olmadan investisiya etməmək vərdişi.", advice: "Yaradıcı risklər almağa icazə verin." },
-            personality: { title: "Personality Mirror", overview: "İçəridə fırtına, çöldə sakitlik.", deep: "Əslində olduqca empatiyalı və dərindüşüncəli birisiniz. İnsanlar sizi daha çox sirrli, güclü və müstəqil biri kimi görürlər. Bu, sizi həm cəlbedici edir, həm də yanlış anlaşılma riski yaradır.", pattern: "Zəif görünməmək üçün emosiyaları pərdələmək.", advice: "Öz otantikliyinizdən (təbiiliyinizdən) qorxmayın." },
-            compatibility: { title: "Compatibility", overview: "Professional və şəxsi sinergiya axtarışı.", deep: "Siz həm iş, həm də şəxsi münasibətlərdə intellektual harmoniyaya və qarşılıqlı hörmətə dəyər verirsiniz. Zəif tərəfiniz, qarşı tərəfdən də hər zaman eyni məntiqi analizi gözləməyinizdir. Güclü tərəfiniz isə hər cür böhranı soyuqqanlılıqla həll etmək bacarığınızdır.", pattern: "Uyğunluğu emosional deyil, mental zəmində axtarmaq.", advice: "İnsanların fərqli reaksiya mexanizmlərinə səbrlə yanaşın." },
-            purpose: { title: "Life Purpose", overview: "İnşa etmək və təkmilləşdirmək üçün buradasınız.", deep: "Sizin həyat missiyanız sadəcə iştirakçı olmaq deyil, ətrafınızdakı dünyanı, sistemləri və insanları daha effektiv bir formaya gətirməkdir.", pattern: "Hər şeyin 'daha yaxşı necə ola biləcəyini' düşünmək.", advice: "Biliklərinizi paylaşmaq missiyanızın əsas hissəsidir." },
-            inner: { title: "Inner World", overview: "Sükutun içindəki dialoqlar.", deep: "Ən böyük daxili konfliktiniz, mükəmməliyyətçiliklə sürətli nəticə əldə etmək istəyi arasındadır. Gizli qorxunuz nəzarəti itirmək və potensialınızı tam reallaşdıra bilməməkdir.", pattern: "Gecə saatlarında qərarları dəfələrlə analiz etmək.", advice: "Mükəmməl olmayan başlanğıclara icazə verin." },
-            strengths: { title: "Strengths & Blind Spots", overview: "Görünən və görünməyən tərəfləriniz.", deep: "Güclü tərəfləriniz: Strateji düşüncə, böhran anında rəhbərlik, sürətli öyrənmə. Fərqinə varmadığınız zəiflik: Başqalarının sizdən asılı qalmasına şərait yaradaraq özünüzü həddindən artıq yükləmək.", pattern: "'Özüm etsəm daha sürətli olar' düşüncəsi.", advice: "Nümayəndəlik verməyi (delegation) öyrənin." },
-            decisions: { title: "Decision Assistant", overview: "Rasionallıq və intuisiya tərəzisi.", deep: "Qərar verərkən məlumatlara və statistikaya əsaslanmaq sizə daha çox uyğundur. Lakin, çox vaxt ilk saniyədə hiss etdiyiniz intuisiyanız ən doğru yolu göstərir.", pattern: "Analiz iflici (həddindən artıq düşünərək qərarı yubatmaq).", advice: "Məntiqiniz intuisiyanızı dəstəkləmək üçün istifadə edilməlidir, boğmaq üçün yox." },
-            emotions: { title: "Emotional Patterns", overview: "Məntiq çərçivəsinə salınan hisslər.", deep: "Siz vəziyyətlərdən emosional olaraq təsirlənirsiniz, lakin bunu beyin süzgəcindən keçirərək məntiqi bir formaya salmağa çalışırsınız. Ədalətsizlik və məntiqsizlik sizi ən çox təsirləndirən faktorlardır.", pattern: "Kədəri və ya məyusluğu işləyərək basdırmaq.", advice: "Emosiyaları analiz etmədən yalnız hiss etməyə zaman ayırın." },
-            timeline: { title: "Growth Timeline", overview: "Zaman xəttinizdəki transformasiya.", deep: "Keçmiş: Sərt prinsiplər və fərdi mübarizə. İndi: Potensialın fərkinə varmaq və sistemlər qurmaq mərhələsi. Gələcək: Liderlik, tam müstəqillik və böyük miqyaslı təsir.", pattern: "Hər 3-4 ildən bir köklü vizyon dəyişikliyi.", advice: "Keçmişdəki çətinlikləri indi bir baza kimi istifadə edin." }
+        // --- TRANSLATIONS DICTIONARY ---
+        const T = {
+            az: {
+                auth: { title: "ASTROLOGUM", sub: "Kainatın Sirləri", name: "Adınız", namePl: "Məsələn: Aqşin", dob: "Doğum Tarixi", time: "Doğum Saatı (Təxmini)", city: "Doğum Yeri (Şəhər)", back: "Geri", next: "İrəli", start: "Başlat" },
+                nav: { profile: "Profil" },
+                dash: { title1: "Analiz", title2: "Modulları", desc: "Sizin üçün xüsusi hesablanmış 15 fərqli baxış bucağı." },
+                modules: [
+                    { id: 'love', title: 'Love & Relationships', desc: 'Münasibətlərim niyə təkrarlanır? İdeal partnyorum.', icon: '🤍' },
+                    { id: 'future', title: 'Future Path', desc: 'Həyatım hansı istiqamətə gedir? Fokus nöqtələri.', icon: '🔭' },
+                    { id: 'career', title: 'Career Direction', desc: 'Xarakterimə uyğun iş və təbii istedadlarım.', icon: '⚡' },
+                    { id: 'money', title: 'Money & Wealth', desc: 'Pulla münasibətim və maliyyə potensialım.', icon: '💠' },
+                    { id: 'personality', title: 'Personality Mirror', desc: 'Mən əslində necəyəm? İnsanlar məni necə görür?', icon: '🪞' },
+                    { id: 'compatibility', title: 'Compatibility', desc: 'Sevgili, dost, iş ortağı ilə uyğunluq dinamikası.', icon: '⚖️' },
+                    { id: 'daily', title: 'Daily Insights', desc: 'Bu gün üçün şəxsi tövsiyələr və enerji.', icon: '✨', action: 'route_daily' },
+                    { id: 'purpose', title: 'Life Purpose', desc: 'Mən nə üçün yaradılmışam? Həyat missiyam.', icon: '🧭' },
+                    { id: 'inner', title: 'Inner World', desc: 'Gizli qorxularım və daxili konfliktlərim.', icon: '🌊' },
+                    { id: 'strengths', title: 'Strengths & Spots', desc: 'Güclü tərəflərim və görünməz zəifliklərim.', icon: '👁️' },
+                    { id: 'decisions', title: 'Decision Assistant', desc: 'Qərar üsullarım, risk və fürsət balansı.', icon: '♟️' },
+                    { id: 'emotions', title: 'Emotional Patterns', desc: 'Emosiyalarım necə işləyir? Təsir nöqtələri.', icon: '🧬' },
+                    { id: 'timeline', title: 'Growth Timeline', desc: 'Keçmiş → İndi → Gələcək inkişaf xəritəsi.', icon: '⏳' },
+                    { id: 'report', title: 'Personal Report', desc: 'Bütün nəticələrin vahid premium PDF hesabatı.', icon: '📄', action: 'export' },
+                    { id: 'ai', title: 'AI Reflection', desc: 'İstifadəçi ilə dialoq. Dərin fərdi süni intellekt analizi.', icon: '🧠', action: 'ai' }
+                ],
+                deep: {
+                    love: { overview: "Siz dərin mənalı bağlar axtarırsınız.", deep: "Münasibətlərinizdə təkrarlanan naxışlar, tam təhlükəsiz hiss etmədən tam təslim olmamağınızdan irəli gəlir. İdeal partnyorunuz sizə intellektual meydan oxuya bilən, amma eyni zamanda azadlığınıza hörmət edən biridir.", pattern: "Duyğusal intensivlik ilə müstəqillik ehtiyacı arasındakı qaçılmaz rəqs.", advice: "Sərhədlərinizi əvvəlcədən və aydın şəkildə təyin edin." },
+                    future: { overview: "Həyatınız böyük bir struktur dəyişikliyinə doğru gedir.", deep: "Keçmişdə etdiyiniz seçim və qərarlar artıq meyvəsini verir. Qarşıdakı aylarda diqqətinizi xırda detallardan çox, böyük mənzərəyə yönəltməlisiniz.", pattern: "Siz həmişə ətrafınızdakılardan daha sürətli inkişaf edirsiniz.", advice: "Yeni təcrübələrə açıq olun, komfort zonasını tərk edin." },
+                    career: { overview: "Siz sistemlərin arxitektorunuz.", deep: "Təbii istedadlarınız xaotik strukturları nizama salmaq və inovativ həllər tapmaqdır. Analitik zəkanız standart işlərdə sıxılır.", pattern: "Sistem qurulana qədər həvəsli, hər şey mükəmməl olduqda isə yorğunluq.", advice: "Liderlik rollarına və ya daimi yaradıcılıq tələb edən layihələrə cəmləşin." },
+                    money: { overview: "Pul sizin üçün riyazi bir azadlıqdır.", deep: "Maliyyə potensialınız olduqca yüksəkdir, lakin pulla münasibətiniz əsasən təhlükəsizlik hissinizlə bağlıdır. Risk alarkən həddindən artıq ehtiyatlı olmaq bəzən böyük sıçrayışlara mane olur.", pattern: "Zəmanət olmadan investisiya etməmək vərdişi.", advice: "Yaradıcı risklər almağa icazə verin." },
+                    personality: { overview: "İçəridə fırtına, çöldə sakitlik.", deep: "Əslində olduqca empatiyalı və dərindüşüncəli birisiniz. İnsanlar sizi daha çox sirrli, güclü və müstəqil biri kimi görürlər.", pattern: "Zəif görünməmək üçün emosiyaları pərdələmək.", advice: "Öz otantikliyinizdən (təbiiliyinizdən) qorxmayın." },
+                    compatibility: { overview: "Professional və şəxsi sinergiya axtarışı.", deep: "Siz həm iş, həm də şəxsi münasibətlərdə intellektual harmoniyaya və qarşılıqlı hörmətə dəyər verirsiniz. Zəif tərəfiniz qarşı tərəfdən də hər zaman eyni məntiqi analizi gözləməyinizdir.", pattern: "Uyğunluğu emosional deyil, mental zəmində axtarmaq.", advice: "İnsanların fərqli reaksiya mexanizmlərinə səbrlə yanaşın." },
+                    purpose: { overview: "İnşa etmək və təkmilləşdirmək üçün buradasınız.", deep: "Sizin həyat missiyanız sadəcə iştirakçı olmaq deyil, ətrafınızdakı dünyanı, sistemləri və insanları daha effektiv bir formaya gətirməkdir.", pattern: "Hər şeyin 'daha yaxşı necə ola biləcəyini' düşünmək.", advice: "Biliklərinizi paylaşmaq missiyanızın əsas hissəsidir." },
+                    inner: { overview: "Sükutun içindəki dialoqlar.", deep: "Ən böyük daxili konfliktiniz, mükəmməliyyətçiliklə sürətli nəticə əldə etmək istəyi arasındadır. Gizli qorxunuz nəzarəti itirmək və potensialınızı tam reallaşdıra bilməməkdir.", pattern: "Gecə saatlarında qərarları dəfələrlə analiz etmək.", advice: "Mükəmməl olmayan başlanğıclara icazə verin." },
+                    strengths: { overview: "Görünən və görünməyən tərəfləriniz.", deep: "Güclü tərəfləriniz: Strateji düşüncə, böhran anında rəhbərlik, sürətli öyrənmə. Fərqinə varmadığınız zəiflik: Başqalarının sizdən asılı qalmasına şərait yaradaraq özünüzü həddindən artıq yükləmək.", pattern: "'Özüm etsəm daha sürətli olar' düşüncəsi.", advice: "Nümayəndəlik verməyi (delegation) öyrənin." },
+                    decisions: { overview: "Rasionallıq və intuisiya tərəzisi.", deep: "Qərar verərkən məlumatlara və statistikaya əsaslanmaq sizə daha çox uyğundur. Lakin, çox vaxt ilk saniyədə hiss etdiyiniz intuisiyanız ən doğru yolu göstərir.", pattern: "Analiz iflici (həddindən artıq düşünərək qərarı yubatmaq).", advice: "Məntiqiniz intuisiyanızı dəstəkləmək üçün istifadə edilməlidir, boğmaq üçün yox." },
+                    emotions: { overview: "Məntiq çərçivəsinə salınan hisslər.", deep: "Siz vəziyyətlərdən emosional olaraq təsirlənirsiniz, lakin bunu beyin süzgəcindən keçirərək məntiqi bir formaya salmağa çalışırsınız.", pattern: "Kədəri və ya məyusluğu işləyərək basdırmaq.", advice: "Emosiyaları analiz etmədən yalnız hiss etməyə zaman ayırın." },
+                    timeline: { overview: "Zaman xəttinizdəki transformasiya.", deep: "Keçmiş: Sərt prinsiplər və fərdi mübarizə. İndi: Potensialın fərkinə varmaq və sistemlər qurmaq mərhələsi. Gələcək: Liderlik, tam müstəqillik və böyük miqyaslı təsir.", pattern: "Hər 3-4 ildən bir köklü vizyon dəyişikliyi.", advice: "Keçmişdəki çətinlikləri indi bir baza kimi istifadə edin." }
+                },
+                panel: { back: "Geri Qayıt", psyDepth: "Psixoloji Dərinlik", pattern: "Gizli Naxış", advice: "Tövsiyə" },
+                daily: { title: "Gündəlik Analiz", text: "Bu gün kainat sizə intuisiyanıza güvənməyin vacibliyini xatırladır. Beyninizdəki o kiçik səs bu gün ən doğru bələdçidir." },
+                ai: { title: "AI Kosmik Terminal", msg1: "> İstifadəçi matrisi yüklənir...", msg2: "> Dərin analiz protokolları aktivdir.", msg3: "Salam. Mən Astrologum süni intellektiyəm. Şəxsi xəritəniz, emosional naxışlarınız və gələcək potensialınız barədə nəyi müzakirə etmək istəyirsiniz?", input: "Terminal mesaj qəbulunu gözləyir... (Tezliklə)" },
+                footer: { sub: "Kainatın arxitekturası", tools: "Alətlər", aiTool: "AI Kosmik Analiz", export: "Xəritəni Export Et", about: "Haqqında", docs: "Texniki Sənədlər", privacy: "Məxfilik" },
+                loaders: { l1: "Kosmik arxivlərə qoşulur...", l2: "Məlumat bazası skan edilir...", l3: "Naxışlar deşifrə olunur...", l4: "Günün enerjisi hesablanır..." },
+                alerts: { export: "Premium Hesabat yaradılır... (Məlumatlar PDF formatında endiriləcək)", logout: "Çıxış" }
+            },
+            en: {
+                auth: { title: "ASTROLOGUM", sub: "Secrets of the Universe", name: "Your Name", namePl: "e.g. John", dob: "Date of Birth", time: "Time of Birth (Approx)", city: "Place of Birth (City)", back: "Back", next: "Next", start: "Start" },
+                nav: { profile: "Profile" },
+                dash: { title1: "Analysis", title2: "Modules", desc: "15 different perspectives calculated exclusively for you." },
+                modules: [
+                    { id: 'love', title: 'Love & Relationships', desc: 'Why do my relationships repeat? My ideal partner.', icon: '🤍' },
+                    { id: 'future', title: 'Future Path', desc: 'Where is my life heading? Focus points.', icon: '🔭' },
+                    { id: 'career', title: 'Career Direction', desc: 'Job suited to my character and talents.', icon: '⚡' },
+                    { id: 'money', title: 'Money & Wealth', desc: 'My relationship with money and potential.', icon: '💠' },
+                    { id: 'personality', title: 'Personality Mirror', desc: 'Who am I really? How do people see me?', icon: '🪞' },
+                    { id: 'compatibility', title: 'Compatibility', desc: 'Compatibility with lover, friend, or partner.', icon: '⚖️' },
+                    { id: 'daily', title: 'Daily Insights', desc: 'Personal advice and energy for today.', icon: '✨', action: 'route_daily' },
+                    { id: 'purpose', title: 'Life Purpose', desc: 'What was I created for? My life mission.', icon: '🧭' },
+                    { id: 'inner', title: 'Inner World', desc: 'My hidden fears and inner conflicts.', icon: '🌊' },
+                    { id: 'strengths', title: 'Strengths & Spots', desc: 'My strengths and invisible weaknesses.', icon: '👁️' },
+                    { id: 'decisions', title: 'Decision Assistant', desc: 'Decision methods, risk & opportunity balance.', icon: '♟️' },
+                    { id: 'emotions', title: 'Emotional Patterns', desc: 'How do my emotions work? Trigger points.', icon: '🧬' },
+                    { id: 'timeline', title: 'Growth Timeline', desc: 'Past → Present → Future growth map.', icon: '⏳' },
+                    { id: 'report', title: 'Personal Report', desc: 'Unified premium PDF report of all results.', icon: '📄', action: 'export' },
+                    { id: 'ai', title: 'AI Reflection', desc: 'Dialogue with AI. Deep personal analysis.', icon: '🧠', action: 'ai' }
+                ],
+                deep: {
+                    love: { overview: "You seek deeply meaningful connections.", deep: "Repeating patterns in relationships stem from your inability to fully surrender without feeling completely secure. Your ideal partner intellectually challenges you while respecting your freedom.", pattern: "The inevitable dance between emotional intensity and the need for independence.", advice: "Set your boundaries clearly and in advance." },
+                    future: { overview: "Your life is heading towards a major structural shift.", deep: "Past choices are bearing fruit. In the coming months, focus on the big picture rather than minute details.", pattern: "You always grow faster than those around you.", advice: "Be open to new experiences, leave your comfort zone." },
+                    career: { overview: "You are an architect of systems.", deep: "Your natural talent is organizing chaotic structures and finding innovative solutions. Your analytical mind gets bored with standard tasks.", pattern: "Enthusiastic until the system is built, then tired when it's perfect.", advice: "Focus on leadership roles or projects requiring constant creativity." },
+                    money: { overview: "Money is mathematical freedom to you.", deep: "Your financial potential is very high, but your relationship with money is tied to security. Being overly cautious sometimes prevents big leaps.", pattern: "Habit of not investing without a guarantee.", advice: "Allow yourself to take creative risks." },
+                    personality: { overview: "Storm inside, calm outside.", deep: "You are highly empathetic and thoughtful. People see you as mysterious, strong, and independent.", pattern: "Masking emotions to avoid appearing weak.", advice: "Don't be afraid of your authenticity." },
+                    compatibility: { overview: "Quest for professional and personal synergy.", deep: "You value intellectual harmony and mutual respect. Your weakness is expecting the same logical analysis from others.", pattern: "Seeking compatibility on a mental, not emotional, ground.", advice: "Be patient with others' different reaction mechanisms." },
+                    purpose: { overview: "You are here to build and improve.", deep: "Your mission isn't just to participate, but to make the world, systems, and people around you more effective.", pattern: "Always thinking 'how can this be better'.", advice: "Sharing your knowledge is a core part of your mission." },
+                    inner: { overview: "Dialogues within the silence.", deep: "Your biggest inner conflict is between perfectionism and the desire for rapid results. Hidden fear is losing control.", pattern: "Over-analyzing decisions late at night.", advice: "Allow for imperfect beginnings." },
+                    strengths: { overview: "Your visible and invisible sides.", deep: "Strengths: Strategic thinking, crisis leadership. Blind spot: Overloading yourself by letting others depend on you.", pattern: "Thinking 'it's faster if I do it myself'.", advice: "Learn the art of delegation." },
+                    decisions: { overview: "The scale of rationality and intuition.", deep: "Relying on data suits you, but often your first-second intuition points to the right path.", pattern: "Analysis paralysis (delaying by overthinking).", advice: "Use logic to support your intuition, not suppress it." },
+                    emotions: { overview: "Feelings framed by logic.", deep: "You are emotionally affected by situations, but try to filter them through logic. Injustice triggers you the most.", pattern: "Suppressing sadness or disappointment by working.", advice: "Take time to just feel emotions without analyzing them." },
+                    timeline: { overview: "Transformation in your timeline.", deep: "Past: Strict principles, individual struggle. Present: Realizing potential, building systems. Future: Leadership, total independence.", pattern: "Radical vision shift every 3-4 years.", advice: "Use past struggles as a foundation now." }
+                },
+                panel: { back: "Go Back", psyDepth: "Psychological Depth", pattern: "Hidden Pattern", advice: "Advice" },
+                daily: { title: "Daily Analysis", text: "Today, the universe reminds you to trust your intuition. That little voice in your head is the truest guide today." },
+                ai: { title: "AI Cosmic Terminal", msg1: "> Loading user matrix...", msg2: "> Deep analysis protocols active.", msg3: "Hello. I am Astrologum AI. What would you like to discuss regarding your chart, emotional patterns, or future potential?", input: "Terminal awaiting message... (Coming soon)" },
+                footer: { sub: "Architecture of the Universe", tools: "Tools", aiTool: "AI Cosmic Analysis", export: "Export Chart", about: "About", docs: "Technical Docs", privacy: "Privacy" },
+                loaders: { l1: "Connecting to cosmic archives...", l2: "Scanning database...", l3: "Deciphering patterns...", l4: "Calculating today's energy..." },
+                alerts: { export: "Premium Report is being generated... (Data will be downloaded as PDF)", logout: "Logout" }
+            },
+            ru: {
+                auth: { title: "ASTROLOGUM", sub: "Тайны Вселенной", name: "Ваше Имя", namePl: "Напр. Иван", dob: "Дата Рождения", time: "Время Рождения (Примерно)", city: "Место Рождения (Город)", back: "Назад", next: "Далее", start: "Начать" },
+                nav: { profile: "Профиль" },
+                dash: { title1: "Модули", title2: "Анализа", desc: "15 различных точек зрения, рассчитанных специально для вас." },
+                modules: [
+                    { id: 'love', title: 'Любовь и Отношения', desc: 'Почему мои отношения повторяются? Идеальный партнер.', icon: '🤍' },
+                    { id: 'future', title: 'Путь в Будущее', desc: 'Куда движется моя жизнь? Точки фокуса.', icon: '🔭' },
+                    { id: 'career', title: 'Карьера', desc: 'Работа по моему характеру и таланты.', icon: '⚡' },
+                    { id: 'money', title: 'Деньги и Богатство', desc: 'Мои отношения с деньгами и потенциал.', icon: '💠' },
+                    { id: 'personality', title: 'Зеркало Личности', desc: 'Кто я на самом деле? Как меня видят люди?', icon: '🪞' },
+                    { id: 'compatibility', title: 'Совместимость', desc: 'Динамика совместимости с партнером или другом.', icon: '⚖️' },
+                    { id: 'daily', title: 'Ежедневные Озарения', desc: 'Личные советы и энергия на сегодня.', icon: '✨', action: 'route_daily' },
+                    { id: 'purpose', title: 'Жизненная Цель', desc: 'Для чего я создан? Моя жизненная миссия.', icon: '🧭' },
+                    { id: 'inner', title: 'Внутренний Мир', desc: 'Мои скрытые страхи и внутренние конфликты.', icon: '🌊' },
+                    { id: 'strengths', title: 'Сильные Стороны', desc: 'Мои сильные стороны и скрытые слабости.', icon: '👁️' },
+                    { id: 'decisions', title: 'Помощник Решений', desc: 'Методы решений, баланс риска и возможностей.', icon: '♟️' },
+                    { id: 'emotions', title: 'Эмоции', desc: 'Как работают мои эмоции? Триггеры.', icon: '🧬' },
+                    { id: 'timeline', title: 'Линия Роста', desc: 'Прошлое → Настоящее → Будущее развитие.', icon: '⏳' },
+                    { id: 'report', title: 'Личный Отчет', desc: 'Единый премиум PDF-отчет всех результатов.', icon: '📄', action: 'export' },
+                    { id: 'ai', title: 'ИИ Рефлексия', desc: 'Диалог с ИИ. Глубокий персональный анализ.', icon: '🧠', action: 'ai' }
+                ],
+                deep: {
+                    love: { overview: "Вы ищете глубоко значимые связи.", deep: "Повторяющиеся паттерны возникают из-за вашей неспособности полностью сдаться без ощущения абсолютной безопасности. Ваш идеальный партнер бросает вам интеллектуальный вызов, уважая свободу.", pattern: "Танец между эмоциональной интенсивностью и потребностью в независимости.", advice: "Устанавливайте свои границы заранее и четко." },
+                    future: { overview: "Ваша жизнь движется к серьезным структурным сдвигам.", deep: "Прошлые выборы приносят плоды. В ближайшие месяцы сосредоточьтесь на общей картине.", pattern: "Вы всегда растете быстрее, чем окружающие.", advice: "Будьте открыты для новых опытов, покиньте зону комфорта." },
+                    career: { overview: "Вы - архитектор систем.", deep: "Ваш природный талант - организовывать хаотичные структуры. Ваш аналитический ум скучает при стандартных задачах.", pattern: "Энтузиазм до создания системы, затем усталость, когда все идеально.", advice: "Сосредоточьтесь на лидерских ролях или творческих проектах." },
+                    money: { overview: "Деньги для вас - математическая свобода.", deep: "Ваш финансовый потенциал высок, но отношения с деньгами связаны с безопасностью. Чрезмерная осторожность иногда мешает.", pattern: "Привычка не инвестировать без гарантий.", advice: "Позвольте себе брать творческие риски." },
+                    personality: { overview: "Буря внутри, спокойствие снаружи.", deep: "Вы очень эмпатичны и вдумчивы. Люди видят в вас загадочность, силу и независимость.", pattern: "Маскировка эмоций, чтобы не казаться слабым.", advice: "Не бойтесь своей подлинности." },
+                    compatibility: { overview: "Поиск профессиональной и личной синергии.", deep: "Вы цените интеллектуальную гармонию. Ваша слабость - ожидание такого же логического анализа от других.", pattern: "Поиск совместимости на ментальной, а не эмоциональной почве.", advice: "Будьте терпеливы к различным механизмам реакций людей." },
+                    purpose: { overview: "Вы здесь, чтобы строить и улучшать.", deep: "Ваша миссия - не просто участвовать, а делать мир и системы вокруг вас более эффективными.", pattern: "Постоянные мысли 'как это можно улучшить'.", advice: "Делиться знаниями - ключевая часть вашей миссии." },
+                    inner: { overview: "Диалоги в тишине.", deep: "Ваш самый большой внутренний конфликт - между перфекционизмом и желанием быстрых результатов.", pattern: "Чрезмерный анализ решений поздно ночью.", advice: "Разрешите себе неидеальные начала." },
+                    strengths: { overview: "Ваши видимые и невидимые стороны.", deep: "Сильные стороны: Стратегическое мышление, кризисное лидерство. Слепое пятно: Перегрузка из-за того, что другие зависят от вас.", pattern: "Мысль 'быстрее сделать самому'.", advice: "Учитесь искусству делегирования." },
+                    decisions: { overview: "Чаша весов рациональности и интуиции.", deep: "Опора на данные вам подходит, но часто первая интуиция указывает верный путь.", pattern: "Аналитический паралич (задержка из-за раздумий).", advice: "Используйте логику для поддержки интуиции, а не ее подавления." },
+                    emotions: { overview: "Чувства, обрамленные логикой.", deep: "Вы эмоционально реагируете, но пытаетесь фильтровать это через логику. Несправедливость ранит больше всего.", pattern: "Подавление грусти работой.", advice: "Уделите время тому, чтобы просто чувствовать эмоции, не анализируя их." },
+                    timeline: { overview: "Трансформация на вашей линии времени.", deep: "Прошлое: Строгие принципы. Настоящее: Осознание потенциала. Будущее: Лидерство, полная независимость.", pattern: "Радикальная смена видения каждые 3-4 года.", advice: "Используйте прошлые трудности как фундамент сейчас." }
+                },
+                panel: { back: "Вернуться", psyDepth: "Психологическая Глубина", pattern: "Скрытый Паттерн", advice: "Совет" },
+                daily: { title: "Ежедневный Анализ", text: "Сегодня вселенная напоминает вам довериться своей интуиции. Этот маленький голос — ваш самый верный путеводитель сегодня." },
+                ai: { title: "ИИ Космический Терминал", msg1: "> Загрузка матрицы пользователя...", msg2: "> Протоколы глубокого анализа активны.", msg3: "Здравствуйте. Я ИИ Astrologum. Что бы вы хотели обсудить касательно вашей карты, эмоций или будущего?", input: "Терминал ожидает сообщение... (Скоро)" },
+                footer: { sub: "Архитектура Вселенной", tools: "Инструменты", aiTool: "ИИ Анализ", export: "Экспорт Карты", about: "О Нас", docs: "Тех. Документация", privacy: "Конфиденциальность" },
+                loaders: { l1: "Подключение к архивам...", l2: "Сканирование базы данных...", l3: "Расшифровка паттернов...", l4: "Расчет энергии дня..." },
+                alerts: { export: "Премиум-отчет создается... (Данные будут скачаны в формате PDF)", logout: "Выйти" }
+            }
         };
-
-        const dailyHoroscopes = [
-            "Bu gün kainat sizə intuisiyanıza güvənməyin vacibliyini xatırladır. Beyninizdəki o kiçik səs bu gün ən doğru bələdçidir. Emosional enerjiniz təmizlənmə dövründədir.",
-            "Qarşılaşacağınız kiçik bir detal böyük bir qərarın açarı ola bilər. Günün enerjisi sizi daxili səsinizə qulaq asmağa çağırır.",
-        ];
 
         // --- UI COMPONENTS ---
         const InputField = ({ label, type, value, onChange, placeholder, required = true }) => (
@@ -156,10 +268,7 @@
         );
 
         const Button = ({ children, onClick, type = "button", variant = "primary", className = "" }) => {
-            const variants = {
-                primary: "bg-white text-black hover:bg-gray-200",
-                glass: "glass-panel text-white hover:bg-white/10 border border-white/10"
-            };
+            const variants = { primary: "bg-white text-black hover:bg-gray-200", glass: "glass-panel text-white hover:bg-white/10 border border-white/10" };
             return (
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type={type} onClick={onClick}
                     className={`px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium transition-all duration-500 relative group ${variants[variant]} ${className}`}>
@@ -177,15 +286,12 @@
             }, [messages, onComplete]);
 
             return (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-mystic-950/90 backdrop-blur-xl">
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-mystic-950/90 backdrop-blur-xl">
                     <div className="relative w-32 h-32 flex items-center justify-center mb-10">
-                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                            className="absolute inset-0 rounded-full border border-mystic-accent/30 border-t-mystic-accent" />
+                        <motion.div animate={{ rotate: 360 }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="absolute inset-0 rounded-full border border-mystic-accent/30 border-t-mystic-accent" />
                     </div>
                     <AnimatePresence mode="wait">
-                        <motion.p key={index} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }}
-                            className="text-sm font-light tracking-[0.3em] text-gray-300 uppercase">
+                        <motion.p key={index} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -10, opacity: 0 }} className="text-sm font-light tracking-[0.2em] text-gray-300 uppercase text-center px-4">
                             {messages[index]}
                         </motion.p>
                     </AnimatePresence>
@@ -193,7 +299,7 @@
             );
         };
 
-        const AuthScreen = ({ onLogin }) => {
+        const AuthScreen = ({ onLogin, lang, t }) => {
             const [formData, setFormData] = useState({ name: '', dob: '', time: '', city: '' });
             const [step, setStep] = useState(1);
             const handleNext = (e) => { e.preventDefault(); if (step < 3) setStep(step + 1); else onLogin(formData); };
@@ -202,31 +308,31 @@
                 <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="min-h-screen flex items-center justify-center p-6">
                     <div className="max-w-md w-full">
                         <div className="text-center mb-12">
-                            <h1 className="text-4xl font-light tracking-widest mb-3">ASTROLOGUM</h1>
-                            <p className="text-gray-400 font-light text-xs tracking-[0.3em] uppercase">Kainatın Sirləri</p>
+                            <h1 className="text-4xl font-light tracking-widest mb-3">{t.auth.title}</h1>
+                            <p className="text-gray-400 font-light text-xs tracking-[0.3em] uppercase">{t.auth.sub}</p>
                         </div>
                         <form onSubmit={handleNext} className="glass-panel p-10 rounded-[2rem]">
                             <AnimatePresence mode="wait">
                                 {step === 1 && (
                                     <motion.div key="1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                                        <InputField label="Adınız" type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                                        <InputField label={t.auth.name} type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder={t.auth.namePl} />
                                     </motion.div>
                                 )}
                                 {step === 2 && (
                                     <motion.div key="2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                                        <InputField label="Doğum Tarixi" type="date" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} />
-                                        <InputField label="Doğum Saatı (Təxmini)" type="time" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} required={false} />
+                                        <InputField label={t.auth.dob} type="date" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} />
+                                        <InputField label={t.auth.time} type="time" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} required={false} />
                                     </motion.div>
                                 )}
                                 {step === 3 && (
                                     <motion.div key="3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-                                        <InputField label="Doğum Yeri (Şəhər)" type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
+                                        <InputField label={t.auth.city} type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
                                     </motion.div>
                                 )}
                             </AnimatePresence>
                             <div className="mt-8 flex justify-between items-center">
-                                {step > 1 ? <button type="button" onClick={() => setStep(step - 1)} className="text-xs text-gray-500 hover:text-white uppercase tracking-widest">Geri</button> : <div/>}
-                                <Button type="submit" variant="primary">{step === 3 ? "Başlat" : "İrəli"}</Button>
+                                {step > 1 ? <button type="button" onClick={() => setStep(step - 1)} className="text-xs text-gray-500 hover:text-white uppercase tracking-widest">{t.auth.back}</button> : <div/>}
+                                <Button type="submit" variant="primary">{step === 3 ? t.auth.start : t.auth.next}</Button>
                             </div>
                         </form>
                     </div>
@@ -234,84 +340,75 @@
             );
         };
 
-        const TopNav = ({ user, setView }) => (
-            <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} className="fixed top-0 w-full z-40 bg-mystic-950/70 backdrop-blur-xl border-b border-white/5 px-8 py-5 flex justify-between items-center">
-                <div className="text-xl font-light tracking-widest cursor-pointer hover:text-mystic-accent transition" onClick={() => setView('dashboard')}>ASTROLOGUM</div>
-                <div onClick={() => setView('profile')} className="text-xs tracking-widest uppercase text-gray-400 border border-white/10 px-4 py-2 rounded-full cursor-pointer hover:bg-white/5 transition">
-                    {user?.name || "Profil"}
+        const TopNav = ({ user, setView, lang, setLang, t }) => (
+            <motion.nav initial={{ y: -100 }} animate={{ y: 0 }} className="fixed top-0 w-full z-40 bg-mystic-950/70 backdrop-blur-xl border-b border-white/5 px-6 md:px-8 py-5 flex justify-between items-center">
+                <div className="text-lg md:text-xl font-light tracking-widest cursor-pointer hover:text-mystic-accent transition" onClick={() => setView('dashboard')}>ASTROLOGUM</div>
+                
+                <div className="flex items-center gap-6">
+                    {/* Language Switcher */}
+                    <div className="flex gap-3">
+                        {['az', 'en', 'ru'].map(l => (
+                            <span key={l} onClick={() => setLang(l)} className={`cursor-pointer text-xs font-medium uppercase tracking-widest transition-colors ${lang === l ? 'text-mystic-accent' : 'text-gray-500 hover:text-white'}`}>
+                                {l}
+                            </span>
+                        ))}
+                    </div>
+                    {/* Profile */}
+                    <div onClick={() => setView('profile')} className="hidden md:block text-xs tracking-widest uppercase text-gray-400 border border-white/10 px-4 py-2 rounded-full cursor-pointer hover:bg-white/5 transition">
+                        {user?.name || t.nav.profile}
+                    </div>
                 </div>
             </motion.nav>
         );
 
-        // --- DASHBOARD WITH 15 MODULES ---
-        const Dashboard = ({ onAction }) => {
-            const modules = [
-                { id: 'love', title: 'Love & Relationships', desc: 'Münasibətlərim niyə təkrarlanır? İdeal partnyorum.', icon: '🤍' },
-                { id: 'future', title: 'Future Path', desc: 'Həyatım hansı istiqamətə gedir? Fokus nöqtələri.', icon: '🔭' },
-                { id: 'career', title: 'Career Direction', desc: 'Xarakterimə uyğun iş və təbii istedadlarım.', icon: '⚡' },
-                { id: 'money', title: 'Money & Wealth', desc: 'Pulla münasibətim və maliyyə potensialım.', icon: '💠' },
-                { id: 'personality', title: 'Personality Mirror', desc: 'Mən əslində necəyəm? İnsanlar məni necə görür?', icon: '🪞' },
-                { id: 'compatibility', title: 'Compatibility', desc: 'Sevgili, dost, iş ortağı ilə uyğunluq dinamikası.', icon: '⚖️' },
-                { id: 'daily', title: 'Daily Insights', desc: 'Bu gün üçün şəxsi tövsiyələr və enerji.', icon: '✨', action: 'route_daily' },
-                { id: 'purpose', title: 'Life Purpose', desc: 'Mən nə üçün yaradılmışam? Həyat missiyam.', icon: '🧭' },
-                { id: 'inner', title: 'Inner World', desc: 'Gizli qorxularım və daxili konfliktlərim.', icon: '🌊' },
-                { id: 'strengths', title: 'Strengths & Spots', desc: 'Güclü tərəflərim və görünməz zəifliklərim.', icon: '👁️' },
-                { id: 'decisions', title: 'Decision Assistant', desc: 'Qərar üsullarım, risk və fürsət balansı.', icon: '♟️' },
-                { id: 'emotions', title: 'Emotional Patterns', desc: 'Emosiyalarım necə işləyir? Təsir nöqtələri.', icon: '🧬' },
-                { id: 'timeline', title: 'Growth Timeline', desc: 'Keçmiş → İndi → Gələcək inkişaf xəritəsi.', icon: '⏳' },
-                { id: 'report', title: 'Personal Report', desc: 'Bütün nəticələrin vahid premium PDF hesabatı.', icon: '📄', action: 'export' },
-                { id: 'ai', title: 'AI Reflection', desc: 'İstifadəçi ilə dialoq. Dərin fərdi süni intellekt analizi.', icon: '🧠', action: 'ai' }
-            ];
-
-            return (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-                    <div className="mb-16">
-                        <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">Analiz <span className="text-mystic-accent italic">Modulları</span></h1>
-                        <p className="text-gray-400 font-light">Sizin üçün xüsusi hesablanmış 15 fərqli baxış bucağı.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {modules.map((mod) => (
-                            <motion.div key={mod.id}
-                                whileHover={{ scale: 1.02 }}
-                                onClick={() => onAction(mod.action || `panel_${mod.id}`)}
-                                className="group cursor-pointer glass-panel p-6 rounded-2xl border border-white/5 hover:border-mystic-accent/40 transition-colors flex flex-col justify-between h-40">
-                                <div>
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h3 className="text-lg font-medium tracking-wide text-gray-200 group-hover:text-white transition">{mod.title}</h3>
-                                        <span className="opacity-50 text-xl">{mod.icon}</span>
-                                    </div>
-                                    <p className="text-xs text-gray-400 font-light leading-relaxed">{mod.desc}</p>
+        const Dashboard = ({ onAction, t }) => (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+                <div className="mb-16 text-center md:text-left">
+                    <h1 className="text-4xl md:text-5xl font-light tracking-tight mb-4">{t.dash.title1} <span className="text-mystic-accent italic">{t.dash.title2}</span></h1>
+                    <p className="text-gray-400 font-light">{t.dash.desc}</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    {t.modules.map((mod) => (
+                        <motion.div key={mod.id} whileHover={{ scale: 1.02 }} onClick={() => onAction(mod.action || `panel_${mod.id}`)}
+                            className="group cursor-pointer glass-panel p-6 rounded-2xl border border-white/5 hover:border-mystic-accent/40 transition-colors flex flex-col justify-between h-40">
+                            <div>
+                                <div className="flex items-center justify-between mb-2">
+                                    <h3 className="text-lg font-medium tracking-wide text-gray-200 group-hover:text-white transition">{mod.title}</h3>
+                                    <span className="opacity-50 text-xl">{mod.icon}</span>
                                 </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </motion.div>
-            );
-        };
+                                <p className="text-xs text-gray-400 font-light leading-relaxed">{mod.desc}</p>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+            </motion.div>
+        );
 
-        const PanelDetail = ({ type, onBack }) => {
-            const data = deepReadings[type];
+        const PanelDetail = ({ type, onBack, t }) => {
+            const data = t.deep[type];
             if (!data) return null;
+
+            // Find title from modules array
+            const modTitle = t.modules.find(m => m.id === type)?.title || type;
 
             return (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pt-32 pb-20 px-6 max-w-4xl mx-auto">
-                    <button onClick={onBack} className="text-xs tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-12 flex items-center gap-2">← Geri Qayıt</button>
+                    <button onClick={onBack} className="text-xs tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-12 flex items-center gap-2">← {t.panel.back}</button>
                     <div className="glass-panel p-10 md:p-16 rounded-[3rem] relative overflow-hidden">
                         <div className="absolute -top-[20%] -right-[20%] w-[50%] h-[50%] bg-mystic-accent/10 blur-[100px] rounded-full pointer-events-none"></div>
-                        <h2 className="text-xs uppercase tracking-[0.3em] text-mystic-accent mb-6">{data.title}</h2>
-                        <h1 className="text-3xl md:text-4xl font-light mb-10 leading-tight text-gradient">"{data.overview}"</h1>
+                        <h2 className="text-xs uppercase tracking-[0.3em] text-mystic-accent mb-6">{modTitle}</h2>
+                        <h1 className="text-2xl md:text-4xl font-light mb-10 leading-tight text-gradient">"{data.overview}"</h1>
                         <div className="space-y-12 mt-12 text-base font-light leading-relaxed text-gray-300">
                             <div>
-                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">Psixoloji Dərinlik</h3>
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">{t.panel.psyDepth}</h3>
                                 <p>{data.deep}</p>
                             </div>
                             <div className="bg-mystic-900/30 p-6 rounded-2xl border border-mystic-accent/20">
-                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">Gizli Naxış</h3>
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">{t.panel.pattern}</h3>
                                 <p className="text-white text-lg italic">"{data.pattern}"</p>
                             </div>
                             <div>
-                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">Tövsiyə</h3>
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-4 opacity-50">{t.panel.advice}</h3>
                                 <p>{data.advice}</p>
                             </div>
                         </div>
@@ -320,58 +417,61 @@
             );
         };
 
-        const DailyView = ({ onBack }) => (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-32 pb-20 px-6 max-w-3xl mx-auto text-center">
-                <button onClick={onBack} className="text-xs tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-12 inline-block">← Geri Qayıt</button>
-                <p className="text-xs tracking-[0.3em] uppercase text-mystic-accent mb-6">{new Date().toLocaleDateString('az-AZ', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-                <h1 className="text-4xl md:text-5xl font-light mb-12">Gündəlik Analiz</h1>
-                <div className="glass-panel p-10 rounded-[2rem] border border-mystic-accent/20">
-                    <p className="text-xl font-light leading-relaxed text-gray-200">"{dailyHoroscopes[0]}"</p>
-                </div>
-            </motion.div>
-        );
+        const DailyView = ({ onBack, lang, t }) => {
+            const locales = { az: 'az-AZ', en: 'en-US', ru: 'ru-RU' };
+            const dateStr = new Date().toLocaleDateString(locales[lang], { year: 'numeric', month: 'long', day: 'numeric' });
+            return (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-32 pb-20 px-6 max-w-3xl mx-auto text-center">
+                    <button onClick={onBack} className="text-xs tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-12 inline-block">← {t.panel.back}</button>
+                    <p className="text-xs tracking-[0.3em] uppercase text-mystic-accent mb-6">{dateStr}</p>
+                    <h1 className="text-4xl md:text-5xl font-light mb-12">{t.daily.title}</h1>
+                    <div className="glass-panel p-10 rounded-[2rem] border border-mystic-accent/20">
+                        <p className="text-xl font-light leading-relaxed text-gray-200">"{t.daily.text}"</p>
+                    </div>
+                </motion.div>
+            );
+        }
 
-        const AITerminal = ({ onClose }) => (
+        const AITerminal = ({ onClose, t }) => (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
                 <div className="glass-panel w-full max-w-3xl rounded-2xl overflow-hidden border border-mystic-accent/40 shadow-[0_0_40px_rgba(59,130,246,0.15)] flex flex-col h-[600px]">
                     <div className="p-4 border-b border-white/10 flex justify-between items-center bg-[#020617]/80">
-                        <span className="text-xs tracking-[0.2em] uppercase text-mystic-accent">AI Kosmik Terminal</span>
+                        <span className="text-xs tracking-[0.2em] uppercase text-mystic-accent">{t.ai.title}</span>
                         <button onClick={onClose} className="text-gray-400 hover:text-white text-sm">✕</button>
                     </div>
                     <div className="flex-1 p-6 font-mono text-sm text-mystic-accent/80 overflow-y-auto bg-[#020617]/90 space-y-3">
-                        <p>> İstifadəçi matrisi yüklənir...</p>
-                        <p>> Dərin analiz protokolları aktivdir.</p>
-                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-white pt-4">
-                            Salam. Mən Astrologum süni intellektiyəm. Şəxsi xəritəniz, emosional naxışlarınız və gələcək potensialınız barədə nəyi müzakirə etmək istəyirsiniz?
+                        <p>{t.ai.msg1}</p>
+                        <p>{t.ai.msg2}</p>
+                        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-white pt-4 leading-relaxed">
+                            {t.ai.msg3}
                         </motion.p>
                     </div>
                     <div className="p-4 border-t border-white/10 bg-[#020617]/80">
-                        <input type="text" disabled placeholder="Terminal mesaj qəbulunu gözləyir... (Tezliklə)" className="w-full bg-transparent outline-none text-sm font-sans text-gray-400 cursor-not-allowed" />
+                        <input type="text" disabled placeholder={t.ai.input} className="w-full bg-transparent outline-none text-sm font-sans text-gray-400 cursor-not-allowed" />
                     </div>
                 </div>
             </motion.div>
         );
 
-        // --- FOOTER ---
-        const Footer = ({ onAction }) => (
+        const Footer = ({ onAction, t }) => (
             <footer className="w-full border-t border-white/5 py-12 mt-10 px-8 bg-[#020617]/60 backdrop-blur-xl relative z-30">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 text-gray-500">
                     <div>
                         <h4 className="text-white font-medium mb-1 tracking-widest text-sm">ASTROLOGUM</h4>
-                        <p className="text-xs font-light">Kainatın arxitekturası</p>
+                        <p className="text-xs font-light">{t.footer.sub}</p>
                     </div>
                     <div>
-                        <h4 className="text-white font-medium mb-4 text-xs uppercase tracking-widest">Alətlər</h4>
+                        <h4 className="text-white font-medium mb-4 text-xs uppercase tracking-widest">{t.footer.tools}</h4>
                         <ul className="space-y-3 text-xs cursor-pointer">
-                            <li className="hover:text-mystic-accent transition" onClick={() => onAction('ai')}>AI Kosmik Analiz</li>
-                            <li className="hover:text-white transition" onClick={() => onAction('export')}>Xəritəni Export Et</li>
+                            <li className="hover:text-mystic-accent transition" onClick={() => onAction('ai')}>{t.footer.aiTool}</li>
+                            <li className="hover:text-white transition" onClick={() => onAction('export')}>{t.footer.export}</li>
                         </ul>
                     </div>
                     <div>
-                        <h4 className="text-white font-medium mb-4 text-xs uppercase tracking-widest">Haqqında</h4>
+                        <h4 className="text-white font-medium mb-4 text-xs uppercase tracking-widest">{t.footer.about}</h4>
                         <ul className="space-y-3 text-xs cursor-pointer">
-                            <li className="hover:text-white transition">Texniki Sənədlər</li>
-                            <li className="hover:text-white transition">Məxfilik</li>
+                            <li className="hover:text-white transition">{t.footer.docs}</li>
+                            <li className="hover:text-white transition">{t.footer.privacy}</li>
                         </ul>
                     </div>
                     <div className="flex flex-col md:justify-end md:items-end text-left md:text-right">
@@ -384,10 +484,13 @@
 
         // --- MAIN APP ---
         const App = () => {
+            const [lang, setLang] = useState('az');
             const [user, setUser] = useState(null);
             const [view, setView] = useState('auth'); 
             const [loadingState, setLoadingState] = useState({ isLoading: false, target: null });
             const [modal, setModal] = useState(null);
+
+            const t = T[lang];
 
             const startLoading = (targetView, messages) => {
                 setLoadingState({ isLoading: true, target: targetView, msgs: messages });
@@ -395,20 +498,23 @@
 
             const handleDashboardAction = (actionId) => {
                 if (actionId === 'ai') { setModal('ai'); return; }
-                if (actionId === 'export') { alert("Premium Hesabat yaradılır... (Məlumatlar PDF formatında endiriləcək)"); return; }
-                if (actionId === 'route_daily') { startLoading('daily', ["Günün enerjisi hesablanır..."]); return; }
+                if (actionId === 'export') { alert(t.alerts.export); return; }
+                if (actionId === 'route_daily') { startLoading('daily', [t.loaders.l4]); return; }
                 
-                // Panel açılışı
-                startLoading(actionId, ["Məlumat bazası skan edilir...", "Naxışlar deşifrə olunur..."]);
+                startLoading(actionId, [t.loaders.l2, t.loaders.l3]);
             };
 
             const renderView = () => {
-                if (view === 'auth') return <AuthScreen onLogin={u => { setUser(u); startLoading('dashboard', ["Kosmik arxivlərə qoşulur..."]); }} />;
-                if (view === 'dashboard') return <Dashboard onAction={handleDashboardAction} />;
-                if (view.startsWith('panel_')) return <PanelDetail type={view.replace('panel_', '')} onBack={() => setView('dashboard')} />;
-                if (view === 'daily') return <DailyView onBack={() => setView('dashboard')} />;
+                if (view === 'auth') return <AuthScreen lang={lang} t={t} onLogin={u => { setUser(u); startLoading('dashboard', [t.loaders.l1]); }} />;
+                if (view === 'dashboard') return <Dashboard onAction={handleDashboardAction} t={t} />;
+                if (view.startsWith('panel_')) return <PanelDetail type={view.replace('panel_', '')} onBack={() => setView('dashboard')} t={t} />;
+                if (view === 'daily') return <DailyView onBack={() => setView('dashboard')} lang={lang} t={t} />;
                 if (view === 'profile') return (
-                    <div className="pt-40 text-center"><h2 className="text-2xl font-light">Profil</h2><p className="text-gray-400 mt-2">{user?.name}</p><Button className="mt-8" onClick={() => {setUser(null); setView('auth');}}>Çıxış</Button></div>
+                    <div className="pt-40 text-center">
+                        <h2 className="text-2xl font-light">{t.nav.profile}</h2>
+                        <p className="text-gray-400 mt-2">{user?.name}</p>
+                        <Button className="mt-8" onClick={() => {setUser(null); setView('auth');}}>{t.alerts.logout}</Button>
+                    </div>
                 );
                 return null;
             };
@@ -417,10 +523,10 @@
                 <div className="min-h-screen flex flex-col">
                     <AnimatePresence mode="wait">
                         {loadingState.isLoading && <Loader key="loader" messages={loadingState.msgs} onComplete={() => { setView(loadingState.target); setLoadingState({ isLoading: false }); }} />}
-                        {modal === 'ai' && <AITerminal key="ai" onClose={() => setModal(null)} />}
+                        {modal === 'ai' && <AITerminal key="ai" onClose={() => setModal(null)} t={t} />}
                     </AnimatePresence>
 
-                    {!loadingState.isLoading && user && <TopNav user={user} setView={setView} />}
+                    {!loadingState.isLoading && user && <TopNav user={user} setView={setView} lang={lang} setLang={setLang} t={t} />}
 
                     <main className="flex-grow w-full relative z-10">
                         <AnimatePresence mode="wait">
@@ -428,7 +534,7 @@
                         </AnimatePresence>
                     </main>
 
-                    {!loadingState.isLoading && user && <Footer onAction={handleDashboardAction} />}
+                    {!loadingState.isLoading && user && <Footer onAction={handleDashboardAction} t={t} />}
                 </div>
             );
         };
@@ -438,5 +544,3 @@
     </script>
 </body>
 </html>
-
-```
