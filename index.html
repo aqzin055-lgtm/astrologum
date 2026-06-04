@@ -1,491 +1,671 @@
+```html
 <!DOCTYPE html>
-<html lang="az" class="scroll-smooth">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVC | Astrologum11 - Professional Astrologiya Portalı</title>
+    <title>Astralis | Inner Reflection</title>
     
-    <meta name="description" content="AVC Astrologum11 ilə fərdi natal xəritənizi yaradın, AI astroloqla danışın və astroloji potensialınızı kəşf edin.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
     
-    <!-- Şriftlər -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind və Konfeti (Ad günü üçün) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
-    
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
-                    colors: { night: '#020617', deepblue: '#0f172a', cardblue: '#1e293b', gold: '#fbbf24', textlight: '#f8fafc' }
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        cosmic: {
+                            900: '#030712', // Deep black
+                            800: '#0f172a', // Dark navy
+                            700: '#1e3a8a', // Cosmic blue
+                        },
+                        glass: 'rgba(255, 255, 255, 0.03)',
+                        glassHover: 'rgba(255, 255, 255, 0.08)',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'scan': 'scan 2s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        scan: {
+                            '0%, 100%': { transform: 'translateY(-100%)', opacity: 0 },
+                            '50%': { transform: 'translateY(100%)', opacity: 1 },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
                 }
             }
         }
     </script>
 
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
     <style>
-        body { 
-            background-color: #020617; color: #f8fafc; 
-            background-image: radial-gradient(circle at 15% 50%, rgba(30, 41, 59, 0.5) 0%, transparent 50%), radial-gradient(circle at 85% 10%, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
-            min-height: 100vh; overflow-x: hidden;
+        body {
+            background-color: #030712;
+            color: #f3f4f6;
+            margin: 0;
+            overflow-x: hidden;
         }
-        .stars {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
-            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0));
-            background-repeat: repeat; background-size: 150px 150px; opacity: 0.15; animation: twinkle 10s linear infinite;
+        /* Custom Scrollbar for premium feel */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        @keyframes twinkle { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.25; } }
-        
-        .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; transition: transform 0.3s ease, border-color 0.3s; }
-        .glass-card:hover { border-color: rgba(251, 191, 36, 0.3); }
-        .input-avc { background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; transition: 0.3s; width: 100%; padding: 12px 16px; font-size: 15px; }
-        .input-avc:focus { border-color: #fbbf24; outline: none; box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2); }
-        .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; font-weight: 600; border-radius: 8px; transition: 0.3s; cursor: pointer; }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
-        .btn-outline { border: 1px solid #fbbf24; color: #fbbf24; border-radius: 8px; transition: 0.3s; }
-        .btn-outline:hover { background: rgba(251, 191, 36, 0.1); }
-        
-        .ad-slot { background: #0f172a; border: 1px dashed #334155; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 12px; border-radius: 8px; margin: 24px 0; text-transform: uppercase; letter-spacing: 1px; }
-        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Timeline */
-        .timeline-node { width: 16px; height: 16px; border-radius: 50%; background: #fbbf24; position: relative; z-index: 10; box-shadow: 0 0 10px #fbbf24; }
-        .timeline-line { position: absolute; left: 7px; top: 16px; bottom: -30px; width: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
-        
-        /* Level Bar */
-        .level-progress { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); overflow: hidden; margin-top: 8px; }
-        .level-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 45%; }
-        
-        /* Chat UI */
-        .chat-bubble-user { background: #334155; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 80%; align-self: flex-end; }
-        .chat-bubble-ai { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #f8fafc; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 80%; align-self: flex-start; }
+        ::-webkit-scrollbar-track {
+            background: #030712; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2); 
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #ffffff, #9ca3af);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #starfield {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+            overflow: hidden;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.2;
+            animation: twinkle var(--duration) infinite ease-in-out alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.2); }
+        }
     </style>
 </head>
 <body>
+    <div id="starfield"></div>
+    <div id="root"></div>
 
-    <div class="stars"></div>
-
-    <!-- NAVİQASİYA -->
-    <nav class="border-b border-white/5 bg-night/90 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="#" onclick="navigate('dashboard-section')" class="font-serif text-2xl font-bold tracking-wide flex items-center gap-2">
-                <span class="text-gold">AVC</span> <span class="text-lg font-sans font-light text-white/80">| Astrologum11</span>
-            </a>
-            <div class="hidden md:flex gap-6 text-sm font-medium text-white/70" id="main-nav" style="display: none;">
-                <button onclick="navigate('dashboard-section')" class="hover:text-gold transition">Profil & Günlük</button>
-                <button onclick="navigate('ai-section')" class="hover:text-gold transition">AI Astroloq</button>
-                <button onclick="navigate('synastry-section')" class="hover:text-gold transition">Sevgi Uyumu</button>
-                <button onclick="navigate('timeline-section')" class="hover:text-gold transition">Zaman Xətti</button>
-                <button onclick="navigate('tests-section')" class="hover:text-gold transition">Astro Testlər</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- SƏHİFƏLƏR KONTEYNERİ -->
-    <div id="app-container">
-
-        <!-- 1. QEYDİYYAT (ONBOARDING) -->
-        <main class="page-section max-w-6xl mx-auto px-4 py-16" id="onboarding-section">
-            <div class="grid md:grid-cols-2 gap-12 items-center">
-                <div class="fade-in">
-                    <span class="text-gold font-medium tracking-wider text-sm uppercase mb-3 block">Kosmik Səyahətə Başla</span>
-                    <h1 class="text-5xl font-serif font-bold leading-tight mb-6">Öz Ulduz Xəritənizi Kəşf Edin</h1>
-                    <p class="text-white/60 text-lg mb-8 leading-relaxed">Astrologum11 sisteminə xoş gəlmisiniz. Şəxsi xarakterinizi, potensialınızı, gizli qabiliyyətlərinizi və gələcək dövrlərinizi kəşf etmək üçün qeydiyyatdan keçin.</p>
-                </div>
-                <div class="glass-card p-8 fade-in">
-                    <h2 class="text-2xl font-semibold mb-6 text-center">Şəxsi Məlumatlar</h2>
-                    <form onsubmit="handleRegistration(event)" class="space-y-5">
-                        <div>
-                            <label class="block text-sm text-white/60 mb-2">Adınız</label>
-                            <input type="text" id="reg-name" placeholder="Məsələn: Aqşin" required class="input-avc">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm text-white/60 mb-2">Doğum Tarixi</label>
-                                <input type="date" id="reg-date" required class="input-avc text-white/70">
-                            </div>
-                            <div>
-                                <label class="block text-sm text-white/60 mb-2">Doğum Saatı</label>
-                                <input type="time" class="input-avc text-white/70">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm text-white/60 mb-2">Doğulduğunuz Şəhər</label>
-                            <input type="text" placeholder="Bakı" required class="input-avc">
-                        </div>
-                        <button type="submit" class="btn-gold w-full py-4 mt-2 text-lg" id="reg-btn">Sistemə Daxil Ol</button>
-                    </form>
-                </div>
-            </div>
-        </main>
-
-        <!-- 2. ƏSAS PANEL (DASHBOARD) -->
-        <main class="page-section hidden max-w-7xl mx-auto px-4 py-10" id="dashboard-section">
-            
-            <!-- 4. Ad Günü Sürprizi Banneri -->
-            <div id="birthday-banner" class="hidden glass-card p-6 mb-8 text-center border-gold/50 bg-gold/10 fade-in">
-                <h2 class="text-3xl font-serif text-gold mb-2">🎂 Doğum Gününüz Mübarək, <span class="dyn-name"></span>!</h2>
-                <p class="text-white/80">Sizin üçün hazırladığımız xüsusi "Yeni Yaş" astroloji hesabatı aktivləşdirildi. Bu il karyera və şəxsi yüksəliş iliniz olacaq.</p>
-            </div>
-
-            <!-- Üst Panel: Məktub, Titul və Səviyyə -->
-            <div class="grid lg:grid-cols-3 gap-6 mb-8">
-                <!-- 10. Kainatdan Məktub -->
-                <div class="glass-card p-6 lg:col-span-2 flex flex-col justify-center border-l-4 border-l-gold fade-in">
-                    <span class="text-gold text-xs tracking-widest uppercase mb-2">Kainatdan Sənə Məktub 💌</span>
-                    <p class="text-lg text-white/90 font-serif italic leading-relaxed">"<span class="dyn-name"></span>, bu gün Mars sənə böyük cəsarət verir. Uzun müddətdir düşündüyün o önəmli addımı atmaq üçün kosmik enerji sənin tərəfindədir. İntuisiyana güvən."</p>
-                </div>
-                <!-- 6. Titul və 8. Səviyyə -->
-                <div class="glass-card p-6 text-center fade-in">
-                    <div class="inline-block bg-white/5 border border-white/10 rounded-full px-4 py-1 text-xs text-white/50 mb-4">Astro Səviyyə Sistemi</div>
-                    <h3 class="text-2xl font-serif text-gold mb-1" id="dyn-title">Kosmik Kəşfiyyatçı</h3>
-                    <p class="text-sm text-white/60 mb-4">Mövcud Titulunuz</p>
-                    <div class="text-left text-xs text-white/50 flex justify-between"><span>Səviyyə 4</span><span>450 / 1000 XP</span></div>
-                    <div class="level-progress"><div class="level-fill"></div></div>
-                </div>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Sol Sütun -->
-                <div class="lg:col-span-2 space-y-8">
-                    <!-- 1. Fərdi Astroloji Profil -->
-                    <div class="glass-card p-8 fade-in">
-                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">✨</span><h2 class="text-2xl font-semibold">Fərdi Astroloji Profiliniz</h2></div>
-                        <div class="grid sm:grid-cols-2 gap-6">
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Xarakter Analizi</h4>
-                                <p class="text-sm text-white/60">Analitik düşüncə, yüksək empatiya və dərin hissiyyat. Siz hadisələrin görünməyən tərəflərini hiss edirsiniz.</p>
-                            </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Güclü & Zəif Tərəflər</h4>
-                                <p class="text-sm text-white/60"><span class="text-green-400">Güclü:</span> Böhran idarəetməsi, sədaqət.<br><span class="text-red-400">Zəif:</span> Həddindən artıq düşünmək (Overthinking).</p>
-                            </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Gizli Potensial</h4>
-                                <p class="text-sm text-white/60">İnsanları sağaltmaq və ya onlara psixoloji yol göstərmək (Healer arxetipi).</p>
-                            </div>
-                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
-                                <h4 class="text-gold font-medium mb-2">Həyat Missiyası</h4>
-                                <p class="text-sm text-white/60">Köhnə strukturları yıxıb, cəmiyyət üçün yeni, daha ədalətli sistemlər qurmaq.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Bu gün Sənin Üçün -->
-                    <div class="glass-card p-8 fade-in">
-                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">🌙</span><h2 class="text-2xl font-semibold">Bu Gün Sənin Üçün</h2></div>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">⚡</div><div class="text-xs text-white/50 uppercase mb-1">Enerji</div><div class="text-lg font-bold text-gold">85%</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">🍀</div><div class="text-xs text-white/50 uppercase mb-1">Uğurlu Saat</div><div class="text-lg font-bold text-white">14:00 - 16:30</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">⚠️</div><div class="text-xs text-white/50 uppercase mb-1">Diqqət Et</div><div class="text-sm font-medium text-white/80">Maddi xərclər</div>
-                            </div>
-                            <div class="border border-white/10 p-4 rounded-xl">
-                                <div class="text-2xl mb-2">🎨</div><div class="text-xs text-white/50 uppercase mb-1">Günün Rəngi</div><div class="text-lg font-bold text-indigo-400">İndiqo</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- AdSense Banner -->
-                    <div class="ad-slot h-[90px] w-full">Google AdSense - Banner (728x90)</div>
-                </div>
-
-                <!-- Sağ Sütun -->
-                <div class="space-y-6">
-                    <!-- Qısa Menyu -->
-                    <div class="glass-card p-6 fade-in">
-                        <h3 class="font-medium mb-4 text-white/80">Sürətli Keçidlər</h3>
-                        <div class="space-y-3">
-                            <button onclick="navigate('ai-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>🔮 AI Astroloq</span> <span>→</span></button>
-                            <button onclick="navigate('synastry-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>❤️ Sevgi Uyğunluğu</span> <span>→</span></button>
-                            <button onclick="navigate('timeline-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📜 Həyat Zaman Xətti</span> <span>→</span></button>
-                            <button onclick="navigate('tests-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📊 Özünü Tanıma Testləri</span> <span>→</span></button>
-                        </div>
-                    </div>
-
-                    <!-- AdSense Kvadrat -->
-                    <div class="glass-card p-4 flex justify-center bg-deepblue">
-                        <div class="ad-slot h-[250px] w-[300px] m-0">AdSense (300x250)</div>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- 3. AI ASTROLOQ -->
-        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="ai-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="glass-card overflow-hidden flex flex-col h-[600px]">
-                <div class="bg-cardblue p-6 border-b border-white/10 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-2xl">🔮</div>
-                    <div><h2 class="font-serif text-xl font-semibold">Nyx AI</h2><p class="text-xs text-white/50">Sizin fərdi astroloji assistentiniz. Göydəki ulduzlara əsasən cavab verir.</p></div>
-                </div>
-                <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-4" id="chat-box">
-                    <div class="chat-bubble-ai fade-in">Salam, <span class="dyn-name"></span>. Mən sizin natal xəritənizi oxuya bilirəm. Məndən kariyeranız, münasibətləriniz və ya gələcək dövrlər barədə sual soruşa bilərsiniz.<br><br><span class="text-xs opacity-70">Nümunə: "Bu il iş dəyişməliyəm?" və ya "Münasibətim necə davam edəcək?"</span></div>
-                </div>
-                <div class="p-4 border-t border-white/10 bg-cardblue/50">
-                    <form onsubmit="handleChat(event)" class="flex gap-2">
-                        <input type="text" id="chat-input" placeholder="Sualınızı bura yazın..." class="input-avc flex-1" autocomplete="off">
-                        <button type="submit" class="btn-gold px-6 rounded-lg">Göndər</button>
-                    </form>
-                </div>
-            </div>
-        </main>
-
-        <!-- 5. SEVGİ UYĞUNLUĞU -->
-        <main class="page-section hidden max-w-5xl mx-auto px-4 py-10" id="synastry-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-serif text-gold mb-4">Kosmik Sinastri</h2>
-                <p class="text-white/60">İki fərqli xəritənin toqquşmasından yaranan enerjini kəşf edin.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-6 mb-10">
-                <div class="glass-card p-6 border-t-2 border-t-gold">
-                    <h3 class="text-lg font-semibold mb-4">Siz (<span class="dyn-name"></span>)</h3>
-                    <input type="date" class="input-avc text-white/50 mb-3" disabled title="Sizin məlumatlarınız avtomatik götürülür">
-                </div>
-                <div class="glass-card p-6 border-t-2 border-t-indigo-400">
-                    <h3 class="text-lg font-semibold mb-4">Tərəfdaşınız</h3>
-                    <input type="text" id="partner-name" placeholder="Adı" required class="input-avc mb-3">
-                    <input type="date" id="partner-date" required class="input-avc text-white/70">
-                </div>
-            </div>
-            <div class="text-center mb-10">
-                <button onclick="calculateSynastry()" class="btn-gold px-10 py-4 text-lg">Uyğunluğu Analiz Et</button>
-            </div>
-
-            <!-- Uyğunluq Nəticəsi -->
-            <div id="synastry-results" class="hidden glass-card p-8 fade-in">
-                <h3 class="text-2xl font-serif text-center mb-8">Nəticə: <span class="text-gold">Güclü Karmik Bağ</span></h3>
-                <div class="space-y-6 max-w-2xl mx-auto">
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Sevgi Potensialı</span><span>85%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-pink-500 h-2 rounded-full" style="width: 85%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Dostluq & Anlayış</span><span>92%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-blue-400 h-2 rounded-full" style="width: 92%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Evlilik / Uzunmüddətlilik</span><span>78%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-gold h-2 rounded-full" style="width: 78%"></div></div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1"><span>Seksual Kimya</span><span>95%</span></div>
-                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-red-500 h-2 rounded-full" style="width: 95%"></div></div>
-                    </div>
-                </div>
-                <p class="mt-8 text-center text-white/60 text-sm">Sizin aranızda dərin bir empatiya və anlayış var. Tərəfdaşınızın Ay bürcü sizin Günəşinizə müsbət bucaq altındadır.</p>
-            </div>
-        </main>
-
-        <!-- 7. HƏYAT ZAMAN XƏTTİ -->
-        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="timeline-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <h2 class="text-4xl font-serif text-gold mb-12 text-center">Həyatınızın Astroloji Dövrləri</h2>
-            
-            <div class="glass-card p-10 relative">
-                <div class="absolute left-[45px] top-10 bottom-10 w-0.5 bg-white/10"></div>
-                
-                <div class="flex gap-8 mb-12 relative fade-in">
-                    <div class="timeline-node mt-1 opacity-50 bg-white shadow-none"></div>
-                    <div>
-                        <span class="text-xs text-white/40 uppercase tracking-widest">Keçmiş (2020 - 2023)</span>
-                        <h3 class="text-xl font-semibold mb-2">Saturn Sınaqları</h3>
-                        <p class="text-white/60 text-sm">Həyatınızda struktur qurmaq və yalançı insanları ələmək dövrü idi. Çoxlu dərslər aldınız.</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-8 mb-12 relative fade-in" style="animation-delay: 0.2s">
-                    <div class="timeline-node mt-1"></div>
-                    <div>
-                        <span class="text-xs text-gold uppercase tracking-widest font-bold">Hazırkı Dövr (İndi)</span>
-                        <h3 class="text-xl font-semibold mb-2">Yupiter Bərəkəti</h3>
-                        <p class="text-white/80 text-sm">Şans planeti Jüpiter sizin xəritənizdə xeyirli bucaqdadır. Yeni imkanlara, səyahətlərə və təhsilə açıq olun.</p>
-                    </div>
-                </div>
-                
-                <div class="flex gap-8 relative fade-in" style="animation-delay: 0.4s">
-                    <div class="timeline-node mt-1 opacity-50 bg-indigo-400 shadow-none"></div>
-                    <div>
-                        <span class="text-xs text-indigo-300 uppercase tracking-widest">Gələcək Pəncərə (2027)</span>
-                        <h3 class="text-xl font-semibold mb-2">Uran Dəyişimi</h3>
-                        <p class="text-white/60 text-sm">Gözlənilməz karyera sıçrayışı və ya yaşayış yeri dəyişikliyi ehtimalı yüksəkdir.</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- 9. ÖZÜNÜ TANIMA TESTLƏRİ -->
-        <main class="page-section hidden max-w-6xl mx-auto px-4 py-10" id="tests-section">
-            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
-            <div class="text-center mb-10">
-                <h2 class="text-4xl font-serif text-gold mb-4">Astro-Psixoloji Testlər</h2>
-                <p class="text-white/60">Sual-cavab əsasında dərin astroloji xarakter analizi.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Şəxsiyyət testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">🎭</div>
-                    <h3 class="text-lg font-semibold mb-2">Kölqə Şəxsiyyət Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">İçinizdəki gizli qorxuları və idarəedici gücləri kəşf edin.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Münasibət testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">💞</div>
-                    <h3 class="text-lg font-semibold mb-2">Bağlanma Tərzi Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">Venera bürcünüzə uyğun olaraq münasibətlərdə necə davrandığınızı tapın.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Karyera testi tezliklə aktiv olacaq. (Demo)')">
-                    <div class="text-4xl mb-4">📈</div>
-                    <h3 class="text-lg font-semibold mb-2">Astro-Karyera Testi</h3>
-                    <p class="text-sm text-white/50 mb-4">10-cu evinizin enerjisinə ən uyğun olan peşə sahəsini tapın.</p>
-                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
-                </div>
-            </div>
-            <div class="ad-slot h-[90px] w-full mt-10">Google AdSense - Banner (728x90)</div>
-        </main>
-
-    </div>
-
-    <!-- FOOTER -->
-    <footer class="border-t border-white/10 bg-night py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
-            <div class="col-span-2">
-                <div class="font-serif text-2xl font-bold text-white mb-4">AVC | Astrologum11</div>
-                <p class="text-white/50 text-sm max-w-sm">Astrologiya ilə psixologiyanın rəqəmsal görüş nöqtəsi. Kainatın sirləri artıq sizin ixtiyarınızdadır.</p>
-            </div>
-            <div>
-                <h4 class="text-white font-semibold mb-4">Linklər</h4>
-                <ul class="space-y-2 text-sm text-white/50">
-                    <li><a href="#" class="hover:text-gold">Ana Səhifə</a></li>
-                    <li><a href="#" class="hover:text-gold">Haqqımızda</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-white font-semibold mb-4">Hüquqi</h4>
-                <ul class="space-y-2 text-sm text-white/50">
-                    <li><a href="#" class="hover:text-gold">Məxfilik Siyasəti</a></li>
-                    <li><a href="#" class="hover:text-gold">İstifadə Şərtləri</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-white/5 text-center text-white/40 text-sm tracking-widest uppercase">
-            © 2026 AVC | Astrologum11 <br>
-            <span class="block mt-3 text-gold/70 text-xs normal-case tracking-normal">by Agshin Ahmadli</span>
-        </div>
-    </footer>
-
-    <!-- LOGIKA (JS) -->
     <script>
-        let currentUser = "";
-
-        // 1. Səhifə Naviqasiyası (SPA Routing)
-        function navigate(pageId) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
-            document.getElementById(pageId).classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Generate Starfield Background
+        const starfield = document.getElementById('starfield');
+        for(let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.setProperty('--duration', (Math.random() * 3 + 2) + 's');
+            star.style.animationDelay = (Math.random() * 5) + 's';
+            starfield.appendChild(star);
         }
+    </script>
 
-        // 2. Qeydiyyat İşləmi & Fərdi Özəlliklərin Yüklənməsi
-        function handleRegistration(e) {
-            e.preventDefault();
-            const btn = document.getElementById('reg-btn');
-            btn.innerHTML = 'Kainatın Qapıları Açılır...';
-            
-            currentUser = document.getElementById('reg-name').value;
-            const dateInput = document.getElementById('reg-date').value;
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
-            // Bütün hədəf yerlərinə istifadəçi adını yaz (Features 1, 10, etc)
-            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = currentUser);
-
-            // 6. Titul Verilməsi
-            const titles = ["Kosmik Lider", "Ayın Mühafizəçisi", "Enerji Memarı", "Ulduz Səyyahı", "Mistika Ustası"];
-            const randomTitle = titles[currentUser.length % titles.length];
-            document.getElementById('dyn-title').innerText = randomTitle;
-
-            setTimeout(() => {
-                document.getElementById('main-nav').style.display = 'flex'; // Menyu göstər
-                navigate('dashboard-section');
-                
-                // 4. Ad Günü Yoxlanışı (Sürpriz)
-                checkBirthday(dateInput);
-                
-                btn.innerHTML = 'Sistemə Daxil Ol';
-            }, 1000);
-        }
-
-        // 4. Ad Günü Sürprizi Yoxlanışı
-        function checkBirthday(birthDateString) {
-            if(!birthDateString) return;
-            const bDate = new Date(birthDateString);
-            const today = new Date(); // Today is conceptually June 3
-            
-            // Demo məqsədi ilə: Əgər gün və ay eynidirsə konfeti patlat. 
-            // Və ya istəyirsinizsə testi görmək üçün if şərtini silib hər giriştə konfeti partlada bilərsiniz.
-            if(bDate.getMonth() === today.getMonth() && bDate.getDate() === today.getDate()) {
-                document.getElementById('birthday-banner').classList.remove('hidden');
-                triggerConfetti();
-            } else {
-                // Test üçün aktiv edirik ki, funksiya görsənsin (Canlıda silinə bilər)
-                document.getElementById('birthday-banner').classList.remove('hidden');
-                triggerConfetti();
+        // --- TRANSLATIONS ---
+        const i18n = {
+            en: {
+                nav: { home: "Home", profile: "Profile", settings: "Settings" },
+                hero: {
+                    headline: "Discover the pattern behind who you are becoming.",
+                    subtitle: "A premium cosmic experience designed to reflect your emotions, choices, relationships, future direction, and inner world with unusual depth.",
+                    cta: "Begin Your Reflection",
+                    secondary: "Explore Panels"
+                },
+                loader: [
+                    "Reading emotional patterns...",
+                    "Mapping your inner rhythm...",
+                    "Connecting symbolic signals...",
+                    "Preparing a personal reflection..."
+                ],
+                result: {
+                    strengths: "Core Strengths",
+                    blindSpots: "Blind Spots",
+                    pattern: "Hidden Emotional Pattern",
+                    advice: "Practical Advice",
+                    symbolic: "Symbolic Message",
+                    focus: "What to focus on next"
+                },
+                ui: {
+                    back: "Return to Selection",
+                    loading: "Processing cosmic alignment..."
+                }
+            },
+            ru: {
+                nav: { home: "Главная", profile: "Профиль", settings: "Настройки" },
+                hero: {
+                    headline: "Откройте паттерн того, кем вы становитесь.",
+                    subtitle: "Премиальный космический опыт, созданный для глубокого отражения ваших эмоций, выбора, отношений, будущего и внутреннего мира.",
+                    cta: "Начать Отражение",
+                    secondary: "Исследовать Панели"
+                },
+                loader: [
+                    "Чтение эмоциональных паттернов...",
+                    "Картографирование вашего внутреннего ритма...",
+                    "Соединение символических сигналов...",
+                    "Подготовка личного отражения..."
+                ],
+                result: {
+                    strengths: "Основные Силы",
+                    blindSpots: "Слепые Зоны",
+                    pattern: "Скрытый Эмоциональный Паттерн",
+                    advice: "Практический Совет",
+                    symbolic: "Символическое Послание",
+                    focus: "На чем сосредоточиться дальше"
+                },
+                ui: {
+                    back: "Вернуться к выбору",
+                    loading: "Обработка космического выравнивания..."
+                }
+            },
+            az: {
+                nav: { home: "Ana Səhifə", profile: "Profil", settings: "Tənzimləmələr" },
+                hero: {
+                    headline: "Kimə çevrildiyinizin arxasındakı naxışı kəşf edin.",
+                    subtitle: "Duyğularınızı, seçimlərinizi, münasibətlərinizi, gələcək istiqamətinizi və daxili dünyanızı qeyri-adi dərinliklə əks etdirmək üçün hazırlanmış premium kosmik təcrübə.",
+                    cta: "Düşüncəyə Başla",
+                    secondary: "Panelləri Kəşf Et"
+                },
+                loader: [
+                    "Duyğusal naxışlar oxunur...",
+                    "Daxili ritminiz xəritələnir...",
+                    "Simvolik siqnallar bağlanır...",
+                    "Şəxsi inikas hazırlanır..."
+                ],
+                result: {
+                    strengths: "Əsas Güclər",
+                    blindSpots: "Görünməz Nöqtələr",
+                    pattern: "Gizli Duyğusal Naxış",
+                    advice: "Praktik Məsləhət",
+                    symbolic: "Simvolik Mesaj",
+                    focus: "Növbəti diqqət mərkəzi"
+                },
+                ui: {
+                    back: "Seçimə Qayıt",
+                    loading: "Kosmik uyğunlaşma işlənir..."
+                }
             }
-        }
+        };
 
-        function triggerConfetti() {
-            var duration = 3 * 1000;
-            var end = Date.now() + duration;
-            (function frame() {
-                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#f8fafc'] });
-                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#f8fafc'] });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
-        }
+        // --- DATA STRUCTURES ---
+        const panels = [
+            {
+                id: 'love',
+                icon: '✧',
+                title: { en: "Love & Relationships", ru: "Любовь и Отношения", az: "Sevgi və Münasibətlər" },
+                desc: {
+                    en: "Understand why you love the way you do, what you silently need, and which patterns keep repeating.",
+                    ru: "Поймите, почему вы любите именно так, в чем молча нуждаетесь, и какие паттерны повторяются.",
+                    az: "Niyə bu şəkildə sevdiyinizi, səssizcə nəyə ehtiyacınız olduğunu və hansı naxışların təkrarlandığını anlayın."
+                },
+                subpanels: [
+                    {
+                        id: 'love_pattern',
+                        title: { en: "Your Love Pattern", ru: "Ваш Паттерн Любви", az: "Sevgi Naxışınız" },
+                        subtitle: { en: "The invisible rhythm of your heart.", ru: "Невидимый ритм вашего сердца.", az: "Qəlbinizin görünməz ritmi." },
+                        result: {
+                            overview: { en: "You do not just seek answers. You seek recognition. In love, your deepest desire is to be seen completely without having to explain yourself.", ru: "Вы не просто ищете ответы. Вы ищете признания. В любви ваше самое глубокое желание — быть увиденным полностью, без необходимости объяснять себя.", az: "Siz sadəcə cavab axtarmırsınız. Siz tanınmaq istəyirsiniz. Sevgidə ən dərin arzunuz özünüzü izah etmədən tamamilə görünməkdir." },
+                            strengths: { en: "Intense loyalty, unspoken understanding, emotional depth.", ru: "Сильная преданность, негласное понимание, эмоциональная глубина.", az: "Sıx sədaqət, danışılmamış anlayış, emosional dərinlik." },
+                            blindSpots: { en: "Expecting others to read your mind, withdrawing when hurt.", ru: "Ожидание, что другие прочитают ваши мысли, уход в себя при боли.", az: "Başqalarının fikirlərinizi oxumasını gözləmək, incindiyiniz zaman geri çəkilmək." },
+                            pattern: { en: "You attract those who need healing, but you secretly wish for someone who can heal you.", ru: "Вы привлекаете тех, кто нуждается в исцелении, но втайне желаете того, кто может исцелить вас.", az: "Sağalmağa ehtiyacı olanları cəlb edirsiniz, lakin gizlincə sizi sağalda biləcək birini arzulayırsınız." },
+                            advice: { en: "Speak your needs aloud. The right person will not be burdened by them.", ru: "Говорите о своих потребностях вслух. Правильного человека они не обременят.", az: "Ehtiyaclarınızı ucadan söyləyin. Doğru insan onlardan yük hiss etməyəcək." },
+                            symbolic: { en: "A mirror reflecting a calm but infinite ocean.", ru: "Зеркало, отражающее спокойный, но бесконечный океан.", az: "Sakit, lakin sonsuz bir okeanı əks etdirən ayna." },
+                            nextFocus: { en: "Vulnerability without conditions.", ru: "Уязвимость без условий.", az: "Şərtsiz zəiflik." }
+                        }
+                    },
+                    {
+                        id: 'love_fears',
+                        title: { en: "Hidden Fears in Love", ru: "Скрытые Страхи в Любви", az: "Sevgidə Gizli Qorxular" },
+                        subtitle: { en: "What you unconsciously protect.", ru: "То, что вы бессознательно защищаете.", az: "Şüursuz olaraq qoruduğunuz şey." },
+                        result: {
+                            overview: { en: "Your pattern is beginning to reveal itself. The fear is not that you won't be loved, but that you will be consumed or abandoned once truly known.", ru: "Ваш паттерн начинает проявляться. Страх не в том, что вас не будут любить, а в том, что вас поглотят или бросят, как только узнают по-настоящему.", az: "Naxışınız özünü göstərməyə başlayır. Qorxu sevilməyəcəyiniz deyil, həqiqətən tanındıqdan sonra tərk ediləcəyiniz və ya istehlak ediləcəyinizdir." },
+                            strengths: { en: "Fierce independence, careful curation of trust.", ru: "Яростная независимость, тщательный отбор доверия.", az: "Şiddətli müstəqillik, inamın diqqətlə seçilməsi." },
+                            blindSpots: { en: "Creating distance right before true intimacy happens.", ru: "Создание дистанции прямо перед тем, как возникает истинная близость.", az: "Əsl yaxınlıq yaranmazdan dərhal əvvəl məsafə yaratmaq." },
+                            pattern: { en: "Testing the connection by pulling away to see if they follow.", ru: "Проверка связи путем отдаления, чтобы посмотреть, последуют ли за вами.", az: "İzlədiklərini görmək üçün geri çəkilərək əlaqəni sınamaq." },
+                            advice: { en: "Let the walls drop one brick at a time. Safe love doesn't require a fortress.", ru: "Позвольте стенам упасть кирпичик за кирпичиком. Безопасная любовь не требует крепости.", az: "Divarların hər dəfə bir kərpic yıxılmasına icazə verin. Təhlükəsiz sevgi bir qala tələb etmir." },
+                            symbolic: { en: "A heavy velvet curtain slowly opening to let light in.", ru: "Тяжелый бархатный занавес, медленно открывающийся, чтобы впустить свет.", az: "İşığı içəri buraxmaq üçün yavaş-yavaş açılan ağır məxmər pərdə." },
+                            nextFocus: { en: "Staying present during moments of emotional discomfort.", ru: "Оставаться в настоящем во время моментов эмоционального дискомфорта.", az: "Emosional narahatlıq anlarında indiki zamanda qalmaq." }
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'career',
+                icon: '⎈',
+                title: { en: "Career Direction", ru: "Карьерное Направление", az: "Karyera İstiqaməti" },
+                desc: {
+                    en: "Reveal the type of work that does not only pay you, but activates your natural intelligence.",
+                    ru: "Откройте для себя тип работы, которая не только оплачивается, но и активирует ваш природный интеллект.",
+                    az: "Təkcə pul qazandıran deyil, həm də təbii intellektinizi aktivləşdirən iş növünü aşkar edin."
+                },
+                subpanels: [
+                    {
+                        id: 'career_calling',
+                        title: { en: "Your True Calling", ru: "Ваше Истинное Призвание", az: "Əsl Çağırışınız" },
+                        subtitle: { en: "The work your soul recognizes.", ru: "Работа, которую узнает ваша душа.", az: "Ruhunuzun tanıdığı iş." },
+                        result: {
+                            overview: { en: "Some parts of you have been waiting to be understood. You are meant to be a bridge between chaotic ideas and structured reality.", ru: "Некоторые части вас ждали, чтобы их поняли. Вы предназначены быть мостом между хаотичными идеями и структурированной реальностью.", az: "Bəzi hissələriniz anlaşılmağı gözləyirdi. Siz xaotik ideyalar və strukturlaşdırılmış reallıq arasında körpü olmaq üçün yaranmısınız." },
+                            strengths: { en: "Visionary thinking, systemic organization, relentless curiosity.", ru: "Дальновидное мышление, системная организация, неустанное любопытство.", az: "Uzaqgörən düşüncə, sistemli təşkilat, amansız maraq." },
+                            blindSpots: { en: "Boredom when routine sets in, taking on too much responsibility.", ru: "Скука, когда наступает рутина, взятие на себя слишком большой ответственности.", az: "Rutin başlayanda darıxmaq, həddindən artıq məsuliyyət götürmək." },
+                            pattern: { en: "You build systems to perfection and then immediately seek a new puzzle.", ru: "Вы доводите системы до совершенства, а затем сразу же ищете новую головоломку.", az: "Sistemləri mükəmməlliyə qədər qurursunuz və dərhal yeni tapmaca axtarırsınız." },
+                            advice: { en: "Delegate the maintenance. Your energy belongs in the creation phase.", ru: "Делегируйте обслуживание. Ваша энергия принадлежит фазе создания.", az: "Baxımı həvalə edin. Enerjiniz yaratma mərhələsinə aiddir." },
+                            symbolic: { en: "An architect drafting cities in the sky.", ru: "Архитектор, проектирующий города в небе.", az: "Səmada şəhərlər layihələndirən memar." },
+                            nextFocus: { en: "Finding collaborators who execute your visions.", ru: "Поиск соавторов, которые реализуют ваши видения.", az: "Baxışlarınızı həyata keçirən əməkdaşlar tapmaq." }
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'future',
+                icon: '❂',
+                title: { en: "Future Path", ru: "Путь Будущего", az: "Gələcək Yolu" },
+                desc: {
+                    en: "See the direction your life is quietly moving toward — as a symbolic map.",
+                    ru: "Увидьте направление, в котором тихо движется ваша жизнь — как символическую карту.",
+                    az: "Həyatınızın səssizcə doğru getdiyi istiqaməti simvolik xəritə kimi görün."
+                },
+                subpanels: [
+                    {
+                        id: 'future_horizon',
+                        title: { en: "The Approaching Horizon", ru: "Приближающийся Горизонт", az: "Yaxınlaşan Üfüq" },
+                        subtitle: { en: "What the next chapter holds.", ru: "Что таит в себе следующая глава.", az: "Növbəti fəslin nələri var." },
+                        result: {
+                            overview: { en: "This reflection is not random — it follows the rhythm you often feel but rarely explain. A major shift in personal sovereignty is approaching.", ru: "Это отражение не случайно — оно следует ритму, который вы часто чувствуете, но редко объясняете. Приближается серьезный сдвиг в личном суверенитете.", az: "Bu inikas təsadüfi deyil — o, tez-tez hiss etdiyiniz, lakin nadir hallarda izah etdiyiniz ritmi izləyir. Şəxsi suverenlikdə böyük bir dəyişiklik yaxınlaşır." },
+                            strengths: { en: "Adaptability, trusting your intuition, letting go of the old.", ru: "Адаптивность, доверие своей интуиции, отпускание старого.", az: "Uyğunlaşma, intuisiyanıza güvənmək, köhnəni buraxmaq." },
+                            blindSpots: { en: "Fear of the unknown leading to brief moments of self-sabotage.", ru: "Страх неизвестного, ведущий к кратковременным моментам самосаботажа.", az: "Naməlum qorxusu qısa müddətli özünü sabotaj anlarına səbəb olur." },
+                            pattern: { en: "You constantly outgrow your environments faster than the people around you.", ru: "Вы постоянно перерастаете свое окружение быстрее, чем люди вокруг вас.", az: "Ətrafınızdakı insanlardan daha sürətli bir şəkildə mühitinizi böyüdürsünüz." },
+                            advice: { en: "Do not shrink to fit spaces you have already outgrown.", ru: "Не сжимайтесь, чтобы поместиться в пространства, из которых вы уже выросли.", az: "Artıq böyüdüyünüz boşluqlara sığmaq üçün kiçilməyin." },
+                            symbolic: { en: "A tree breaking through the concrete to find the sun.", ru: "Дерево, пробивающееся сквозь бетон, чтобы найти солнце.", az: "Günəşi tapmaq üçün betonu qıran ağac." },
+                            nextFocus: { en: "Embracing radical authenticity without apology.", ru: "Принятие радикальной подлинности без извинений.", az: "Üzrsüz radikal orijinallığı qəbul etmək." }
+                        }
+                    }
+                ]
+            },
+            {
+                id: 'inner',
+                icon: '◉',
+                title: { en: "Inner Emotions", ru: "Внутренние Эмоции", az: "Daxili Duyğular" },
+                desc: {
+                    en: "Explore the psychological depths of your unseen emotional processing.",
+                    ru: "Исследуйте психологические глубины вашей невидимой эмоциональной обработки.",
+                    az: "Görünməyən emosional prosesinizin psixoloji dərinliklərini kəşf edin."
+                },
+                subpanels: [
+                    {
+                        id: 'inner_shadow',
+                        title: { en: "The Shadow Self", ru: "Теневое Я", az: "Kölgə Özünüz" },
+                        subtitle: { en: "Embracing the unspoken.", ru: "Принятие невысказанного.", az: "Danışılmayanları qucaqlamaq." },
+                        result: {
+                            overview: { en: "You carry a quiet intensity. The world sees your control, but beneath it is a vivid ocean of unexpressed desires and deeply felt justice.", ru: "Вы несете тихую интенсивность. Мир видит ваш контроль, но под ним скрывается яркий океан невыраженных желаний и глубоко чувствуемой справедливости.", az: "Sakit bir intensivlik daşıyırsınız. Dünya nəzarətinizi görür, lakin onun altında ifadə olunmamış arzuların və dərindən hiss olunan ədalətin parlaq okeanı var." },
+                            strengths: { en: "Deep empathy, resilience in solitude, highly observant.", ru: "Глубокая эмпатия, стойкость в одиночестве, высокая наблюдательность.", az: "Dərin empatiya, tənhalıqda dözümlülük, yüksək müşahidəçilik." },
+                            blindSpots: { en: "Holding onto past slights because they felt unjust.", ru: "Удержание прошлых обид, потому что они казались несправедливыми.", az: "Ədalətsiz hiss etdikləri üçün keçmiş incikliklərdən yapışmaq." },
+                            pattern: { en: "You intellectualize your feelings instead of allowing yourself to physically feel them.", ru: "Вы интеллектуализируете свои чувства вместо того, чтобы позволить себе физически их прочувствовать.", az: "Hisslərinizi fiziki olaraq hiss etməyə icazə vermək əvəzinə onları intellektuallaşdırırsınız." },
+                            advice: { en: "Feelings are weather. You are the sky. Let the storm pass without analyzing the rain.", ru: "Чувства — это погода. Вы — небо. Позвольте шторму пройти, не анализируя дождь.", az: "Hisslər havadır. Sən göysən. Fırtınanın yağışı təhlil etmədən keçməsinə icazə verin." },
+                            symbolic: { en: "A dark room suddenly illuminated by a single, striking beam of light.", ru: "Темная комната, внезапно освещенная единственным, поразительным лучом света.", az: "Qaranlıq otaq qəflətən tək, heyrətamiz işıq şüası ilə işıqlanır." },
+                            nextFocus: { en: "Somatic release and letting go of cognitive control.", ru: "Соматическое освобождение и отказ от когнитивного контроля.", az: "Somatik sərbəst buraxılma və koqnitiv nəzarəti buraxmaq." }
+                        }
+                    }
+                ]
+            }
+        ];
 
-        // 3. AI Astroloq Söhbət Məntiqi
-        function handleChat(e) {
-            e.preventDefault();
-            const inputField = document.getElementById('chat-input');
-            const msg = inputField.value.trim();
-            if(!msg) return;
+        // --- COMPONENTS ---
 
-            const chatBox = document.getElementById('chat-box');
-            // İstifadəçi mesajı
-            chatBox.innerHTML += `<div class="chat-bubble-user fade-in">${msg}</div>`;
-            inputField.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
+        const Navbar = ({ lang, setLang }) => (
+            <motion.nav 
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                className="fixed w-full z-50 glass-panel border-b border-white/10 px-6 py-4 flex justify-between items-center"
+            >
+                <div className="flex items-center gap-2 cursor-pointer">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(99,102,241,0.5)]">A</div>
+                    <span className="text-xl font-light tracking-widest text-white">ASTRALIS</span>
+                </div>
+                <div className="flex gap-6 items-center">
+                    <select 
+                        value={lang} 
+                        onChange={(e) => setLang(e.target.value)}
+                        className="bg-transparent text-gray-300 outline-none cursor-pointer border border-white/10 rounded-md px-2 py-1 text-sm hover:bg-white/5 transition"
+                    >
+                        <option value="en" className="bg-gray-900">EN</option>
+                        <option value="ru" className="bg-gray-900">RU</option>
+                        <option value="az" className="bg-gray-900">AZ</option>
+                    </select>
+                </div>
+            </motion.nav>
+        );
 
-            // AI Gözləmə
-            setTimeout(() => {
-                const aiResponses = [
-                    "Sizin doğum xəritənizə əsasən, gələn ay karyera evinizdə Venera tranziti olacaq. Dəyişiklik üçün çox müsbət vaxtdır.",
-                    "Ayın hazırkı fazası sizdən keçmişlə bağları qoparmağı tələb edir. Sualınızla bağlı narahatlığa səbəb yoxdur, axışa buraxın.",
-                    "Saturnun mövqeyinə görə maliyyə məsələlərində risk etməmək daha yaxşıdır. Səbrli olun."
-                ];
-                const reply = aiResponses[Math.floor(Math.random() * aiResponses.length)];
-                chatBox.innerHTML += `<div class="chat-bubble-ai fade-in">✨ ${reply}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 1500);
-        }
+        const Button = ({ children, onClick, primary = false }) => (
+            <motion.button
+                whileHover={{ scale: 1.05, boxShadow: primary ? "0 0 25px rgba(99, 102, 241, 0.4)" : "0 0 15px rgba(255,255,255,0.1)" }}
+                whileTap={{ scale: 0.95 }}
+                onClick={onClick}
+                className={`px-8 py-3 rounded-full font-light tracking-wide transition-all ${
+                    primary 
+                        ? "bg-white text-black hover:bg-gray-200" 
+                        : "glass-panel text-white hover:bg-white/10"
+                }`}
+            >
+                {children}
+            </motion.button>
+        );
 
-        // 5. Sevgi Uyğunluğu
-        function calculateSynastry() {
-            const partnerName = document.getElementById('partner-name').value;
-            if(!partnerName) { alert("Zəhmət olmasa tərəfdaşınızın adını daxil edin."); return; }
-            
-            const resultBox = document.getElementById('synastry-results');
-            resultBox.classList.remove('hidden');
-            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+        const CosmicLoader = ({ texts, onComplete }) => {
+            const [textIndex, setTextIndex] = useState(0);
+
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setTextIndex(prev => (prev + 1) % texts.length);
+                }, 1000);
+                const timeout = setTimeout(() => {
+                    onComplete();
+                }, 4000);
+                return () => {
+                    clearInterval(interval);
+                    clearTimeout(timeout);
+                };
+            }, [texts, onComplete]);
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }} 
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-50 bg-[#030712] flex flex-col items-center justify-center overflow-hidden"
+                >
+                    {/* Rotating Rings */}
+                    <motion.div 
+                        animate={{ rotate: 360 }} 
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                        className="absolute w-64 h-64 border-[1px] border-indigo-500/30 rounded-full"
+                    />
+                    <motion.div 
+                        animate={{ rotate: -360 }} 
+                        transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                        className="absolute w-96 h-96 border-[1px] border-purple-500/20 rounded-full"
+                    />
+                    
+                    {/* Core Sphere */}
+                    <motion.div 
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-full blur-xl mb-12"
+                    />
+                    
+                    {/* Scanning Text */}
+                    <AnimatePresence mode="wait">
+                        <motion.p
+                            key={textIndex}
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -10, opacity: 0 }}
+                            className="text-gray-300 font-light tracking-widest text-lg"
+                        >
+                            {texts[textIndex]}
+                        </motion.p>
+                    </AnimatePresence>
+
+                    {/* Progress Bar */}
+                    <div className="w-64 h-1 bg-gray-800 rounded-full mt-8 overflow-hidden">
+                        <motion.div 
+                            initial={{ width: "0%" }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 4, ease: "easeInOut" }}
+                            className="h-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                        />
+                    </div>
+                </motion.div>
+            );
+        };
+
+        const App = () => {
+            const [lang, setLang] = useState('en');
+            const [view, setView] = useState('home'); // home, category, result
+            const [activePanel, setActivePanel] = useState(null);
+            const [activeSubpanel, setActiveSubpanel] = useState(null);
+            const [isLoading, setIsLoading] = useState(false);
+
+            const t = i18n[lang];
+
+            const handlePanelClick = (panel) => {
+                setActivePanel(panel);
+                setView('category');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const handleSubpanelClick = (subpanel) => {
+                setActiveSubpanel(subpanel);
+                setIsLoading(true);
+            };
+
+            return (
+                <div className="min-h-screen text-gray-100 font-sans flex flex-col selection:bg-indigo-500/30 selection:text-white">
+                    <Navbar lang={lang} setLang={setLang} />
+                    
+                    <main className="flex-grow pt-24 pb-20 px-6 max-w-7xl mx-auto w-full relative">
+                        <AnimatePresence mode="wait">
+                            {isLoading && (
+                                <CosmicLoader 
+                                    key="loader" 
+                                    texts={t.loader} 
+                                    onComplete={() => {
+                                        setIsLoading(false);
+                                        setView('result');
+                                    }} 
+                                />
+                            )}
+
+                            {view === 'home' && !isLoading && (
+                                <motion.div 
+                                    key="home"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.8 }}
+                                    className="flex flex-col items-center mt-20"
+                                >
+                                    <div className="text-center max-w-3xl mb-24">
+                                        <motion.h1 
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.2, duration: 0.8 }}
+                                            className="text-5xl md:text-7xl font-light tracking-tight mb-8 text-gradient leading-tight"
+                                        >
+                                            {t.hero.headline}
+                                        </motion.h1>
+                                        <motion.p 
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 0.4, duration: 0.8 }}
+                                            className="text-xl text-gray-400 font-light mb-12 leading-relaxed"
+                                        >
+                                            {t.hero.subtitle}
+                                        </motion.p>
+                                        <motion.div 
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ delay: 0.6, duration: 0.8 }}
+                                            className="flex flex-wrap justify-center gap-6"
+                                        >
+                                            <Button primary onClick={() => handlePanelClick(panels[0])}>{t.hero.cta}</Button>
+                                            <Button onClick={() => {
+                                                document.getElementById('panels').scrollIntoView({ behavior: 'smooth' });
+                                            }}>{t.hero.secondary}</Button>
+                                        </motion.div>
+                                    </div>
+
+                                    <div id="panels" className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                                        {panels.map((panel, idx) => (
+                                            <motion.div
+                                                key={panel.id}
+                                                initial={{ opacity: 0, y: 30 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.2 + (idx * 0.1), duration: 0.6 }}
+                                                whileHover={{ y: -10, scale: 1.02 }}
+                                                className="glass-panel p-8 rounded-3xl cursor-pointer group hover:border-indigo-500/30 transition-all duration-500 relative overflow-hidden"
+                                                onClick={() => handlePanelClick(panel)}
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                                <div className="text-4xl mb-6 text-indigo-400 group-hover:text-white transition-colors duration-300">{panel.icon}</div>
+                                                <h3 className="text-xl font-medium mb-3 tracking-wide">{panel.title[lang]}</h3>
+                                                <p className="text-gray-400 text-sm font-light leading-relaxed">{panel.desc[lang]}</p>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {view === 'category' && activePanel && !isLoading && (
+                                <motion.div
+                                    key="category"
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    className="w-full mt-10"
+                                >
+                                    <button 
+                                        onClick={() => setView('home')}
+                                        className="text-gray-400 hover:text-white mb-12 flex items-center gap-2 transition-colors text-sm uppercase tracking-widest"
+                                    >
+                                        ← {t.ui.back}
+                                    </button>
+                                    
+                                    <div className="mb-16">
+                                        <div className="text-6xl text-indigo-400 mb-6">{activePanel.icon}</div>
+                                        <h2 className="text-5xl font-light mb-4 text-gradient">{activePanel.title[lang]}</h2>
+                                        <p className="text-xl text-gray-400 font-light max-w-2xl">{activePanel.desc[lang]}</p>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {activePanel.subpanels.map((sub, idx) => (
+                                            <motion.div
+                                                key={sub.id}
+                                                initial={{ opacity: 0, y: 20 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: idx * 0.1 }}
+                                                whileHover={{ scale: 1.02 }}
+                                                onClick={() => handleSubpanelClick(sub)}
+                                                className="glass-panel p-8 rounded-2xl cursor-pointer hover:bg-white/[0.05] transition-all duration-300 border border-white/5"
+                                            >
+                                                <h4 className="text-2xl font-medium mb-2">{sub.title[lang]}</h4>
+                                                <p className="text-gray-400 font-light">{sub.subtitle[lang]}</p>
+                                                <div className="mt-6 flex items-center text-indigo-400 text-sm tracking-widest uppercase">
+                                                    <span>Explore Reflection →</span>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {view === 'result' && activeSubpanel && !isLoading && (
+                                <motion.div
+                                    key="result"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.8, ease: "easeOut" }}
+                                    className="w-full mt-10 max-w-4xl mx-auto"
+                                >
+                                    <button 
+                                        onClick={() => setView('category')}
+                                        className="text-gray-400 hover:text-white mb-10 flex items-center gap-2 transition-colors text-sm uppercase tracking-widest"
+                                    >
+                                        ← {t.ui.back}
+                                    </button>
+
+                                    <div className="glass-panel rounded-3xl p-10 md:p-16 relative overflow-hidden">
+                                        {/* Background abstract glow */}
+                                        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                                        
+                                        <div className="relative z-10">
+                                            <h2 className="text-sm uppercase tracking-widest text-indigo-400 mb-4">{activeSubpanel.title[lang]}</h2>
+                                            <p className="text-3xl md:text-4xl font-light leading-snug mb-12 text-gray-100">
+                                                "{activeSubpanel.result.overview[lang]}"
+                                            </p>
+
+                                            <div className="space-y-12">
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                                                        <h4 className="text-gray-400 text-sm uppercase tracking-widest mb-3">{t.result.strengths}</h4>
+                                                        <p className="text-lg font-light">{activeSubpanel.result.strengths[lang]}</p>
+                                                    </div>
+                                                    <div className="bg-white/5 p-6 rounded-2xl border border-white/5">
+                                                        <h4 className="text-gray-400 text-sm uppercase tracking-widest mb-3">{t.result.blindSpots}</h4>
+                                                        <p className="text-lg font-light">{activeSubpanel.result.blindSpots[lang]}</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="border-t border-white/10 pt-12">
+                                                    <h4 className="text-gray-400 text-sm uppercase tracking-widest mb-4">{t.result.pattern}</h4>
+                                                    <p className="text-2xl font-light text-gray-200">{activeSubpanel.result.pattern[lang]}</p>
+                                                </div>
+
+                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-white/10 pt-12">
+                                                    <div>
+                                                        <h4 className="text-indigo-400 text-sm uppercase tracking-widest mb-3">{t.result.advice}</h4>
+                                                        <p className="text-lg font-light text-gray-300">{activeSubpanel.result.advice[lang]}</p>
+                                                    </div>
+                                                    <div>
+                                                        <h4 className="text-purple-400 text-sm uppercase tracking-widest mb-3">{t.result.symbolic}</h4>
+                                                        <p className="text-lg font-light text-gray-300 italic">"{activeSubpanel.result.symbolic[lang]}"</p>
+                                                    </div>
+                                                </div>
+
+                                                <div className="bg-gradient-to-r from-indigo-900/40 to-purple-900/40 p-8 rounded-2xl border border-indigo-500/20 text-center mt-12">
+                                                    <h4 className="text-gray-400 text-sm uppercase tracking-widest mb-3">{t.result.focus}</h4>
+                                                    <p className="text-xl font-medium text-white">{activeSubpanel.result.nextFocus[lang]}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="border-t border-white/5 py-8 text-center text-gray-500 text-sm font-light backdrop-blur-md bg-black/50 z-10 relative">
+                        <p>© 2026 Astralis Inc. Designed with emotional intelligence.</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
+
+```
