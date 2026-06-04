@@ -1,474 +1,740 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="az" class="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Astralis - premium astrologiya platforması. Kainatın sizin üçün saxladığı naxışları kəşf edin.">
-  <meta name="keywords" content="astrologiya, ulduz falı, bürc, astralis, kosmik">
-  <meta name="author" content="Astralis">
-  <title>Astralis — Kosmik Kəşfiyyat</title>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif;
-      background: #000000;
-      color: #ffffff;
-      overflow-x: hidden;
-    }
-
-    /* Glassmorphism */
-    .glass-premium {
-      background: rgba(15, 25, 45, 0.5);
-      backdrop-filter: blur(20px);
-      border: 0.5px solid rgba(255, 255, 255, 0.08);
-      border-radius: 32px;
-      transition: all 0.3s ease;
-    }
-
-    .glass-premium:hover {
-      background: rgba(25, 40, 65, 0.7);
-      border-color: rgba(100, 150, 255, 0.3);
-      transform: translateY(-4px);
-    }
-
-    /* Cosmic background */
-    .cosmic-bg {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      background: radial-gradient(ellipse at 20% 30%, #0a0e1a 0%, #000000 100%);
-    }
-
-    .stars {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle 3s infinite alternate;
-    }
-
-    @keyframes twinkle {
-      0% { opacity: 0.2; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.2); }
-    }
-
-    .text-gradient {
-      background: linear-gradient(135deg, #FFFFFF 0%, #A0C0FF 50%, #6B8CFF 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    /* Loading spinner */
-    .cosmic-loader {
-      width: 60px;
-      height: 60px;
-      border: 2px solid rgba(107, 140, 255, 0.2);
-      border-top-color: #6B8CFF;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .line-clamp-3 {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    @media (max-width: 768px) {
-      .glass-premium { border-radius: 24px; }
-    }
-  </style>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            cosmic: { dark: '#050812', navy: '#0A1128', blue: '#1A2A5E', light: '#6B8CFF' }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologum | Professional Kainat Analizi</title>
+    
+    <!-- Fonts: Apple-like San Francisco / Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        mystic: {
+                            950: '#020617', // Extremely dark blue/black
+                            900: '#0f172a', // Deep slate
+                            800: '#1e293b',
+                            accent: '#3b82f6', // Professional blue
+                        },
+                        apple: {
+                            gray: '#1d1d1f',
+                            light: '#f5f5f7'
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0 },
+                            '100%': { opacity: 1 },
+                        },
+                        slideUp: {
+                            '0%': { opacity: 0, transform: 'translateY(40px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  </script>
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+
+    <style>
+        body {
+            background-color: #020617; /* Very dark slate */
+            color: #f8fafc;
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Professional Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.15); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3); 
+        }
+
+        /* Glassmorphism that looks like Apple Vision Pro / iOS */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .glass-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+            outline: none;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Background Canvas */
+        #stars-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 80vw;
+            height: 80vh;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(15, 23, 42, 0.8) 0%, rgba(2, 6, 23, 1) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Chart Animations */
+        .orbit {
+            transform-origin: center;
+            animation: spin var(--speed) linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
 </head>
 <body>
-<div id="root"></div>
+    <canvas id="stars-canvas"></canvas>
+    <div class="bg-glow"></div>
+    <div id="root"></div>
 
-<script src="https://unpkg.com/react@18.2.0/umd/react.development.js"></script>
-<script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
-<script src="https://unpkg.com/react-router-dom@6.20.0/umd/react-router-dom.development.js"></script>
-<script src="https://unpkg.com/framer-motion@10.16.16/dist/framer-motion.js"></script>
+    <script>
+        // High-performance professional starfield background
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let stars = [];
 
-<script>
-// ============================================================
-// ASTRALIS - PREMIUM ASTROLOGY PLATFORM
-// Full functional React application without Babel
-// ============================================================
-
-// ---------- TRANSLATIONS ----------
-const translations = {
-  az: {
-    nav: { home: 'Ana səhifə', love: 'Sevgi', future: 'Gələcək', money: 'Pul', career: 'Karyera', settings: 'Tənzimləmələr' },
-    hero: { headline: 'Kimə çevrildiyinizin naxışını kəşf edin.', subtitle: 'Emosiyalarınızı, seçimlərinizi və daxili aləminizi dərinliklə əks etdirən premium kosmik təcrübə.', cta: 'Refleksiyaya başla', secondary: 'Panelləri araşdır' },
-    panelTitles: { love: 'Sevgi & Münasibətlər', future: 'Gələcək Yolu', money: 'Pul Enerjisi', career: 'Karyera İstiqaməti', personality: 'Şəxsiyyət Güzgüsü', innerWorld: 'Daxili Hisslər', compatibility: 'Uyğunluq', daily: 'Gündəlik Rəhbərlik' },
-    panelDesc: { love: 'Necə sevdiyinizi, nəyə ehtiyacınız olduğunu və hansı təkrarları anlayın.', future: 'Həyatınızın hansı istiqamətə getdiyini görün.', money: 'Dəyər, risk və ambisiya ilə münasibətinizi kəşf edin.', career: 'Təbii intellektinizi işə salan iş növü.', personality: 'Həqiqi mənzərənizin nadir əksi.', innerWorld: 'Səthin altında nələr hərəkət edir.', compatibility: 'Enerjinizin başqaları ilə rezonansı.', daily: 'Anınız üçün kosmosdan sakit bir işarə.' },
-    loader: { messages: ['Emosional naxışlar oxunur...', 'Daxili ritminiz xəritələnir...', 'Simvolik siqnallar birləşir...', 'Şəxsi əks hazırlanır...'] },
-    result: { strengths: 'Güclü tərəflər', challenges: 'Çətinliklər', advice: 'Məsləhət', symbolic: 'Simvolik mesaj', next: 'Növbəti diqqət', overview: 'Kosmik baxış', hidden: 'Gizli naxış' }
-  },
-  en: {
-    nav: { home: 'Home', love: 'Love', future: 'Future', money: 'Money', career: 'Career', settings: 'Settings' },
-    hero: { headline: 'Discover the pattern behind who you are becoming.', subtitle: 'A premium cosmic experience designed to reflect your emotions, choices, relationships, and inner world.', cta: 'Begin Your Reflection', secondary: 'Explore Panels' },
-    panelTitles: { love: 'Love & Relationships', future: 'Future Path', money: 'Money Energy', career: 'Career Direction', personality: 'Personality Mirror', innerWorld: 'Inner Emotions', compatibility: 'Compatibility', daily: 'Daily Guidance' },
-    panelDesc: { love: 'Understand why you love the way you do.', future: 'See where your life is quietly moving.', money: 'Explore your relationship with value and risk.', career: 'Reveal the work that activates your intelligence.', personality: 'Your authentic blueprint.', innerWorld: 'Your hidden emotional landscape.', compatibility: 'How your energy resonates with others.', daily: 'A quiet signal from the cosmos.' },
-    loader: { messages: ['Reading emotional patterns...', 'Mapping your inner rhythm...', 'Connecting symbolic signals...', 'Preparing reflection...'] },
-    result: { strengths: 'Strengths', challenges: 'Challenges', advice: 'Advice', symbolic: 'Symbolic Message', next: 'Next Focus', overview: 'Overview', hidden: 'Hidden Pattern' }
-  },
-  ru: {
-    nav: { home: 'Главная', love: 'Любовь', future: 'Будущее', money: 'Деньги', career: 'Карьера', settings: 'Настройки' },
-    hero: { headline: 'Узнайте паттерн того, кем вы становитесь.', subtitle: 'Премиальный космический опыт, отражающий ваши эмоции, выборы и отношения.', cta: 'Начать рефлексию', secondary: 'Исследовать панели' },
-    panelTitles: { love: 'Любовь и отношения', future: 'Путь будущего', money: 'Энергия денег', career: 'Карьерный путь', personality: 'Зеркало личности', innerWorld: 'Внутренний мир', compatibility: 'Совместимость', daily: 'Дневной сигнал' },
-    panelDesc: { love: 'Поймите, как вы любите.', future: 'Увидьте направление вашей жизни.', money: 'Исследуйте отношение к ценности.', career: 'Работа, активирующая интеллект.', personality: 'Ваша истинная природа.', innerWorld: 'Скрытый эмоциональный ландшафт.', compatibility: 'Резонанс вашей энергии.', daily: 'Тихий сигнал космоса.' },
-    loader: { messages: ['Чтение паттернов...', 'Картирование ритма...', 'Соединение символов...', 'Подготовка отражения...'] },
-    result: { strengths: 'Сильные стороны', challenges: 'Слепые зоны', advice: 'Совет', symbolic: 'Послание', next: 'Фокус', overview: 'Обзор', hidden: 'Скрытый паттерн' }
-  }
-};
-
-// ---------- CATEGORIES ----------
-const categories = [
-  { id: 'love', nameKey: 'panelTitles.love', icon: '❤️' },
-  { id: 'future', nameKey: 'panelTitles.future', icon: '🌌' },
-  { id: 'money', nameKey: 'panelTitles.money', icon: '✨' },
-  { id: 'career', nameKey: 'panelTitles.career', icon: '⚡' },
-  { id: 'personality', nameKey: 'panelTitles.personality', icon: '🌀' },
-  { id: 'innerWorld', nameKey: 'panelTitles.innerWorld', icon: '🌙' },
-  { id: 'compatibility', nameKey: 'panelTitles.compatibility', icon: '🔮' },
-  { id: 'daily', nameKey: 'panelTitles.daily', icon: '☀️' }
-];
-
-// ---------- SUBPANELS ----------
-const subPanelsData = {
-  love: [
-    { id: 'lovePattern', title: 'Sevgi Naxışın', subtitle: 'Ürəyinin memarlığı', hook: 'Göstərdiyindən daha çox verirsən.', resultId: 'love_res' },
-    { id: 'emotionalNeeds', title: 'Emosional Ehtiyaclar', subtitle: 'Səssizcə arzuladıqların', hook: 'Tanınma sağaldır.', resultId: 'needs_res' }
-  ],
-  future: [{ id: 'futureMap', title: 'Gələcək Xəritən', subtitle: 'Sakit cərəyan', hook: 'Xəritə artıq daxilində çizilib.', resultId: 'future_res' }],
-  money: [{ id: 'moneyWorth', title: 'Pul və Dəyər', subtitle: 'Rəqəmlərdən kənar', hook: 'Bolluq daxili uyğunluqdan gəlir.', resultId: 'money_res' }],
-  career: [{ id: 'careerCall', title: 'Karyera Çağırışı', subtitle: 'Aktivləşmə nöqtəsi', hook: 'Zəkan ifadə olunmaq istəyir.', resultId: 'career_res' }],
-  personality: [{ id: 'personalityTrue', title: 'Həqiqi Mənzərə', subtitle: 'Nadir əks', hook: 'Etdiklərin deyil, hiss etdiklərinsən.', resultId: 'personality_res' }],
-  innerWorld: [{ id: 'innerShadow', title: 'Gizli Hisslər', subtitle: 'Danışılmayan dərinliklər', hook: 'Qaranlığın müəllimdir.', resultId: 'inner_res' }],
-  compatibility: [{ id: 'compatSignal', title: 'Rezonans İmzası', subtitle: 'Görünməz kimya', hook: 'Hər kəsi seçmirsən — bəzilərini tanıyırsan.', resultId: 'compat_res' }],
-  daily: [{ id: 'dailySignal', title: 'Bugünün Siqnalı', subtitle: 'Kosmosdan pıçıltı', hook: 'Kainat incə tonlarda danışır.', resultId: 'daily_res' }]
-};
-
-// ---------- RESULTS ----------
-const resultsDB = {
-  love_res: {
-    title: "Ürəyinin Memarlığı",
-    overview: "Sevgiyə müqəddəs bir sığınacaq kimi yanaşırsan. Dərin bağlılıq qabiliyyətin var, lakin daxili alovunu incə sərhədlərlə qoruyursan.",
-    hiddenPattern: "Tamamilə açılmazdan əvvəl icazə gözləyirsən. Bu səbir səni qoruyur, lakin bəzən sevinci gecikdirir.",
-    strengths: ["Dərin emosional sadiqlik", "İntuitiv empatiya", "Qoruyucu istilik"],
-    challenges: ["Başqalarının işarələrini çox düşünmək", "Tərk edilmə qorxusu", "Öz ehtiyaclarını susdurmaq"],
-    advice: "Birinin səninlə yarı yolda görüşməsinə icazə ver. Sevgin imtahan deyil — hədiyyədir.",
-    symbolicMessage: "Ayçiçəyi gecə çiçəklənir — sevgin etibarda böyüyür.",
-    nextFocus: "Bu gün bir incə həqiqətini ifadə et."
-  },
-  needs_res: {
-    title: "Səssizcə Arzuladıqların",
-    overview: "Tamamilə rahat nəfəs ala bilməyin üçün dərindən başa düşülməyə ehtiyacın var.",
-    hiddenPattern: "Almaq istədiklərini başqalarına verirsən, lakin susqun müqavilələr bağlayırsan.",
-    strengths: ["Başqalarının ehtiyaclarını dərk etmək", "Emosional uyğunlaşma"],
-    challenges: ["Çox verməyinə baxmayaraq görünməmək", "Ehtiyaclarını dilə gətirməkdə çətinlik"],
-    advice: "Ehtiyacını yumşaqca adlandır — bu ən cəsarətli aydınlıqdır.",
-    symbolicMessage: "Səda öz mənbəyini axtarır.",
-    nextFocus: "Bu gün bir emosional arzunu kağıza yaz."
-  },
-  future_res: {
-    title: "Sakit Cərəyan", overview: "Gələcəyin buz altında çay kimi hərəkət edir — güclü, yavaş və məqsədli.", hiddenPattern: "Görünməz irəliləyişdə durğunluq qorxusu var.", strengths: ["Dözümlü səbir", "Dərin strateji zəka"], challenges: ["Qeyri-müəyyənliyə nəzarət etmək"], advice: "Görünməz cazibəyə etibar et.", symbolicMessage: "Palıd ağacının tacı göyə toxunmazdan əvvəl illərlə böyüyür.", nextFocus: "Bu gün bir kiçik addım at." },
-  money_res: {
-    title: "Dəyər və Öz Dəyərin", overview: "Pul sənin üçün öz varlığını necə qiymətləndirdiyinin güzgüsüdür.", hiddenPattern: "Çox verərək dəyərini sübut etməyə çalışırsan.", strengths: ["Səxavətli ruh", "Yaradıcı resursçuluq"], challenges: ["Günahsız qəbul etməkdə çətinlik"], advice: "Günahsız qəbul etməyə icazə ver.", symbolicMessage: "Çay dənizə axmağa icazə istəmir.", nextFocus: "Bu gün bir nailiyyətini qeyd et." },
-  career_res: {
-    title: "Aktivləşmə Nöqtəsi", overview: "Sənə çağırış kimi hiss edilən iş lazımdır.", hiddenPattern: "Parıldamaq üçün icazə gözləyirsən.", strengths: ["İnnovativ düşüncə", "Empatik liderlik"], challenges: ["İmpostor səsləri"], advice: "Mükəmməl plana ehtiyacın yoxdur — sadəcə canlı bir istiqamət kifayətdir.", symbolicMessage: "Ox geriyə çəkilir ki, irəli uça bilsin.", nextFocus: "Sevdiyin bir bacarığı müəyyən et." },
-  personality_res: {
-    title: "Həqiqi Mənzərə", overview: "Sən sabitdən daha axıcısan — dərinlik, maraq varlığısan.", hiddenPattern: "Özünü senzura edərək gözləntilərə uyğunlaşırsan.", strengths: ["Dərin özünüdərk", "Bədii həssaslıq"], challenges: ["Çox şey olmaq qorxusu"], advice: "Dünya sənin kiçik versiyanına ehtiyac duymur.", symbolicMessage: "Brilyant işıq onun üzlərinə dəyəndə alovlanır.", nextFocus: "Bu gün izahatsız, sadəcə 'sən' olan bir şey et." },
-  inner_res: {
-    title: "Danışılmayan Dərinliklər", overview: "Daxili aləmin dərin emosional müdriklik daşıyır.", hiddenPattern: "Sakit görünərək incəliyini qoruyursan.", strengths: ["Emosional dözümlülük", "Şəfqətli sağaltma"], challenges: ["Kədərlənəndə təcrid olunmaq"], advice: "Ağrın qüsur deyil. Onun şahidlik edən biri olsun.", symbolicMessage: "Mağarada ən qədim incəsənət çizilmişdir.", nextFocus: "Bu axşam bir gizli hissini yaz." },
-  compat_res: {
-    title: "Rezonans İmzası", overview: "Danışılmamış anlayış vasitəsilə bağlanırsan.", hiddenPattern: "Harmoniya üçün özündən verir, sonra inciklik yaranır.", strengths: ["Dərin sadiqlik", "Emosional radar"], challenges: ["Emosional əlçatmazları cəlb etmək"], advice: "Uyğunluq əvvəlcə özünü seçməklə başlayır.", symbolicMessage: "Tənzimləyici çəngəl səy göstərmədən öz cütü ilə titrəyir.", nextFocus: "Tamamilə göründüyün bir əlaqə tap." },
-  daily_res: {
-    title: "Bugünün Pıçıltısı", overview: "Kainat öz daxili ritmini eşitmək üçün yavaşlamağı təklif edir.", hiddenPattern: "Böyük anları gözləyərək kiçik sevinclərdən keçirsən.", strengths: ["Hazırlıq potensialı"], challenges: ["Mikro işarələri qaçırmaq"], advice: "Dur. Nəfəs al. Özünə bir kiçik mehribanlıq et.", symbolicMessage: "Bu gecə fərqinə varacağın ulduz min illərdir səni gözləyir.", nextFocus: "5 dəqiqəlik sükut et." }
-};
-
-const getResult = (id) => resultsDB[id] || resultsDB.love_res;
-
-// ---------- STARS GENERATION ----------
-function generateStars() {
-  const container = document.getElementById('stars');
-  if (container && container.children.length === 0) {
-    for (let i = 0; i < 120; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.width = Math.random() * 2 + 'px';
-      star.style.height = star.style.width;
-      star.style.left = Math.random() * 100 + '%';
-      star.style.top = Math.random() * 100 + '%';
-      star.style.animationDelay = Math.random() * 5 + 's';
-      star.style.animationDuration = Math.random() * 3 + 2 + 's';
-      container.appendChild(star);
-    }
-  }
-}
-
-// ---------- REACT COMPONENTS ----------
-const { useState, useEffect, createContext, useContext } = React;
-const { BrowserRouter, Routes, Route, useNavigate, useParams } = ReactRouterDOM;
-const { motion, AnimatePresence } = FramerMotion;
-
-// Language Context
-const LangContext = createContext();
-const useLang = () => useContext(LangContext);
-
-// Cosmic Loader Component
-const CosmicLoader = ({ onComplete }) => {
-  const { lang } = useLang();
-  const [progress, setProgress] = useState(0);
-  const [msgIdx, setMsgIdx] = useState(0);
-  const messages = translations[lang].loader.messages;
-  
-  useEffect(() => {
-    const msgInt = setInterval(() => setMsgIdx(i => (i + 1) % messages.length), 900);
-    const progInt = setInterval(() => {
-      setProgress(p => {
-        if (p >= 100) {
-          clearInterval(progInt);
-          clearInterval(msgInt);
-          setTimeout(onComplete, 200);
-          return 100;
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            initStars();
         }
-        return p + 2.5;
-      });
-    }, 70);
-    return () => { clearInterval(msgInt); clearInterval(progInt); };
-  }, [onComplete, messages.length]);
-  
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-2xl">
-      <div className="text-center px-6">
-        <div className="cosmic-loader mx-auto mb-6"></div>
-        <p className="text-xl font-light text-white/90">{messages[msgIdx]}</p>
-        <div className="w-64 h-0.5 bg-white/10 rounded-full mt-6 overflow-hidden">
-          <div className="h-full bg-gradient-to-r from-blue-400 to-white transition-all duration-100" style={{ width: `${progress}%` }}></div>
-        </div>
-        <p className="text-xs text-white/30 mt-3">{Math.floor(progress)}%</p>
-      </div>
-    </div>
-  );
-};
 
-// Result Page
-const ResultPage = () => {
-  const { subpanelId } = useParams();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const { lang } = useLang();
-  const t = translations[lang];
-  const result = getResult(subpanelId);
-  
-  useEffect(() => { const timer = setTimeout(() => setLoading(false), 2500); return () => clearTimeout(timer); }, []);
-  if (loading) return <CosmicLoader onComplete={() => setLoading(false)} />;
-  
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-12 md:py-16">
-      <div className="glass-premium p-6 md:p-10">
-        <h1 className="text-3xl md:text-4xl font-semibold text-gradient">{result.title}</h1>
-        <div className="mt-6 space-y-6">
-          <div><h3 className="text-xs uppercase text-blue-300 mb-2">{t.result.overview}</h3><p className="text-white/80">{result.overview}</p></div>
-          <div className="bg-white/5 rounded-xl p-4"><h3 className="text-xs uppercase text-amber-300 mb-2">{t.result.hidden}</h3><p className="text-white/80 italic">{result.hiddenPattern}</p></div>
-          <div className="grid md:grid-cols-2 gap-5">
-            <div><h3 className="text-xs uppercase text-emerald-300 mb-2">{t.result.strengths}</h3><ul className="space-y-1">{result.strengths.map((s,i) => <li key={i} className="text-white/70 text-sm">✦ {s}</li>)}</ul></div>
-            <div><h3 className="text-xs uppercase text-rose-300 mb-2">{t.result.challenges}</h3><ul className="space-y-1">{result.challenges.map((c,i) => <li key={i} className="text-white/70 text-sm">◈ {c}</li>)}</ul></div>
-          </div>
-          <div className="border-l-2 border-blue-500 pl-4"><h3 className="text-xs uppercase text-indigo-300 mb-1">{t.result.advice}</h3><p className="text-white/80">{result.advice}</p></div>
-          <div><h3 className="text-xs uppercase text-purple-300 mb-1">{t.result.symbolic}</h3><p className="text-white/70 italic">“{result.symbolicMessage}”</p></div>
-          <div className="bg-white/5 rounded-xl p-4"><h3 className="text-xs uppercase text-cyan-300 mb-1">{t.result.next}</h3><p className="text-white/80">{result.nextFocus}</p></div>
-        </div>
-        <button onClick={() => navigate('/')} className="mt-8 px-6 py-2 rounded-full glass-premium text-sm hover:bg-white/10">← Kosmosa qayıt</button>
-      </div>
-    </div>
-  );
-};
+        function initStars() {
+            stars = [];
+            const numStars = Math.floor((width * height) / 3000); // Dynamic density
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 1.2 + 0.1,
+                    alpha: Math.random(),
+                    speed: Math.random() * 0.05 + 0.01
+                });
+            }
+        }
 
-// Category Page
-const CategoryPage = () => {
-  const { categoryId } = useParams();
-  const navigate = useNavigate();
-  const { lang } = useLang();
-  const t = translations[lang];
-  const category = categories.find(c => c.id === categoryId);
-  const panels = subPanelsData[categoryId] || [];
-  const [loadingPanel, setLoadingPanel] = useState(null);
-  
-  if (loadingPanel) return <CosmicLoader onComplete={() => navigate(`/result/${categoryId}/${loadingPanel.resultId}`)} />;
-  
-  return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <div className="flex items-center gap-3 mb-8"><span className="text-5xl">{category?.icon}</span><h1 className="text-3xl md:text-4xl font-light">{t.panelTitles[categoryId]}</h1></div>
-      <div className="grid md:grid-cols-2 gap-5">
-        {panels.map(panel => (
-          <div key={panel.id} onClick={() => setLoadingPanel(panel)} className="glass-premium p-6 cursor-pointer">
-            <h2 className="text-xl font-medium">{panel.title}</h2>
-            <p className="text-white/40 text-sm mt-1">{panel.subtitle}</p>
-            <p className="text-white/60 mt-3 text-sm italic border-l-2 border-blue-400/50 pl-3">“{panel.hook}”</p>
-            <div className="mt-4 text-right text-xs text-blue-300/80">KƏŞF ET →</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+        function drawStars() {
+            ctx.clearRect(0, 0, width, height);
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+                ctx.fill();
+                
+                // Twinkle effect
+                star.alpha += (Math.random() - 0.5) * 0.05;
+                if(star.alpha < 0.1) star.alpha = 0.1;
+                if(star.alpha > 0.8) star.alpha = 0.8;
 
-// Settings Page
-const SettingsPage = () => {
-  const { lang, setLang } = useLang();
-  const langs = [{code:'az', label:'Azərbaycanca', flag:'🇦🇿'},{code:'en', label:'English', flag:'🇬🇧'},{code:'ru', label:'Русский', flag:'🇷🇺'}];
-  return (
-    <div className="max-w-md mx-auto px-4 py-16">
-      <div className="glass-premium p-6 md:p-8">
-        <h2 className="text-2xl font-light mb-6">Dil / Language</h2>
-        <div className="space-y-2">
-          {langs.map(l => (
-            <button key={l.code} onClick={() => setLang(l.code)} className={`w-full flex justify-between items-center px-4 py-3 rounded-xl transition ${lang === l.code ? 'bg-white/10 border border-white/20' : 'hover:bg-white/5'}`}>
-              <span><span className="mr-2">{l.flag}</span>{l.label}</span>
-              {lang === l.code && <span className="text-blue-300 text-sm">✓</span>}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+                // Subtle parallax movement
+                star.y -= star.speed;
+                if (star.y < 0) {
+                    star.y = height;
+                    star.x = Math.random() * width;
+                }
+            });
+            requestAnimationFrame(drawStars);
+        }
 
-// Home Page
-const HomePage = () => {
-  const { lang } = useLang();
-  const t = translations[lang];
-  const navigate = useNavigate();
-  
-  return (
-    <div>
-      <section className="relative min-h-[85vh] flex items-center justify-center px-6 text-center">
-        <div className="relative z-10 max-w-4xl">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gradient leading-tight">{t.hero.headline}</h1>
-          <p className="text-white/50 text-lg mt-6 max-w-xl mx-auto">{t.hero.subtitle}</p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <button onClick={() => navigate('/category/love')} className="px-6 py-3 rounded-full bg-white/10 backdrop-blur border border-white/20 hover:bg-white/20 transition">{t.hero.cta}</button>
-            <button onClick={() => document.getElementById('panels')?.scrollIntoView({behavior:'smooth'})} className="px-6 py-3 rounded-full glass-premium hover:bg-white/5 transition">{t.hero.secondary}</button>
-          </div>
-        </div>
-      </section>
-      
-      <section id="panels" className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-2xl md:text-3xl font-light text-center mb-3">Kosmik ölçülərin</h2>
-        <p className="text-white/40 text-center mb-10">Hər panel emosional xəritənin bir tərəfini açır</p>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {categories.map(cat => (
-            <div key={cat.id} onClick={() => navigate(`/category/${cat.id}`)} className="glass-premium p-5 cursor-pointer">
-              <div className="text-3xl mb-2">{cat.icon}</div>
-              <h3 className="text-lg font-medium">{t.panelTitles[cat.id]}</h3>
-              <p className="text-white/40 text-xs mt-2 line-clamp-3">{t.panelDesc[cat.id]}</p>
-              <div className="mt-3 text-right text-blue-300/50 text-xs">KƏŞF ET →</div>
+        window.addEventListener('resize', resize);
+        resize();
+        drawStars();
+    </script>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion;
+
+        // --- DEEP MOCK DATA FOR "VAUV" EFFECT ---
+        const deepReadings = {
+            career: [
+                {
+                    title: "Sistemlərin Arxitektoru",
+                    overview: "Siz sadəcə bir işçi deyilsiniz, siz xaotik strukturları anlayan və onları mükəmməlləşdirən birisiniz. İntellektiniz standart tapşırıqlar üçün çox sürətlidir.",
+                    deep: "İnsanların əksəriyyəti problemi həll etməyə çalışarkən, siz problemin nədən yarandığını görən birisiniz. Sizin üçün ən böyük təhlükə potensialınızı istifadə etməyən dar çərçivəli işlərdir. Yaradıcı və texniki bacarıqlarınızın vəhdəti sizi unikal edir.",
+                    pattern: "Siz bir sistemi qurana qədər həvəslisiniz, ancaq hər şey mükəmməl işləməyə başladıqda darıxmağa başlayırsınız.",
+                    advice: "Yeni texnologiyaları öyrənməyə və böyük miqyaslı layihələrə rəhbərlik etməyə fokuslanın. Rutin işlərdən qaçın."
+                },
+                {
+                    title: "Səssiz Liderlik",
+                    overview: "Siz idarə etməyi səs-küylə yox, dərin strategiya ilə bacarırsınız.",
+                    deep: "Kənardan sakit və müşahidəçi görünsəniz də, içəridə böyük bir vizyon daşıyırsınız. İş mühitində sizin analitik bacarıqlarınız hər kəsin gözündən qaçan detalları tutmağınıza kömək edir.",
+                    pattern: "Məsuliyyəti təkbaşına daşımağa meyillisiniz, çünki başqalarının bunu sizin qədər mükəmməl edəcəyinə inanmırsınız.",
+                    advice: "Təcrübənizi paylaşmağı öyrənin. Siz rəhbərlik etdikdə ətrafınızdakılar daha güclü olur."
+                }
+            ],
+            relationships: [
+                {
+                    // Strictly professional emotional intelligence reading
+                    title: "Duyğusal Dərinlik və Təhlükəsizlik",
+                    overview: "Siz səthi əlaqələrdən yorulursunuz. Sizin üçün münasibət zehni və emosional bir rezonans deməkdir.",
+                    deep: "Siz bir insanı sevəndə onun təkcə indiki halını deyil, potensialını, daxili qorxularını və travmalarını da görürsünüz. Bu qədər empatik olmaq bəzən sizi yorur. Münasibətlərdə hər kəsin ehtiyaclarını qarşılayarkən, öz ehtiyaclarınızı arxa plana atma ehtimalınız yüksəkdir. Şəxsi hədlərinizi qorumaq sizin ən vacib inkişaf nöqtənizdir.",
+                    pattern: "Emosional olaraq tam təhlükəsiz hiss etmədiyiniz anlarda arxaya çəkilib divarlar hörməyə başlayırsınız.",
+                    advice: "Daxili qorxularınızı açıq şəkildə ifadə edin. Doğru insan sizin qurduğunuz o kiçik müdafiə divarlarından inciməyəcək, əksinə onları anlamağa çalışacaq."
+                },
+                {
+                    title: "Müstəqillik və Bağlılıq Balansı",
+                    overview: "Siz həm dərin bir bağ qurmaq, həm də tamamilə azad olmaq istəyən mürəkkəb bir təbiətə sahibsiniz.",
+                    deep: "Əlaqələrinizdə hər zaman məntiqi qabağa qoymağa çalışsanız da, içəridə böyük bir duyğusal okean var. Zəif görünməkdən çəkinirsiniz, çünki idarəetməni itirmək sizin ən böyük qorxularınızdan biridir. İnsanlarla aranızda hər zaman görünməz, incə bir məsafə saxlayırsınız ki, tamamilə mənimsənilməyəsiniz.",
+                    pattern: "Hər şey çox yaxşı getdikdə, bilinçaltı olaraq problemin haradan çıxacağını axtarırsınız.",
+                    advice: "İnam prosesinə icazə verin. Həqiqi yaxınlıq zəifliklərdən yaranır."
+                }
+            ],
+            future: [
+                {
+                    title: "Böyük Dəyişiklik Astanası",
+                    overview: "Həyatınızda uzun müddətdir gözlədiyiniz, bəlkə də tam adını qoya bilmədiyiniz o sıçrayış mərhələsinə yaxınlaşırsınız.",
+                    deep: "Keçmişdə etdiyiniz bəzi seçimlər bu gün sizə mənasız və ya səhv kimi görünə bilər, amma əslində onlar bu gün qurmaqda olduğunuz fəlsəfənin təməlidir. İrəlidəki dövr sizin üçün köhnə kimliklərdən qurtulma və tam potensialınıza çatma dövrü olacaq.",
+                    pattern: "Siz həmişə ətrafınızdakı insanlardan daha sürətli böyüyürsünüz və mühitiniz sizə dar gəlməyə başlayır.",
+                    advice: "Artıq sizə xidmət etməyən vərdişləri və mühitləri arxada qoymaqdan qorxmayın."
+                }
+            ],
+            money: [
+                {
+                    title: "Dəyər və Güc Arasında",
+                    overview: "Sizin üçün pul sadəcə kağız deyil, azadlığın və təhlükəsizliyin riyazi ifadəsidir.",
+                    deep: "Siz qazanmağı yaxşı bilirsiniz, amma əsl məsələ pulun sizə verdiyi hissdədir. Pullarınızı necə xərclədiyiniz və necə saxladığınız sizin daxili güvən ehtiyacınızla birbaşa bağlıdır. Siz hər hansı bir risk almazdan əvvəl onu beyninizdə min dəfə hesablayan tipolgiya aidisiniz.",
+                    pattern: "Maddi təhlükəsizlik tam bərqərar olmadan böyük yaradıcı addımlar atmaqda çətinlik çəkirsiniz.",
+                    advice: "İnvestisiyanı təkcə layihələrə yox, öz daxili rahatlığınıza da edin."
+                }
+            ]
+        };
+
+        const dailyHoroscopes = [
+            "Bu gün kainat sizə intuisiyanıza güvənməyin vacibliyini xatırladır. Beyninizdəki o kiçik səs bu gün ən doğru bələdçidir.",
+            "Gözlənilməz bir fürsət qapınızı döyəcək. Mükəmməl olmasını gözləməyin, sadəcə addım atın.",
+            "Bu gün ünsiyyətdə səhv anlaşılmalara diqqət edin. Hisslərinizi sözlərlə ifadə etmək çətin ola bilər, daxilinizə çəkilmək daha yaxşıdır.",
+            "Uzun müddətdir üzərində çalışdığınız bir məsələnin düyümü bu gün açılır. Enerjiniz olduqca yüksəkdir."
+        ];
+
+        // --- COMPONENTS ---
+
+        // 1. Professional Input Component
+        const InputField = ({ label, type, value, onChange, placeholder, required = true }) => (
+            <div className="mb-6">
+                <label className="block text-xs uppercase tracking-[0.2em] text-gray-400 mb-2">{label}</label>
+                <input
+                    type={type}
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    required={required}
+                    className="w-full bg-transparent border-b border-white/20 pb-2 text-lg font-light text-white focus:border-white transition-colors duration-300 outline-none placeholder-gray-600"
+                />
             </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
-};
+        );
 
-// Layout
-const Layout = ({ children }) => {
-  const { lang, setLang } = useLang();
-  const t = translations[lang];
-  const navigate = useNavigate();
-  const [showLang, setShowLang] = useState(false);
-  
-  useEffect(() => { generateStars(); }, []);
-  
-  return (
-    <div className="min-h-screen">
-      <div className="cosmic-bg"></div>
-      <div id="stars" className="stars"></div>
-      <nav className="fixed top-0 w-full z-50 backdrop-blur-2xl bg-black/40 border-b border-white/10 px-4 md:px-8 py-4 flex justify-between items-center">
-        <div onClick={() => navigate('/')} className="text-xl md:text-2xl font-semibold tracking-tight cursor-pointer text-gradient">Astralis</div>
-        <div className="hidden md:flex gap-6 text-sm">
-          <button onClick={() => navigate('/category/love')} className="hover:text-white/80">{t.nav.love}</button>
-          <button onClick={() => navigate('/category/future')} className="hover:text-white/80">{t.nav.future}</button>
-          <button onClick={() => navigate('/category/money')} className="hover:text-white/80">{t.nav.money}</button>
-          <button onClick={() => navigate('/category/career')} className="hover:text-white/80">{t.nav.career}</button>
-          <button onClick={() => navigate('/settings')} className="hover:text-white/80">{t.nav.settings}</button>
-        </div>
-        <div className="relative">
-          <button onClick={() => setShowLang(!showLang)} className="glass-premium px-3 py-1.5 rounded-full text-xs">{lang.toUpperCase()}</button>
-          {showLang && (
-            <div className="absolute right-0 mt-2 glass-premium bg-black/90 rounded-xl overflow-hidden min-w-[90px]">
-              {['az','en','ru'].map(l => (
-                <button key={l} onClick={() => { setLang(l); setShowLang(false); }} className={`block w-full text-left px-3 py-2 text-sm hover:bg-white/10 ${lang === l ? 'text-white' : 'text-white/60'}`}>{l.toUpperCase()}</button>
-              ))}
-            </div>
-          )}
-        </div>
-      </nav>
-      <main className="pt-24 md:pt-28 pb-12">{children}</main>
-      <footer className="border-t border-white/10 py-6 text-center text-white/20 text-xs">ASTRALIS — KOSMİK KƏŞFİYYAT | © 2025</footer>
-    </div>
-  );
-};
+        // 2. Cosmic Button (Apple style minimalism + Tesla dark mode)
+        const Button = ({ children, onClick, type = "button", variant = "primary", className = "", disabled = false }) => {
+            const baseClass = "px-8 py-4 rounded-full text-sm uppercase tracking-widest font-medium transition-all duration-500 overflow-hidden relative group";
+            const variants = {
+                primary: "bg-white text-black hover:bg-gray-200",
+                glass: "glass-panel text-white hover:bg-white/10 border border-white/10"
+            };
+            
+            return (
+                <motion.button
+                    whileHover={{ scale: disabled ? 1 : 1.02 }}
+                    whileTap={{ scale: disabled ? 1 : 0.98 }}
+                    type={type}
+                    onClick={onClick}
+                    disabled={disabled}
+                    className={`${baseClass} ${variants[variant]} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
+                >
+                    <span className="relative z-10">{children}</span>
+                    {!disabled && variant === 'glass' && (
+                        <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    )}
+                </motion.button>
+            );
+        };
 
-// App
-const App = () => {
-  const [lang, setLang] = useState('az');
-  useEffect(() => { const saved = localStorage.getItem('astralis-lang'); if (saved && ['az','en','ru'].includes(saved)) setLang(saved); }, []);
-  const handleSetLang = (l) => { setLang(l); localStorage.setItem('astralis-lang', l); };
-  
-  return (
-    <LangContext.Provider value={{ lang, setLang: handleSetLang }}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout><HomePage /></Layout>} />
-          <Route path="/category/:categoryId" element={<Layout><CategoryPage /></Layout>} />
-          <Route path="/result/:categoryId/:subpanelId" element={<Layout><ResultPage /></Layout>} />
-          <Route path="/settings" element={<Layout><SettingsPage /></Layout>} />
-        </Routes>
-      </BrowserRouter>
-    </LangContext.Provider>
-  );
-};
+        // 3. Loading Animation (Mystic & Professional)
+        const Loader = ({ messages, onComplete }) => {
+            const [index, setIndex] = useState(0);
 
-// Render
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
-</script>
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setIndex(prev => (prev + 1) % messages.length);
+                }, 1500);
+                
+                const completeTimer = setTimeout(() => {
+                    onComplete();
+                }, messages.length * 1500); // Wait for all messages
+
+                return () => {
+                    clearInterval(timer);
+                    clearTimeout(completeTimer);
+                };
+            }, [messages, onComplete]);
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020617]/90 backdrop-blur-xl"
+                >
+                    {/* Abstract Core */}
+                    <div className="relative w-40 h-40 flex items-center justify-center mb-12">
+                        <motion.div 
+                            animate={{ rotate: 360 }} 
+                            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-0 rounded-full border border-white/10 border-t-white/50"
+                        />
+                        <motion.div 
+                            animate={{ rotate: -360 }} 
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="absolute inset-4 rounded-full border border-white/5 border-b-white/40"
+                        />
+                        <motion.div 
+                            animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.3, 0.8, 0.3] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                            className="w-12 h-12 bg-white rounded-full blur-[20px]"
+                        />
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                        <motion.p
+                            key={index}
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="text-lg font-light tracking-widest text-gray-300"
+                        >
+                            {messages[index]}
+                        </motion.p>
+                    </AnimatePresence>
+                </motion.div>
+            );
+        };
+
+        // 4. Registration View
+        const AuthScreen = ({ onLogin }) => {
+            const [formData, setFormData] = useState({ name: '', dob: '', time: '', city: '' });
+            const [step, setStep] = useState(1);
+
+            const handleNext = (e) => {
+                e.preventDefault();
+                if (step < 3) setStep(step + 1);
+                else {
+                    onLogin(formData);
+                }
+            };
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                    className="min-h-screen flex items-center justify-center p-6"
+                >
+                    <div className="max-w-md w-full">
+                        <div className="text-center mb-16">
+                            <h1 className="text-4xl font-light tracking-widest mb-4">ASTROLOGUM</h1>
+                            <p className="text-gray-400 font-light text-sm tracking-widest uppercase">Kainatın sirlərinə qapı açın</p>
+                        </div>
+
+                        <form onSubmit={handleNext} className="glass-panel p-10 rounded-3xl relative overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                {step === 1 && (
+                                    <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                                        <h2 className="text-2xl font-light mb-8">Sizi necə çağıraq?</h2>
+                                        <InputField label="Adınız" type="text" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="Məsələn: Ağşin" />
+                                    </motion.div>
+                                )}
+                                {step === 2 && (
+                                    <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                                        <h2 className="text-2xl font-light mb-8">Zamanın koordinatları</h2>
+                                        <InputField label="Doğum Tarixi" type="date" value={formData.dob} onChange={e => setFormData({...formData, dob: e.target.value})} />
+                                        <InputField label="Doğum Saatı (təxmini)" type="time" value={formData.time} onChange={e => setFormData({...formData, time: e.target.value})} required={false} />
+                                    </motion.div>
+                                )}
+                                {step === 3 && (
+                                    <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                                        <h2 className="text-2xl font-light mb-8">Məkanın enerjisi</h2>
+                                        <InputField label="Doğum Yeri (Şəhər)" type="text" value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} placeholder="Məsələn: Bakı" />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
+                            <div className="mt-10 flex justify-between items-center">
+                                {step > 1 ? (
+                                    <button type="button" onClick={() => setStep(step - 1)} className="text-sm text-gray-500 hover:text-white transition uppercase tracking-widest">Geri</button>
+                                ) : <div></div>}
+                                
+                                <Button type="submit" variant="primary">
+                                    {step === 3 ? "Analizi Başlat" : "İrəli"}
+                                </Button>
+                            </div>
+                        </form>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // 5. Apple/Tesla Style Navbar
+        const TopNav = ({ user, setView, currentView }) => (
+            <motion.nav 
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="fixed top-0 w-full z-40 bg-[#020617]/70 backdrop-blur-2xl border-b border-white/5 px-8 py-5 flex justify-between items-center"
+            >
+                <div className="text-xl font-light tracking-widest cursor-pointer" onClick={() => setView('dashboard')}>ASTROLOGUM</div>
+                <div className="hidden md:flex gap-8">
+                    <button onClick={() => setView('dashboard')} className={`text-sm tracking-widest uppercase transition-colors ${currentView === 'dashboard' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}>Kəşf</button>
+                    <button onClick={() => setView('birthchart')} className={`text-sm tracking-widest uppercase transition-colors ${currentView === 'birthchart' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}>Doğum Xəritəsi</button>
+                    <button onClick={() => setView('daily')} className={`text-sm tracking-widest uppercase transition-colors ${currentView === 'daily' ? 'text-white' : 'text-gray-500 hover:text-gray-300'}`}>Gündəlik</button>
+                </div>
+                <div className="text-sm text-gray-400 border border-white/10 px-4 py-1.5 rounded-full">
+                    {user?.name || "Profil"}
+                </div>
+            </motion.nav>
+        );
+
+        // 6. Main Dashboard
+        const Dashboard = ({ onSelectPanel }) => {
+            const panels = [
+                { id: 'career', title: 'Karyera & Potensial', desc: 'Zehni intellektinizin əsl yeri haradadır?', img: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000&auto=format&fit=crop' },
+                { id: 'relationships', title: 'Münasibətlər', desc: 'Duyğusal dərinlik, bağlanma və daxili ehtiyaclar.', img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1000&auto=format&fit=crop' },
+                { id: 'future', title: 'Gələcək İstiqamət', desc: 'Həyatınızın səssizcə doğru getdiyi o istiqamət.', img: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1000&auto=format&fit=crop' },
+                { id: 'money', title: 'Maddi Enerji', desc: 'Dəyər, təhlükəsizlik və resurslarla olan bağınız.', img: 'https://images.unsplash.com/photo-1638848731306-056db8142340?q=80&w=1000&auto=format&fit=crop' }
+            ];
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="pt-32 pb-20 px-6 max-w-7xl mx-auto"
+                >
+                    <div className="mb-20 text-center md:text-left">
+                        <motion.h1 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 1 }}
+                            className="text-5xl md:text-7xl font-light tracking-tight mb-6"
+                        >
+                            Nə bilmək <span className="text-gray-500 italic">istəyirsən?</span>
+                        </motion.h1>
+                        <motion.p 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.2 }}
+                            className="text-xl text-gray-400 font-light max-w-2xl"
+                        >
+                            Kainatın məlumatları sizin daxili kodlarınızla birləşir. İstədiyiniz modulu seçərək dərin analizi başladın.
+                        </motion.p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {panels.map((panel, idx) => (
+                            <motion.div
+                                key={panel.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.8, delay: idx * 0.1 }}
+                                onClick={() => onSelectPanel(panel.id)}
+                                className="group cursor-pointer glass-panel rounded-[2rem] overflow-hidden border border-white/5 hover:border-white/20 transition-all duration-700 flex flex-col md:flex-row h-auto md:h-[300px]"
+                            >
+                                <div className="w-full md:w-1/2 h-64 md:h-full overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-colors duration-700 z-10"></div>
+                                    <img src={panel.img} alt={panel.title} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 grayscale group-hover:grayscale-0" />
+                                </div>
+                                <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+                                    <h3 className="text-2xl font-light mb-4">{panel.title}</h3>
+                                    <p className="text-gray-400 font-light leading-relaxed mb-8 text-sm">{panel.desc}</p>
+                                    <div className="mt-auto">
+                                        <span className="text-xs uppercase tracking-widest text-white/50 group-hover:text-white transition-colors flex items-center gap-2">
+                                            Kəşf Et <span className="transform group-hover:translate-x-2 transition-transform">→</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // 7. Deep Analysis Detail Page
+        const PanelDetail = ({ type, onBack }) => {
+            // Get pseudo-random reading based on type
+            const dataList = deepReadings[type];
+            const data = dataList[Math.floor(Math.random() * dataList.length)];
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="pt-32 pb-20 px-6 max-w-4xl mx-auto"
+                >
+                    <button onClick={onBack} className="text-sm tracking-widest uppercase text-gray-500 hover:text-white transition-colors mb-16 flex items-center gap-2">
+                        ← Geri Qayıt
+                    </button>
+
+                    <div className="glass-panel p-10 md:p-16 rounded-[3rem] relative overflow-hidden">
+                        {/* Apple style soft glow background */}
+                        <div className="absolute -top-[20%] -right-[20%] w-[50%] h-[50%] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+                        <h2 className="text-sm uppercase tracking-[0.3em] text-gray-400 mb-6 border-b border-white/10 pb-4 inline-block">Dərin Analiz Nəticəsi</h2>
+                        
+                        <h1 className="text-4xl md:text-5xl font-light mb-10 leading-tight text-gradient">
+                            "{data.overview}"
+                        </h1>
+
+                        <div className="space-y-16 mt-16 text-lg font-light leading-relaxed text-gray-300">
+                            <div>
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-6">Psixoloji Dərinlik</h3>
+                                <p>{data.deep}</p>
+                            </div>
+
+                            <div className="bg-white/5 p-8 rounded-3xl border border-white/5">
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-6">Gizli Naxış</h3>
+                                <p className="text-white text-xl italic font-serif">"{data.pattern}"</p>
+                            </div>
+
+                            <div>
+                                <h3 className="text-xs uppercase tracking-[0.2em] text-white mb-6">Kainatın Təklifi</h3>
+                                <p>{data.advice}</p>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // 8. Daily Horoscope View
+        const DailyView = () => {
+            const today = new Date().toLocaleDateString('az-AZ', { year: 'numeric', month: 'long', day: 'numeric' });
+            const reading = dailyHoroscopes[Math.floor(Math.random() * dailyHoroscopes.length)];
+
+            return (
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="pt-40 pb-20 px-6 max-w-3xl mx-auto text-center"
+                >
+                    <p className="text-sm tracking-widest uppercase text-gray-500 mb-6">{today}</p>
+                    <h1 className="text-4xl md:text-6xl font-light mb-16">Gündəlik Enerji</h1>
+                    
+                    <div className="glass-panel p-12 rounded-[3rem]">
+                        <p className="text-2xl md:text-3xl font-light leading-relaxed text-gray-200">
+                            "{reading}"
+                        </p>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // 9. Professional Birth Chart View (SVG / UI representation)
+        const BirthChartView = ({ user }) => {
+            return (
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="pt-32 pb-20 px-6 max-w-6xl mx-auto flex flex-col items-center"
+                >
+                    <div className="text-center mb-16">
+                        <h1 className="text-4xl md:text-5xl font-light mb-4 text-gradient">Şəxsi Doğum Xəritəsi</h1>
+                        <p className="text-gray-400 font-light text-lg">Məkan: {user?.city}, Zaman: {user?.dob}</p>
+                    </div>
+
+                    <div className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] flex items-center justify-center">
+                        {/* High-end minimalist chart representation */}
+                        <div className="absolute inset-0 border border-white/20 rounded-full orbit" style={{'--speed': '60s'}}></div>
+                        <div className="absolute inset-4 border border-white/10 rounded-full orbit" style={{'--speed': '40s', animationDirection: 'reverse'}}></div>
+                        <div className="absolute inset-12 border border-white/5 rounded-full orbit" style={{'--speed': '90s'}}></div>
+                        
+                        {/* Lines cutting across to simulate houses */}
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-0"></div>
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-30"></div>
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-60"></div>
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-90"></div>
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-[120deg]"></div>
+                        <div className="absolute w-full h-[1px] bg-white/10 rotate-[150deg]"></div>
+
+                        {/* Center Point */}
+                        <div className="w-16 h-16 bg-[#020617] border border-white/30 rounded-full z-10 flex items-center justify-center">
+                            <span className="text-xs font-light text-gray-500">YOU</span>
+                        </div>
+
+                        {/* Mock Planets (Decorative) */}
+                        <div className="absolute top-[10%] left-[20%] w-3 h-3 bg-white rounded-full shadow-[0_0_10px_white]"></div>
+                        <div className="absolute bottom-[20%] right-[30%] w-4 h-4 bg-blue-400 rounded-full shadow-[0_0_15px_blue]"></div>
+                        <div className="absolute top-[40%] right-[10%] w-2 h-2 bg-red-400 rounded-full shadow-[0_0_8px_red]"></div>
+                    </div>
+
+                    <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+                        <div className="glass-panel p-6 rounded-2xl text-center">
+                            <h3 className="text-sm uppercase tracking-widest text-gray-500 mb-2">Günəş (Xarakter)</h3>
+                            <p className="text-2xl font-light">Qoç</p>
+                        </div>
+                        <div className="glass-panel p-6 rounded-2xl text-center">
+                            <h3 className="text-sm uppercase tracking-widest text-gray-500 mb-2">Ay (Duyğular)</h3>
+                            <p className="text-2xl font-light">Əqrəb</p>
+                        </div>
+                        <div className="glass-panel p-6 rounded-2xl text-center">
+                            <h3 className="text-sm uppercase tracking-widest text-gray-500 mb-2">Yüksələn (Aura)</h3>
+                            <p className="text-2xl font-light">Şir</p>
+                        </div>
+                    </div>
+                </motion.div>
+            );
+        };
+
+        // --- MAIN APP CONTAINER ---
+        const App = () => {
+            const [user, setUser] = useState(null);
+            const [view, setView] = useState('auth'); // auth, dashboard, panel, birthchart, daily
+            const [loadingState, setLoadingState] = useState({ isLoading: false, type: null, targetView: null });
+
+            const handleLogin = (userData) => {
+                setUser(userData);
+                setLoadingState({
+                    isLoading: true,
+                    type: 'login',
+                    targetView: 'dashboard'
+                });
+            };
+
+            const handlePanelSelect = (panelId) => {
+                setLoadingState({
+                    isLoading: true,
+                    type: 'analysis',
+                    targetView: `panel_${panelId}`
+                });
+            };
+
+            const handleLoaderComplete = () => {
+                const target = loadingState.targetView;
+                setLoadingState({ isLoading: false, type: null, targetView: null });
+                setView(target);
+            };
+
+            const renderView = () => {
+                if (view === 'auth') return <AuthScreen onLogin={handleLogin} />;
+                if (view === 'dashboard') return <Dashboard onSelectPanel={handlePanelSelect} />;
+                if (view.startsWith('panel_')) return <PanelDetail type={view.replace('panel_', '')} onBack={() => setView('dashboard')} />;
+                if (view === 'birthchart') return <BirthChartView user={user} />;
+                if (view === 'daily') return <DailyView />;
+                return null;
+            };
+
+            const getLoaderMessages = () => {
+                if (loadingState.type === 'login') {
+                    return [
+                        "Kosmik arxivlərə qoşulur...",
+                        "Zaman və məkan koordinatları təsdiqlənir...",
+                        "Şəxsi matrisiniz yüklənir..."
+                    ];
+                }
+                return [
+                    "Duyğusal naxışlar skan edilir...",
+                    "Görünməz sirlər deşifrə olunur...",
+                    "Sizin üçün xüsusi analiz hazırlanır..."
+                ];
+            };
+
+            return (
+                <div className="min-h-screen text-gray-100 font-sans font-light selection:bg-white/20">
+                    <AnimatePresence mode="wait">
+                        {loadingState.isLoading && (
+                            <Loader key="loader" messages={getLoaderMessages()} onComplete={handleLoaderComplete} />
+                        )}
+                    </AnimatePresence>
+
+                    {!loadingState.isLoading && user && (
+                        <TopNav user={user} setView={setView} currentView={view.startsWith('panel_') ? 'dashboard' : view} />
+                    )}
+
+                    <main className="relative z-10 w-full h-full">
+                        <AnimatePresence mode="wait">
+                            {!loadingState.isLoading && (
+                                <motion.div key={view} className="w-full h-full">
+                                    {renderView()}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </main>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
