@@ -2,398 +2,490 @@
 <html lang="az" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>AstroLogic | Mission Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVC | Astrologum11 - Professional Astrologiya Portalı</title>
     
-    <!-- Apple Tərzi Şriftlər: Inter (SF Pro alternativi) və Mono (NASA Telemetriya üçün) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="description" content="AVC Astrologum11 ilə fərdi natal xəritənizi yaradın, AI astroloqla danışın və astroloji potensialınızı kəşf edin.">
     
-    <!-- Tailwind CSS -->
+    <!-- Şriftlər -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind və Konfeti (Ad günü üçün) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        nasa: {
-                            black: '#000000',
-                            darkBlue: '#050A1F',
-                            blue: '#0B3D91',
-                            red: '#FC3D21',
-                            panel: '#111526'
-                        },
-                        apple: {
-                            glass: 'rgba(17, 21, 38, 0.65)',
-                            border: 'rgba(255, 255, 255, 0.1)'
-                        }
-                    }
+                    fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
+                    colors: { night: '#020617', deepblue: '#0f172a', cardblue: '#1e293b', gold: '#fbbf24', textlight: '#f8fafc' }
                 }
             }
         }
     </script>
 
     <style>
-        /* NASA / Apple Hibrid Arxitekturası */
-        body {
-            background-color: #000000;
-            color: #F5F5F7;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+        body { 
+            background-color: #020617; color: #f8fafc; 
+            background-image: radial-gradient(circle at 15% 50%, rgba(30, 41, 59, 0.5) 0%, transparent 50%), radial-gradient(circle at 85% 10%, rgba(15, 23, 42, 0.8) 0%, transparent 50%);
+            min-height: 100vh; overflow-x: hidden;
         }
-
-        /* Dərin Kosmik Arxa Plan və Telemetriya Şəbəkəsi */
-        .mission-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1;
-            background: 
-                linear-gradient(rgba(5, 10, 31, 0.9), rgba(0, 0, 0, 0.95)),
-                repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(11, 61, 145, 0.1) 50px),
-                repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(11, 61, 145, 0.1) 50px);
-            background-size: 100% 100%, 50px 50px, 50px 50px;
+        .stars {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: -1;
+            background-image: radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)), radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)), radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0));
+            background-repeat: repeat; background-size: 150px 150px; opacity: 0.15; animation: twinkle 10s linear infinite;
         }
-
-        .hud-crosshair {
-            position: absolute;
-            width: 20px; height: 20px;
-            border: 1px solid rgba(252, 61, 33, 0.5);
-        }
-        .cross-tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
-        .cross-tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
-        .cross-bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
-        .cross-br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
-
-        /* Apple Glassmorphism */
-        .glass-nav {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border-bottom: 1px solid var(--apple-border);
-        }
-
-        .mission-card {
-            background: var(--apple-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mission-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: #0B3D91;
-            transition: background 0.3s ease;
-        }
-
-        .mission-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-        }
-
-        .mission-card:hover::before { background: #FC3D21; }
-
-        /* Ayrı-ayrı Səhifələr (Panellər) üçün Fullscreen Modal */
-        .mission-panel {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000000;
-            z-index: 100;
-            transform: translateX(100%);
-            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .mission-panel.active {
-            transform: translateX(0);
-        }
-
-        /* NASA Tərzi Inputlar */
-        .tech-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(11, 61, 145, 0.5);
-            border-radius: 8px;
-            padding: 16px 20px;
-            color: #4ade80; /* Terminal yaşılı */
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .tech-input:focus {
-            outline: none;
-            border-color: #FC3D21;
-            box-shadow: 0 0 15px rgba(252, 61, 33, 0.2);
-        }
-
-        .fade-up {
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeUpAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes fadeUpAnim { to { opacity: 1; transform: translateY(0); } }
+        @keyframes twinkle { 0%, 100% { opacity: 0.1; } 50% { opacity: 0.25; } }
         
-        /* Terminal Blinking Cursor */
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; transition: transform 0.3s ease, border-color 0.3s; }
+        .glass-card:hover { border-color: rgba(251, 191, 36, 0.3); }
+        .input-avc { background: #0f172a; border: 1px solid #334155; border-radius: 8px; color: white; transition: 0.3s; width: 100%; padding: 12px 16px; font-size: 15px; }
+        .input-avc:focus { border-color: #fbbf24; outline: none; box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2); }
+        .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; font-weight: 600; border-radius: 8px; transition: 0.3s; cursor: pointer; }
+        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3); }
+        .btn-outline { border: 1px solid #fbbf24; color: #fbbf24; border-radius: 8px; transition: 0.3s; }
+        .btn-outline:hover { background: rgba(251, 191, 36, 0.1); }
+        
+        .ad-slot { background: #0f172a; border: 1px dashed #334155; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 12px; border-radius: 8px; margin: 24px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Timeline */
+        .timeline-node { width: 16px; height: 16px; border-radius: 50%; background: #fbbf24; position: relative; z-index: 10; box-shadow: 0 0 10px #fbbf24; }
+        .timeline-line { position: absolute; left: 7px; top: 16px; bottom: -30px; width: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
+        
+        /* Level Bar */
+        .level-progress { height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); overflow: hidden; margin-top: 8px; }
+        .level-fill { height: 100%; background: linear-gradient(90deg, #fbbf24, #f59e0b); width: 45%; }
+        
+        /* Chat UI */
+        .chat-bubble-user { background: #334155; padding: 12px 16px; border-radius: 16px 16px 0 16px; max-width: 80%; align-self: flex-end; }
+        .chat-bubble-ai { background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #f8fafc; padding: 12px 16px; border-radius: 16px 16px 16px 0; max-width: 80%; align-self: flex-start; }
     </style>
 </head>
-<body class="antialiased selection:bg-nasa-red selection:text-white">
+<body>
 
-    <div class="mission-bg">
-        <div class="hud-crosshair cross-tl"></div>
-        <div class="hud-crosshair cross-tr"></div>
-        <div class="hud-crosshair cross-bl"></div>
-        <div class="hud-crosshair cross-br"></div>
-    </div>
+    <div class="stars"></div>
 
-    <!-- Naviqasiya (Apple Smoothness + NASA Branding) -->
-    <nav class="fixed w-full z-40 glass-nav transition-all duration-300">
-        <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between h-16 md:h-20">
-            <div class="text-xl font-bold tracking-widest text-white flex items-center gap-3">
-                <span class="w-3 h-3 rounded-full bg-nasa-red blink"></span>
-                AstroLogic <span class="text-nasa-blue text-sm font-mono mt-1">JPL-CORE</span>
-            </div>
-
-            <div class="hidden lg:flex items-center gap-8 text-[12px] uppercase tracking-widest font-mono text-gray-400">
-                <a href="#" class="hover:text-white transition">Missiya Mərkəzi</a>
-                <a href="#" class="hover:text-white transition">Avtonom Sistemlər</a>
-                <a href="#" class="hover:text-white transition">Data Bazası</a>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <div class="text-xs font-mono text-gray-500 hidden sm:block">SYS_STATUS: <span class="text-green-400">ONLINE</span></div>
+    <!-- NAVİQASİYA -->
+    <nav class="border-b border-white/5 bg-night/90 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" onclick="navigate('dashboard-section')" class="font-serif text-2xl font-bold tracking-wide flex items-center gap-2">
+                <span class="text-gold">AVC</span> <span class="text-lg font-sans font-light text-white/80">| Astrologum11</span>
+            </a>
+            <div class="hidden md:flex gap-6 text-sm font-medium text-white/70" id="main-nav" style="display: none;">
+                <button onclick="navigate('dashboard-section')" class="hover:text-gold transition">Profil & Günlük</button>
+                <button onclick="navigate('ai-section')" class="hover:text-gold transition">AI Astroloq</button>
+                <button onclick="navigate('synastry-section')" class="hover:text-gold transition">Sevgi Uyumu</button>
+                <button onclick="navigate('timeline-section')" class="hover:text-gold transition">Zaman Xətti</button>
+                <button onclick="navigate('tests-section')" class="hover:text-gold transition">Astro Testlər</button>
             </div>
         </div>
     </nav>
 
-    <!-- Ana Ekran (Hero) -->
-    <header class="relative min-h-[60vh] flex items-center pt-24 pb-12 overflow-hidden">
-        <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full z-10 fade-up">
-            <div class="text-nasa-red font-mono text-sm tracking-[0.3em] mb-4 uppercase">Qabaqcıl Mühəndislik Laboratoriyası</div>
-            <h1 class="text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
-                Məntiq və <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-nasa-blue to-blue-400">Mexatronika Problemləri.</span>
-            </h1>
-            <p class="text-lg text-gray-400 font-light max-w-2xl mb-10 leading-relaxed">
-                NASA səviyyəli avtonom sistemlər, rover kinematikası və sənaye datalarının idarəedilməsi problemlərini həlledərək mühəndislik zəkanızı test edin.
-            </p>
-            <div class="flex gap-4">
-                <button onclick="scrollToMissions()" class="bg-white text-black font-semibold px-8 py-3 rounded-full hover:scale-105 transition-transform duration-300">
-                    Sistemə Daxil Ol
-                </button>
-                <div class="font-mono text-xs text-gray-500 flex items-center border border-gray-700 px-4 rounded-full">
-                    GİZLİLİK SƏVİYYƏSİ: MAKSİMUM
+    <!-- SƏHİFƏLƏR KONTEYNERİ -->
+    <div id="app-container">
+
+        <!-- 1. QEYDİYYAT (ONBOARDING) -->
+        <main class="page-section max-w-6xl mx-auto px-4 py-16" id="onboarding-section">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="fade-in">
+                    <span class="text-gold font-medium tracking-wider text-sm uppercase mb-3 block">Kosmik Səyahətə Başla</span>
+                    <h1 class="text-5xl font-serif font-bold leading-tight mb-6">Öz Ulduz Xəritənizi Kəşf Edin</h1>
+                    <p class="text-white/60 text-lg mb-8 leading-relaxed">Astrologum11 sisteminə xoş gəlmisiniz. Şəxsi xarakterinizi, potensialınızı, gizli qabiliyyətlərinizi və gələcək dövrlərinizi kəşf etmək üçün qeydiyyatdan keçin.</p>
+                </div>
+                <div class="glass-card p-8 fade-in">
+                    <h2 class="text-2xl font-semibold mb-6 text-center">Şəxsi Məlumatlar</h2>
+                    <form onsubmit="handleRegistration(event)" class="space-y-5">
+                        <div>
+                            <label class="block text-sm text-white/60 mb-2">Adınız</label>
+                            <input type="text" id="reg-name" placeholder="Məsələn: Aqşin" required class="input-avc">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-white/60 mb-2">Doğum Tarixi</label>
+                                <input type="date" id="reg-date" required class="input-avc text-white/70">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-white/60 mb-2">Doğum Saatı</label>
+                                <input type="time" class="input-avc text-white/70">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm text-white/60 mb-2">Doğulduğunuz Şəhər</label>
+                            <input type="text" placeholder="Bakı" required class="input-avc">
+                        </div>
+                        <button type="submit" class="btn-gold w-full py-4 mt-2 text-lg" id="reg-btn">Sistemə Daxil Ol</button>
+                    </form>
                 </div>
             </div>
-        </div>
-    </header>
+        </main>
 
-    <!-- Missiyalar (Dashboard) -->
-    <section id="missions" class="py-12 relative z-10">
-        <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+        <!-- 2. ƏSAS PANEL (DASHBOARD) -->
+        <main class="page-section hidden max-w-7xl mx-auto px-4 py-10" id="dashboard-section">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 4. Ad Günü Sürprizi Banneri -->
+            <div id="birthday-banner" class="hidden glass-card p-6 mb-8 text-center border-gold/50 bg-gold/10 fade-in">
+                <h2 class="text-3xl font-serif text-gold mb-2">🎂 Doğum Gününüz Mübarək, <span class="dyn-name"></span>!</h2>
+                <p class="text-white/80">Sizin üçün hazırladığımız xüsusi "Yeni Yaş" astroloji hesabatı aktivləşdirildi. Bu il karyera və şəxsi yüksəliş iliniz olacaq.</p>
+            </div>
+
+            <!-- Üst Panel: Məktub, Titul və Səviyyə -->
+            <div class="grid lg:grid-cols-3 gap-6 mb-8">
+                <!-- 10. Kainatdan Məktub -->
+                <div class="glass-card p-6 lg:col-span-2 flex flex-col justify-center border-l-4 border-l-gold fade-in">
+                    <span class="text-gold text-xs tracking-widest uppercase mb-2">Kainatdan Sənə Məktub 💌</span>
+                    <p class="text-lg text-white/90 font-serif italic leading-relaxed">"<span class="dyn-name"></span>, bu gün Mars sənə böyük cəsarət verir. Uzun müddətdir düşündüyün o önəmli addımı atmaq üçün kosmik enerji sənin tərəfindədir. İntuisiyana güvən."</p>
+                </div>
+                <!-- 6. Titul və 8. Səviyyə -->
+                <div class="glass-card p-6 text-center fade-in">
+                    <div class="inline-block bg-white/5 border border-white/10 rounded-full px-4 py-1 text-xs text-white/50 mb-4">Astro Səviyyə Sistemi</div>
+                    <h3 class="text-2xl font-serif text-gold mb-1" id="dyn-title">Kosmik Kəşfiyyatçı</h3>
+                    <p class="text-sm text-white/60 mb-4">Mövcud Titulunuz</p>
+                    <div class="text-left text-xs text-white/50 flex justify-between"><span>Səviyyə 4</span><span>450 / 1000 XP</span></div>
+                    <div class="level-progress"><div class="level-fill"></div></div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Sol Sütun -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- 1. Fərdi Astroloji Profil -->
+                    <div class="glass-card p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">✨</span><h2 class="text-2xl font-semibold">Fərdi Astroloji Profiliniz</h2></div>
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
+                                <h4 class="text-gold font-medium mb-2">Xarakter Analizi</h4>
+                                <p class="text-sm text-white/60">Analitik düşüncə, yüksək empatiya və dərin hissiyyat. Siz hadisələrin görünməyən tərəflərini hiss edirsiniz.</p>
+                            </div>
+                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
+                                <h4 class="text-gold font-medium mb-2">Güclü & Zəif Tərəflər</h4>
+                                <p class="text-sm text-white/60"><span class="text-green-400">Güclü:</span> Böhran idarəetməsi, sədaqət.<br><span class="text-red-400">Zəif:</span> Həddindən artıq düşünmək (Overthinking).</p>
+                            </div>
+                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
+                                <h4 class="text-gold font-medium mb-2">Gizli Potensial</h4>
+                                <p class="text-sm text-white/60">İnsanları sağaltmaq və ya onlara psixoloji yol göstərmək (Healer arxetipi).</p>
+                            </div>
+                            <div class="bg-cardblue/50 p-4 rounded-xl border border-white/5">
+                                <h4 class="text-gold font-medium mb-2">Həyat Missiyası</h4>
+                                <p class="text-sm text-white/60">Köhnə strukturları yıxıb, cəmiyyət üçün yeni, daha ədalətli sistemlər qurmaq.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Bu gün Sənin Üçün -->
+                    <div class="glass-card p-8 fade-in">
+                        <div class="flex items-center gap-3 mb-6"><span class="text-2xl">🌙</span><h2 class="text-2xl font-semibold">Bu Gün Sənin Üçün</h2></div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                            <div class="border border-white/10 p-4 rounded-xl">
+                                <div class="text-2xl mb-2">⚡</div><div class="text-xs text-white/50 uppercase mb-1">Enerji</div><div class="text-lg font-bold text-gold">85%</div>
+                            </div>
+                            <div class="border border-white/10 p-4 rounded-xl">
+                                <div class="text-2xl mb-2">🍀</div><div class="text-xs text-white/50 uppercase mb-1">Uğurlu Saat</div><div class="text-lg font-bold text-white">14:00 - 16:30</div>
+                            </div>
+                            <div class="border border-white/10 p-4 rounded-xl">
+                                <div class="text-2xl mb-2">⚠️</div><div class="text-xs text-white/50 uppercase mb-1">Diqqət Et</div><div class="text-sm font-medium text-white/80">Maddi xərclər</div>
+                            </div>
+                            <div class="border border-white/10 p-4 rounded-xl">
+                                <div class="text-2xl mb-2">🎨</div><div class="text-xs text-white/50 uppercase mb-1">Günün Rəngi</div><div class="text-lg font-bold text-indigo-400">İndiqo</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AdSense Banner -->
+                    <div class="ad-slot h-[90px] w-full">Google AdSense - Banner (728x90)</div>
+                </div>
+
+                <!-- Sağ Sütun -->
+                <div class="space-y-6">
+                    <!-- Qısa Menyu -->
+                    <div class="glass-card p-6 fade-in">
+                        <h3 class="font-medium mb-4 text-white/80">Sürətli Keçidlər</h3>
+                        <div class="space-y-3">
+                            <button onclick="navigate('ai-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>🔮 AI Astroloq</span> <span>→</span></button>
+                            <button onclick="navigate('synastry-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>❤️ Sevgi Uyğunluğu</span> <span>→</span></button>
+                            <button onclick="navigate('timeline-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📜 Həyat Zaman Xətti</span> <span>→</span></button>
+                            <button onclick="navigate('tests-section')" class="w-full text-left bg-cardblue/50 p-3 rounded-lg hover:bg-white/10 transition flex items-center justify-between"><span>📊 Özünü Tanıma Testləri</span> <span>→</span></button>
+                        </div>
+                    </div>
+
+                    <!-- AdSense Kvadrat -->
+                    <div class="glass-card p-4 flex justify-center bg-deepblue">
+                        <div class="ad-slot h-[250px] w-[300px] m-0">AdSense (300x250)</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 3. AI ASTROLOQ -->
+        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="ai-section">
+            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
+            <div class="glass-card overflow-hidden flex flex-col h-[600px]">
+                <div class="bg-cardblue p-6 border-b border-white/10 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center text-2xl">🔮</div>
+                    <div><h2 class="font-serif text-xl font-semibold">Nyx AI</h2><p class="text-xs text-white/50">Sizin fərdi astroloji assistentiniz. Göydəki ulduzlara əsasən cavab verir.</p></div>
+                </div>
+                <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-4" id="chat-box">
+                    <div class="chat-bubble-ai fade-in">Salam, <span class="dyn-name"></span>. Mən sizin natal xəritənizi oxuya bilirəm. Məndən kariyeranız, münasibətləriniz və ya gələcək dövrlər barədə sual soruşa bilərsiniz.<br><br><span class="text-xs opacity-70">Nümunə: "Bu il iş dəyişməliyəm?" və ya "Münasibətim necə davam edəcək?"</span></div>
+                </div>
+                <div class="p-4 border-t border-white/10 bg-cardblue/50">
+                    <form onsubmit="handleChat(event)" class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Sualınızı bura yazın..." class="input-avc flex-1" autocomplete="off">
+                        <button type="submit" class="btn-gold px-6 rounded-lg">Göndər</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- 5. SEVGİ UYĞUNLUĞU -->
+        <main class="page-section hidden max-w-5xl mx-auto px-4 py-10" id="synastry-section">
+            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-serif text-gold mb-4">Kosmik Sinastri</h2>
+                <p class="text-white/60">İki fərqli xəritənin toqquşmasından yaranan enerjini kəşf edin.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6 mb-10">
+                <div class="glass-card p-6 border-t-2 border-t-gold">
+                    <h3 class="text-lg font-semibold mb-4">Siz (<span class="dyn-name"></span>)</h3>
+                    <input type="date" class="input-avc text-white/50 mb-3" disabled title="Sizin məlumatlarınız avtomatik götürülür">
+                </div>
+                <div class="glass-card p-6 border-t-2 border-t-indigo-400">
+                    <h3 class="text-lg font-semibold mb-4">Tərəfdaşınız</h3>
+                    <input type="text" id="partner-name" placeholder="Adı" required class="input-avc mb-3">
+                    <input type="date" id="partner-date" required class="input-avc text-white/70">
+                </div>
+            </div>
+            <div class="text-center mb-10">
+                <button onclick="calculateSynastry()" class="btn-gold px-10 py-4 text-lg">Uyğunluğu Analiz Et</button>
+            </div>
+
+            <!-- Uyğunluq Nəticəsi -->
+            <div id="synastry-results" class="hidden glass-card p-8 fade-in">
+                <h3 class="text-2xl font-serif text-center mb-8">Nəticə: <span class="text-gold">Güclü Karmik Bağ</span></h3>
+                <div class="space-y-6 max-w-2xl mx-auto">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1"><span>Sevgi Potensialı</span><span>85%</span></div>
+                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-pink-500 h-2 rounded-full" style="width: 85%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1"><span>Dostluq & Anlayış</span><span>92%</span></div>
+                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-blue-400 h-2 rounded-full" style="width: 92%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1"><span>Evlilik / Uzunmüddətlilik</span><span>78%</span></div>
+                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-gold h-2 rounded-full" style="width: 78%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1"><span>Seksual Kimya</span><span>95%</span></div>
+                        <div class="w-full bg-white/10 h-2 rounded-full"><div class="bg-red-500 h-2 rounded-full" style="width: 95%"></div></div>
+                    </div>
+                </div>
+                <p class="mt-8 text-center text-white/60 text-sm">Sizin aranızda dərin bir empatiya və anlayış var. Tərəfdaşınızın Ay bürcü sizin Günəşinizə müsbət bucaq altındadır.</p>
+            </div>
+        </main>
+
+        <!-- 7. HƏYAT ZAMAN XƏTTİ -->
+        <main class="page-section hidden max-w-4xl mx-auto px-4 py-10" id="timeline-section">
+            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
+            <h2 class="text-4xl font-serif text-gold mb-12 text-center">Həyatınızın Astroloji Dövrləri</h2>
+            
+            <div class="glass-card p-10 relative">
+                <div class="absolute left-[45px] top-10 bottom-10 w-0.5 bg-white/10"></div>
                 
-                <!-- Problem 1: Rocker-Bogie (Sənin konseptinə uyğunlaşdırılıb) -->
-                <div onclick="openPanel('panel-rover')" class="mission-card p-8 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="font-mono text-xs text-nasa-blue tracking-widest border border-nasa-blue px-2 py-1 rounded">MSN-01</div>
-                        <div class="text-gray-500 group-hover:text-white transition">↗</div>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-3">Rocker-Bogie Kinematikası</h3>
-                    <p class="text-gray-400 text-sm font-light mb-6">
-                        6 təkərli avtonom roverin mürəkkəb relyefdə hərəkət dinamikası və bucaq tənliklərinin hesablanması.
-                    </p>
-                    <div class="w-full bg-gray-800 h-1 mt-auto rounded-full overflow-hidden">
-                        <div class="bg-nasa-red h-full w-[25%] group-hover:w-[100%] transition-all duration-700"></div>
+                <div class="flex gap-8 mb-12 relative fade-in">
+                    <div class="timeline-node mt-1 opacity-50 bg-white shadow-none"></div>
+                    <div>
+                        <span class="text-xs text-white/40 uppercase tracking-widest">Keçmiş (2020 - 2023)</span>
+                        <h3 class="text-xl font-semibold mb-2">Saturn Sınaqları</h3>
+                        <p class="text-white/60 text-sm">Həyatınızda struktur qurmaq və yalançı insanları ələmək dövrü idi. Çoxlu dərslər aldınız.</p>
                     </div>
                 </div>
-
-                <!-- Problem 2: Agrobot / Data -->
-                <div onclick="openPanel('panel-agrobot')" class="mission-card p-8 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="font-mono text-xs text-nasa-blue tracking-widest border border-nasa-blue px-2 py-1 rounded">MSN-02</div>
-                        <div class="text-gray-500 group-hover:text-white transition">↗</div>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-3">Kənd Təsərrüfatı Avtomatlaşdırması</h3>
-                    <p class="text-gray-400 text-sm font-light mb-6">
-                        Süni intellekt əsaslı aqrobot sistemləri üçün optimal naviqasiya və məlumat idarəetmə alqoritmi.
-                    </p>
-                    <div class="w-full bg-gray-800 h-1 mt-auto rounded-full overflow-hidden">
-                        <div class="bg-nasa-blue h-full w-[25%] group-hover:w-[100%] transition-all duration-700"></div>
+                
+                <div class="flex gap-8 mb-12 relative fade-in" style="animation-delay: 0.2s">
+                    <div class="timeline-node mt-1"></div>
+                    <div>
+                        <span class="text-xs text-gold uppercase tracking-widest font-bold">Hazırkı Dövr (İndi)</span>
+                        <h3 class="text-xl font-semibold mb-2">Yupiter Bərəkəti</h3>
+                        <p class="text-white/80 text-sm">Şans planeti Jüpiter sizin xəritənizdə xeyirli bucaqdadır. Yeni imkanlara, səyahətlərə və təhsilə açıq olun.</p>
                     </div>
                 </div>
-
-                <!-- Problem 3: Logic Gate -->
-                <div onclick="openPanel('panel-logic')" class="mission-card p-8 cursor-pointer group">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="font-mono text-xs text-nasa-blue tracking-widest border border-nasa-blue px-2 py-1 rounded">MSN-03</div>
-                        <div class="text-gray-500 group-hover:text-white transition">↗</div>
-                    </div>
-                    <h3 class="text-2xl font-semibold mb-3">Sənaye Mexatronikası Dövrəsi</h3>
-                    <p class="text-gray-400 text-sm font-light mb-6">
-                        Davamlılıq (sustainability) sistemləri üçün məntiq elementləri (AND, OR, XOR) ilə idarəetmə strukturunun dizaynı.
-                    </p>
-                    <div class="w-full bg-gray-800 h-1 mt-auto rounded-full overflow-hidden">
-                        <div class="bg-white h-full w-[25%] group-hover:w-[100%] transition-all duration-700"></div>
+                
+                <div class="flex gap-8 relative fade-in" style="animation-delay: 0.4s">
+                    <div class="timeline-node mt-1 opacity-50 bg-indigo-400 shadow-none"></div>
+                    <div>
+                        <span class="text-xs text-indigo-300 uppercase tracking-widest">Gələcək Pəncərə (2027)</span>
+                        <h3 class="text-xl font-semibold mb-2">Uran Dəyişimi</h3>
+                        <p class="text-white/60 text-sm">Gözlənilməz karyera sıçrayışı və ya yaşayış yeri dəyişikliyi ehtimalı yüksəkdir.</p>
                     </div>
                 </div>
+            </div>
+        </main>
 
+        <!-- 9. ÖZÜNÜ TANIMA TESTLƏRİ -->
+        <main class="page-section hidden max-w-6xl mx-auto px-4 py-10" id="tests-section">
+            <button onclick="navigate('dashboard-section')" class="text-white/50 text-sm mb-6 hover:text-white">← Geri qayıt</button>
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-serif text-gold mb-4">Astro-Psixoloji Testlər</h2>
+                <p class="text-white/60">Sual-cavab əsasında dərin astroloji xarakter analizi.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Şəxsiyyət testi tezliklə aktiv olacaq. (Demo)')">
+                    <div class="text-4xl mb-4">🎭</div>
+                    <h3 class="text-lg font-semibold mb-2">Kölqə Şəxsiyyət Testi</h3>
+                    <p class="text-sm text-white/50 mb-4">İçinizdəki gizli qorxuları və idarəedici gücləri kəşf edin.</p>
+                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
+                </div>
+                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Münasibət testi tezliklə aktiv olacaq. (Demo)')">
+                    <div class="text-4xl mb-4">💞</div>
+                    <h3 class="text-lg font-semibold mb-2">Bağlanma Tərzi Testi</h3>
+                    <p class="text-sm text-white/50 mb-4">Venera bürcünüzə uyğun olaraq münasibətlərdə necə davrandığınızı tapın.</p>
+                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
+                </div>
+                <div class="glass-card p-6 hover:scale-105 cursor-pointer text-center" onclick="alert('Karyera testi tezliklə aktiv olacaq. (Demo)')">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-lg font-semibold mb-2">Astro-Karyera Testi</h3>
+                    <p class="text-sm text-white/50 mb-4">10-cu evinizin enerjisinə ən uyğun olan peşə sahəsini tapın.</p>
+                    <button class="btn-outline w-full py-2 text-sm">Testə Başla</button>
+                </div>
+            </div>
+            <div class="ad-slot h-[90px] w-full mt-10">Google AdSense - Banner (728x90)</div>
+        </main>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 bg-night py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 grid md:grid-cols-4 gap-8">
+            <div class="col-span-2">
+                <div class="font-serif text-2xl font-bold text-white mb-4">AVC | Astrologum11</div>
+                <p class="text-white/50 text-sm max-w-sm">Astrologiya ilə psixologiyanın rəqəmsal görüş nöqtəsi. Kainatın sirləri artıq sizin ixtiyarınızdadır.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4">Linklər</h4>
+                <ul class="space-y-2 text-sm text-white/50">
+                    <li><a href="#" class="hover:text-gold">Ana Səhifə</a></li>
+                    <li><a href="#" class="hover:text-gold">Haqqımızda</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-4">Hüquqi</h4>
+                <ul class="space-y-2 text-sm text-white/50">
+                    <li><a href="#" class="hover:text-gold">Məxfilik Siyasəti</a></li>
+                    <li><a href="#" class="hover:text-gold">İstifadə Şərtləri</a></li>
+                </ul>
             </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-8 border-t border-white/10 mt-20 relative z-10 bg-black">
-        <div class="max-w-[1400px] mx-auto px-6 text-center">
-            <p class="text-sm text-gray-500 font-mono tracking-widest">
-                CREATED BY AGSHIN AHMADLI
-            </p>
+        <div class="max-w-7xl mx-auto px-4 mt-12 pt-6 border-t border-white/5 text-center text-white/40 text-sm tracking-widest uppercase">
+            © 2026 AVC | Astrologum11 <br>
+            <span class="block mt-3 text-gold/70 text-xs normal-case tracking-normal">by Agshin Ahmadli</span>
         </div>
     </footer>
 
-    <!-- ==========================================
-         AYRI-AYRI PANELLƏR (SƏHİFƏLƏR)
-         ========================================== -->
-
-    <!-- PANEL 1: Rocker-Bogie Rover -->
-    <div id="panel-rover" class="mission-panel">
-        <!-- Panel Nav -->
-        <div class="sticky top-0 w-full bg-black/80 backdrop-blur-md border-b border-white/10 p-6 flex justify-between items-center z-50">
-            <div class="font-mono text-nasa-red tracking-widest">JPL-ROVER_INTERFACE</div>
-            <button onclick="closePanel('panel-rover')" class="text-white hover:text-nasa-red transition font-mono text-sm border border-white/20 px-4 py-2 rounded-full">Sistemi Bağla [X]</button>
-        </div>
-
-        <div class="max-w-[1000px] mx-auto p-6 md:p-12 w-full flex-1">
-            <div class="mb-12 border-b border-white/10 pb-8">
-                <h1 class="text-4xl font-bold mb-4">Parametr: Rocker-Bogie Mexanizmi</h1>
-                <p class="text-gray-400 font-mono text-sm leading-relaxed">
-                    Sizə verilən tapşırıq Mars səthində avtonom hərəkət edəcək yeni nəsil roverin baza parametrlərini hesablamaqdır. Mühəndislik planlarına əsasən, roverin şassi uzunluğu tam olaraq <span class="text-white font-bold">100 sm</span>, hər bir təkərin diametri isə <span class="text-white font-bold">28 sm</span>-dir.
-                </p>
-            </div>
-
-            <!-- Visual Telemetry Area -->
-            <div class="bg-nasa-panel rounded-2xl border border-nasa-blue p-8 mb-12 relative overflow-hidden">
-                <div class="absolute right-0 top-0 opacity-10">
-                    <svg width="300" height="300" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="white" stroke-width="2" fill="none"/><line x1="10" y1="50" x2="90" y2="50" stroke="white"/><line x1="50" y1="10" x2="50" y2="90" stroke="white"/></svg>
-                </div>
-                
-                <h3 class="text-lg font-semibold mb-4">Sual / Məntiq Tənliyi:</h3>
-                <p class="text-gray-300 mb-6 leading-relaxed">
-                    Əgər rover 30 dərəcəlik bir maili müstəvidə (qaya üzərində) hərəkət edirsə və asqı sistemi (rocker) ağırlıq mərkəzini qorumaq üçün riyazi olaraq şassi uzunluğunun (100sm) yarısı qədər geri çəkilirsə, ön təkərlərin (d=28sm) yerdən qopmaması üçün mərkəzi oxa düşən minimum qüvvə balansı neçə olmalıdır?
-                </p>
-
-                <div class="grid md:grid-cols-2 gap-6 font-mono text-sm">
-                    <div class="bg-black/50 p-4 border border-white/5 rounded-lg">
-                        <div class="text-gray-500 mb-1">X_AXIS (Length)</div>
-                        <div class="text-green-400">100.00 cm</div>
-                    </div>
-                    <div class="bg-black/50 p-4 border border-white/5 rounded-lg">
-                        <div class="text-gray-500 mb-1">WHEEL_DIA</div>
-                        <div class="text-green-400">28.00 cm</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Terminal Input -->
-            <div class="mb-12">
-                <label class="block font-mono text-sm text-gray-400 mb-2">Həlli daxil edin (Terminal):</label>
-                <div class="relative">
-                    <span class="absolute left-4 top-4 text-green-400 font-mono">></span>
-                    <input type="text" class="tech-input pl-10" placeholder="Riyazi nəticəni bura yazın...">
-                </div>
-                <button class="mt-4 bg-nasa-blue text-white font-mono text-sm px-6 py-3 rounded hover:bg-blue-700 transition w-full md:w-auto">
-                    KODU TƏSDİQLƏ
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PANEL 2: Agrobot -->
-    <div id="panel-agrobot" class="mission-panel">
-        <div class="sticky top-0 w-full bg-black/80 backdrop-blur-md border-b border-white/10 p-6 flex justify-between items-center z-50">
-            <div class="font-mono text-nasa-blue tracking-widest">AGRO-DATA_SYSTEM</div>
-            <button onclick="closePanel('panel-agrobot')" class="text-white hover:text-nasa-blue transition font-mono text-sm border border-white/20 px-4 py-2 rounded-full">Sistemi Bağla [X]</button>
-        </div>
-        <div class="max-w-[1000px] mx-auto p-6 md:p-12 w-full flex-1">
-            <h1 class="text-4xl font-bold mb-4">Aqrobot Naviqasiya Alqoritmi</h1>
-            <p class="text-gray-400 font-mono text-sm leading-relaxed mb-8">Hackathon tapşırığı: Çox-agentli sistemlərdə optimal yolun tapılması.</p>
-            <div class="bg-nasa-panel rounded-2xl border border-white/10 p-8 mb-8 text-gray-300">
-                Sistem sahədə (grid 10x10) hərəkət edir. Şimal-Şərq istiqamətində məhsuldarlıq datası toplanmalıdır. Ən qısa yolu tapmaq üçün A* (A-Star) alqoritmində evristik funksiyanı necə optimallaşdırarsınız?
-            </div>
-            <textarea class="tech-input h-48" placeholder="// Alqoritm məntiqini bura qeyd edin..."></textarea>
-        </div>
-    </div>
-
-    <!-- PANEL 3: Logic Gate -->
-    <div id="panel-logic" class="mission-panel">
-        <div class="sticky top-0 w-full bg-black/80 backdrop-blur-md border-b border-white/10 p-6 flex justify-between items-center z-50">
-            <div class="font-mono text-white tracking-widest">MECHATRONICS_GATE</div>
-            <button onclick="closePanel('panel-logic')" class="text-white hover:text-gray-400 transition font-mono text-sm border border-white/20 px-4 py-2 rounded-full">Sistemi Bağla [X]</button>
-        </div>
-        <div class="max-w-[1000px] mx-auto p-6 md:p-12 w-full flex-1">
-            <h1 class="text-4xl font-bold mb-4">Sənaye Davamlılığı: Məntiq Qapıları</h1>
-            <div class="bg-nasa-panel rounded-2xl border border-white/10 p-8 mb-8 text-gray-300">
-                Sensor A (Temperatur) və Sensor B (Rütubət) məlumat verir. Sistem yalnız Temperatur normal (1) VƏ Rütubət yüksək (0) olduqda suvarmanı (Q) aktiv etməlidir. Xəta vəziyyətində (hər ikisi 0) təcili dayandırma işə düşməlidir. Bu məntiq dövrəsinin Boolean tənliyini yazın.
-            </div>
-            <input type="text" class="tech-input" placeholder="Q = (A AND B) OR ...">
-        </div>
-    </div>
-
-
-    <!-- ==========================================
-         JAVASCRIPT LOGIC
-         ========================================== -->
+    <!-- LOGIKA (JS) -->
     <script>
-        // Səhifəni yumşaq şəkildə aşağı sürüşdürmək
-        function scrollToMissions() {
-            document.getElementById('missions').scrollIntoView({ behavior: 'smooth' });
+        let currentUser = "";
+
+        // 1. Səhifə Naviqasiyası (SPA Routing)
+        function navigate(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Ayrı-ayrı panellərin (modal səhifələrin) açılması
-        function openPanel(panelId) {
-            document.body.style.overflow = 'hidden'; // Arxa plan scrollunu dondur
-            document.getElementById(panelId).classList.add('active');
+        // 2. Qeydiyyat İşləmi & Fərdi Özəlliklərin Yüklənməsi
+        function handleRegistration(e) {
+            e.preventDefault();
+            const btn = document.getElementById('reg-btn');
+            btn.innerHTML = 'Kainatın Qapıları Açılır...';
+            
+            currentUser = document.getElementById('reg-name').value;
+            const dateInput = document.getElementById('reg-date').value;
+
+            // Bütün hədəf yerlərinə istifadəçi adını yaz (Features 1, 10, etc)
+            document.querySelectorAll('.dyn-name').forEach(el => el.innerText = currentUser);
+
+            // 6. Titul Verilməsi
+            const titles = ["Kosmik Lider", "Ayın Mühafizəçisi", "Enerji Memarı", "Ulduz Səyyahı", "Mistika Ustası"];
+            const randomTitle = titles[currentUser.length % titles.length];
+            document.getElementById('dyn-title').innerText = randomTitle;
+
+            setTimeout(() => {
+                document.getElementById('main-nav').style.display = 'flex'; // Menyu göstər
+                navigate('dashboard-section');
+                
+                // 4. Ad Günü Yoxlanışı (Sürpriz)
+                checkBirthday(dateInput);
+                
+                btn.innerHTML = 'Sistemə Daxil Ol';
+            }, 1000);
         }
 
-        // Panellərin bağlanması
-        function closePanel(panelId) {
-            document.body.style.overflow = 'auto'; // Scrollu bərpa et
-            document.getElementById(panelId).classList.remove('active');
+        // 4. Ad Günü Sürprizi Yoxlanışı
+        function checkBirthday(birthDateString) {
+            if(!birthDateString) return;
+            const bDate = new Date(birthDateString);
+            const today = new Date(); // Today is conceptually June 3
+            
+            // Demo məqsədi ilə: Əgər gün və ay eynidirsə konfeti patlat. 
+            // Və ya istəyirsinizsə testi görmək üçün if şərtini silib hər giriştə konfeti partlada bilərsiniz.
+            if(bDate.getMonth() === today.getMonth() && bDate.getDate() === today.getDate()) {
+                document.getElementById('birthday-banner').classList.remove('hidden');
+                triggerConfetti();
+            } else {
+                // Test üçün aktiv edirik ki, funksiya görsənsin (Canlıda silinə bilər)
+                document.getElementById('birthday-banner').classList.remove('hidden');
+                triggerConfetti();
+            }
         }
 
-        // Terminal inputlarında səs və vizual effekt simulyasiyası
-        document.querySelectorAll('.tech-input').forEach(input => {
-            input.addEventListener('keydown', (e) => {
-                if(e.key === 'Enter') {
-                    const btn = input.parentElement.nextElementSibling;
-                    if(btn && btn.tagName === 'BUTTON') {
-                        btn.innerHTML = "TƏHLİL EDİLİR <span class='blink'>...</span>";
-                        btn.classList.replace('bg-nasa-blue', 'bg-yellow-600');
-                        
-                        setTimeout(() => {
-                            btn.innerHTML = "SİSTEM QƏBUL ETDİ";
-                            btn.classList.replace('bg-yellow-600', 'bg-green-600');
-                        }, 2000);
-                    }
-                }
-            });
-        });
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#fbbf24', '#f8fafc'] });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#fbbf24', '#f8fafc'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        // 3. AI Astroloq Söhbət Məntiqi
+        function handleChat(e) {
+            e.preventDefault();
+            const inputField = document.getElementById('chat-input');
+            const msg = inputField.value.trim();
+            if(!msg) return;
+
+            const chatBox = document.getElementById('chat-box');
+            // İstifadəçi mesajı
+            chatBox.innerHTML += `<div class="chat-bubble-user fade-in">${msg}</div>`;
+            inputField.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // AI Gözləmə
+            setTimeout(() => {
+                const aiResponses = [
+                    "Sizin doğum xəritənizə əsasən, gələn ay karyera evinizdə Venera tranziti olacaq. Dəyişiklik üçün çox müsbət vaxtdır.",
+                    "Ayın hazırkı fazası sizdən keçmişlə bağları qoparmağı tələb edir. Sualınızla bağlı narahatlığa səbəb yoxdur, axışa buraxın.",
+                    "Saturnun mövqeyinə görə maliyyə məsələlərində risk etməmək daha yaxşıdır. Səbrli olun."
+                ];
+                const reply = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                chatBox.innerHTML += `<div class="chat-bubble-ai fade-in">✨ ${reply}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1500);
+        }
+
+        // 5. Sevgi Uyğunluğu
+        function calculateSynastry() {
+            const partnerName = document.getElementById('partner-name').value;
+            if(!partnerName) { alert("Zəhmət olmasa tərəfdaşınızın adını daxil edin."); return; }
+            
+            const resultBox = document.getElementById('synastry-results');
+            resultBox.classList.remove('hidden');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
     </script>
 </body>
 </html>
