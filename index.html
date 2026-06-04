@@ -1,329 +1,543 @@
-import React, { useState, useEffect } from 'react';
-import { dict } from '../locales/dict';
+Tam olaraq istədiyin premium dizaynı, bütün səhifələri (Home, Login, Dashboard, Karyera, Sinastri, Doğum xəritəsi, AI Chat), fırlanan kosmik yüklənmə animasiyasını və **AZ / EN** dilləri arasında səhifə yenilənmədən keçid edən sistemi tək bir `.html` faylında yığdım.
 
-export default function AstrologumPlatform() {
-  const [lang, setLang] = useState('az');
-  const t = dict[lang];
-  
-  // State idarəetməsi: home, auth, dash, loading, [xidmət_adı], [xidmət_nəticəsi]
-  const [view, setView] = useState('home'); 
-  const [loadingText, setLoadingText] = useState('');
-  const [nextView, setNextView] = useState('');
+Burada React əvəzinə təmiz **Vanilla JavaScript** və **Tailwind CSS** istifadə olunub. Kodu sadəcə `index.html` olaraq yaddaşda saxlayıb brauzerdə aça bilərsən.
 
-  // Səhifə dəyişmə + Loading simulyasiyası
-  const handleTransition = (targetView, withLoading = true) => {
-    if (!withLoading) {
-      setView(targetView);
-      return;
-    }
+```html
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrologum - Kosmik Platforma</title>
     
-    setView('loading');
-    setNextView(targetView);
-    let i = 0;
-    setLoadingText(t.loading[0]);
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    const interval = setInterval(() => {
-      i++;
-      if(i < t.loading.length) {
-        setLoadingText(t.loading[i]);
-      }
-    }, 900);
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        cosmic: { dark: '#030814', blue: '#0a1628' },
+                        accent: { blue: '#0a84ff', gold: '#d4af37' }
+                    }
+                }
+            }
+        }
+    </script>
 
-    setTimeout(() => {
-      clearInterval(interval);
-      setView(targetView);
-    }, 3600);
-  };
+    <style>
+        :root {
+            --cosmic-dark: #030814;
+            --cosmic-blue: #0a1628;
+            --accent-blue: #0a84ff;
+            --accent-gold: #d4af37;
+        }
 
-  return (
-    <div className="min-h-screen w-full relative z-10 flex flex-col items-center">
-      <div className="stars-container"></div>
+        body {
+            background: radial-gradient(ellipse at 50% 0%, var(--cosmic-blue) 0%, var(--cosmic-dark) 100%);
+            color: #f5f5f7;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            min-height: 100vh;
+            margin: 0;
+        }
 
-      {/* ŞÜŞƏ NAVİQASİYA */}
-      <nav className="fixed top-0 w-full glass-panel !rounded-none !border-t-0 !border-l-0 !border-r-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleTransition('home', false)}>
-            <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">A</div>
-            <span className="font-semibold tracking-tight text-xl">Astrologum</span>
-          </div>
-          
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex gap-6 text-sm font-medium text-white/60">
-              <button onClick={() => handleTransition('dash', false)} className="hover:text-white transition">{t.nav.dash}</button>
-              <button onClick={() => handleTransition('ai', false)} className="hover:text-white transition">{t.nav.ai}</button>
+        /* Yavaş Hərəkət Edən Ulduzlar */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            background-image: 
+                radial-gradient(2px 2px at 15% 30%, rgba(255,255,255,0.3), transparent),
+                radial-gradient(1px 1px at 65% 45%, rgba(255,255,255,0.4), transparent),
+                radial-gradient(3px 3px at 85% 70%, rgba(255,255,255,0.2), transparent);
+            background-size: 400px 400px;
+            animation: cosmicDrift 120s linear infinite;
+        }
+
+        @keyframes cosmicDrift {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-100px) scale(1.05); }
+            100% { transform: translateY(-200px) scale(1); }
+        }
+
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(10, 22, 45, 0.45);
+            backdrop-filter: blur(24px) saturate(150%);
+            -webkit-backdrop-filter: blur(24px) saturate(150%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(10, 132, 255, 0.3);
+            background: rgba(10, 22, 45, 0.6);
+        }
+
+        .apple-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .apple-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(10, 132, 255, 0.05);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
+        }
+
+        /* Kosmik Yüklənmə Animasiyası */
+        .orbit-spinner {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 0 auto;
+        }
+        .orbit-core {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px; height: 20px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--accent-gold);
+        }
+        .orbit-planet {
+            position: absolute;
+            top: -6px; left: 50%;
+            width: 12px; height: 12px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            transform-origin: 0 66px;
+            animation: orbitSpin 2s linear infinite;
+        }
+
+        @keyframes orbitSpin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* View Keçidləri */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 0.6s forwards;
+        }
+        .view-section.active {
+            display: flex;
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center">
+
+    <div class="stars-container"></div>
+
+    <nav class="fixed top-0 w-full glass-panel !rounded-none !border-t-0 !border-l-0 !border-r-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="handleTransition('home', false)">
+                <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-bold">A</div>
+                <span class="font-semibold tracking-tight text-xl">Astrologum</span>
             </div>
             
-            {/* Dil Seçimi (Anında Dəyişir) */}
-            <div className="flex gap-1 bg-black/40 p-1 rounded-full border border-white/10 text-xs font-medium">
-              {['az', 'en'].map(l => (
-                <button 
-                  key={l} onClick={() => setLang(l)}
-                  className={`px-3 py-1 rounded-full uppercase transition ${lang === l ? 'bg-white text-black' : 'text-white/50 hover:text-white'}`}
-                >
-                  {l}
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex gap-6 text-sm font-medium text-white/60">
+                    <button onclick="handleTransition('dash', false)" class="hover:text-white transition" id="nav-dash">Panel</button>
+                    <button onclick="handleTransition('ai', false)" class="hover:text-white transition" id="nav-ai">Nyx AI</button>
+                </div>
+                
+                <div class="flex gap-1 bg-black/40 p-1 rounded-full border border-white/10 text-xs font-medium">
+                    <button onclick="setLang('az')" id="btn-lang-az" class="px-3 py-1 rounded-full uppercase transition bg-white text-black">AZ</button>
+                    <button onclick="setLang('en')" id="btn-lang-en" class="px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white">EN</button>
+                </div>
+                
+                <button onclick="handleTransition('auth', false)" id="nav-login" class="hidden md:block bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full text-sm font-medium transition border border-white/10">
+                    Daxil ol
                 </button>
-              ))}
             </div>
-            
-            {view === 'home' && (
-              <button onClick={() => handleTransition('auth', false)} className="hidden md:block bg-white/10 hover:bg-white/20 px-5 py-2 rounded-full text-sm font-medium transition border border-white/10">
-                {t.nav.login}
-              </button>
-            )}
-          </div>
         </div>
-      </nav>
+    </nav>
 
-      {/* ƏSAS MƏZMUN KONTEYNERİ */}
-      <main className="flex-1 w-full max-w-7xl px-6 pt-32 pb-20 flex flex-col items-center justify-center fade-enter-active">
-        
-        {/* 1. ANA SƏHİFƏ (HERO) */}
-        {view === 'home' && (
-          <div className="text-center max-w-4xl mx-auto w-full">
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 leading-tight">
-              {t.hero.title}
-            </h1>
-            <p className="text-xl text-white/50 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
-              {t.hero.subtitle}
-            </p>
-            <button 
-              onClick={() => handleTransition('auth', false)}
-              className="bg-white text-black font-semibold rounded-full px-10 py-5 text-lg hover:scale-105 transition duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)]"
-            >
-              {t.hero.start}
+    <main class="flex-1 w-full max-w-7xl px-6 pt-32 pb-20 flex flex-col items-center justify-center">
+
+        <div id="view-home" class="view-section active flex-col items-center w-full max-w-4xl text-center">
+            <h1 id="hero-title" class="text-5xl md:text-7xl font-bold tracking-tighter mb-6 leading-tight">Ulduzların sənə nə demək istədiyini kəşf et.</h1>
+            <p id="hero-sub" class="text-xl text-white/50 font-light mb-12 max-w-2xl mx-auto leading-relaxed">Şəxsi doğum məlumatlarına əsaslanan sadə, aydın və vizual astroloji analiz platforması.</p>
+            <button onclick="handleTransition('auth', false)" id="hero-btn" class="bg-white text-black font-semibold rounded-full px-10 py-5 text-lg hover:scale-105 transition duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                Analizə başla
             </button>
-          </div>
-        )}
+        </div>
 
-        {/* 2. QEYDİYYAT / GİRİŞ */}
-        {view === 'auth' && (
-          <div className="w-full max-w-md glass-panel p-10">
-            <h2 className="text-2xl font-semibold mb-8 text-center">{t.auth.title}</h2>
-            <div className="space-y-4">
-              <input type="text" placeholder={t.auth.name} className="apple-input" />
-              <div className="grid grid-cols-2 gap-4">
-                <input type="date" className="apple-input text-white/70" />
-                <input type="time" className="apple-input text-white/70" />
-              </div>
-              <input type="text" placeholder={t.auth.city} className="apple-input" />
-              
-              <button 
-                onClick={() => handleTransition('dash')}
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-2xl py-4 mt-6 transition shadow-[0_0_20px_rgba(10,132,255,0.3)]"
-              >
-                {t.auth.btn}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* 3. DASHBOARD (XİDMƏT SEÇİMİ) */}
-        {view === 'dash' && (
-          <div className="w-full">
-            <h2 className="text-3xl font-semibold mb-12 text-center text-white/90">{t.dash.title}</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {t.dash.cards.map((card, idx) => (
-                <div 
-                  key={idx} 
-                  onClick={() => handleTransition(card.id, false)}
-                  className="glass-panel p-8 cursor-pointer group flex flex-col h-full"
-                >
-                  <div className="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">
-                    {card.icon}
-                  </div>
-                  <h3 className="text-xl font-medium mb-3 group-hover:text-blue-400 transition">{card.title}</h3>
-                  <p className="text-white/50 font-light text-sm flex-1">{card.desc}</p>
-                  <div className="mt-6 flex items-center text-sm font-semibold text-white/30 group-hover:text-white transition">
-                    Başla <span className="ml-2">→</span>
-                  </div>
+        <div id="view-auth" class="view-section flex-col items-center w-full max-w-md">
+            <div class="glass-panel p-10 w-full">
+                <h2 id="auth-title" class="text-2xl font-semibold mb-8 text-center">Kosmik sistemə qoşul</h2>
+                <input type="text" id="auth-name" placeholder="Adınız" class="apple-input" />
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="date" class="apple-input text-white/70 !mb-0" />
+                    <input type="time" class="apple-input text-white/70 !mb-0" />
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* 4. SİNASTRİ FORMU */}
-        {view === 'synastry' && (
-          <div className="w-full max-w-4xl">
-            <div className="text-center mb-10">
-              <h2 className="text-4xl font-semibold mb-3">{t.panels.synastry.title}</h2>
-              <p className="text-white/50">{t.panels.synastry.sub}</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="glass-panel p-8 border-t-2 border-t-blue-500">
-                <h3 className="text-sm uppercase tracking-widest text-blue-400 mb-6 font-semibold">{t.panels.synastry.p1}</h3>
-                <input type="text" disabled value="Profil Data" className="apple-input opacity-50 cursor-not-allowed mb-4" />
-              </div>
-              <div className="glass-panel p-8 border-t-2 border-t-purple-500">
-                <h3 className="text-sm uppercase tracking-widest text-purple-400 mb-6 font-semibold">{t.panels.synastry.p2}</h3>
-                <input type="text" placeholder="Adı" className="apple-input mb-4" />
-                <input type="date" className="apple-input mb-4 text-white/70" />
-                <input type="time" className="apple-input text-white/70" />
-              </div>
-            </div>
-            <div className="flex justify-center">
-              <button onClick={() => handleTransition('synastry-result')} className="bg-white text-black px-12 py-4 rounded-full font-semibold hover:scale-105 transition">
-                {t.panels.synastry.btn}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* 5. KARYERA FORMU */}
-        {view === 'career' && (
-          <div className="w-full max-w-2xl glass-panel p-10">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-semibold mb-3">{t.panels.career.title}</h2>
-              <p className="text-white/50">{t.panels.career.sub}</p>
-            </div>
-            <div className="space-y-4">
-              <input type="text" placeholder={t.panels.career.field} className="apple-input" />
-              <input type="text" placeholder={t.panels.career.interest} className="apple-input" />
-              <select className="apple-input appearance-none text-white/70 bg-black/50">
-                <option value="low">Aşağı (Stabil) Risk</option>
-                <option value="med">Orta (Hesablanmış) Risk</option>
-                <option value="high">Yüksək Risk (İnvestisiya/Biznes)</option>
-              </select>
-              <button onClick={() => handleTransition('career-result')} className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-2xl py-4 mt-6 transition shadow-lg">
-                {t.panels.career.btn}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* X. YÜKLƏNMƏ EKRANI (Premium Kosmik Animasiya) */}
-        {view === 'loading' && (
-          <div className="flex flex-col items-center justify-center">
-            <div className="orbit-spinner mb-12">
-              <div className="orbit-core"></div>
-              <div className="orbit-planet"></div>
-            </div>
-            <p className="text-xl font-light text-white/80 animate-pulse tracking-wide">
-              {loadingText}
-            </p>
-          </div>
-        )}
-
-        {/* NƏTİCƏ EKRANLARI (Bir nümunə - Sinastri Nəticəsi) */}
-        {view === 'synastry-result' && (
-          <div className="w-full max-w-3xl glass-panel p-8 md:p-12">
-             <div className="text-center mb-12">
-                <div className="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-blue-400 to-purple-600 mb-2">
-                  87%
-                </div>
-                <div className="text-xs text-white/50 uppercase tracking-widest">Ümumi Uyğunluq İndeksi</div>
-             </div>
-             
-             <div className="space-y-8 max-w-xl mx-auto">
-                <ProgressBar label="Emosional Rezonans (Ay)" percent="92" color="bg-blue-500" />
-                <ProgressBar label="İntellektual Sinxronluq (Merkuri)" percent="85" color="bg-purple-500" />
-                <ProgressBar label="Uzunmüddətli Öhdəlik (Saturn)" percent="78" color="bg-green-500" />
-             </div>
-
-             <div className="mt-12 p-6 bg-black/40 rounded-2xl border border-white/5 text-sm font-light leading-relaxed text-white/80">
-                <span className="font-semibold text-blue-400 block mb-2">Astroloq Rəyi:</span>
-                Göstəricilər bu münasibətin olduqca sağlam emosional təmələ dayandığını göstərir. Tərəflər arasında ünsiyyət axıcıdır. Lakin uzunmüddətli maddi və ya ailəvi öhdəliklərdə (Saturn aspekti) kompromisə getmək vacib olacaq.
-             </div>
-
-             <div className="mt-8 text-center text-xs text-white/30 px-10">
-                {t.disclaimer}
-             </div>
-
-             <button onClick={() => handleTransition('dash', false)} className="mt-10 mx-auto block text-sm text-white/50 hover:text-white transition">
-               ← Panelə Qayıt
-             </button>
-          </div>
-        )}
-
-        {/* NƏTİCƏ: Doğum Xəritəsi (Chart) */}
-        {view === 'chart' && (
-          <div className="w-full max-w-5xl glass-panel p-10 flex flex-col md:flex-row gap-10 items-center">
-            <div className="w-64 h-64 md:w-80 md:h-80 rounded-full border border-white/20 bg-black/30 relative flex items-center justify-center shadow-[0_0_50px_rgba(10,132,255,0.1)]">
-              {/* Vizual Xəritə Simulyasiyası */}
-              <div className="absolute w-full h-[1px] bg-white/10 rotate-45"></div>
-              <div className="absolute w-full h-[1px] bg-white/10 -rotate-45"></div>
-              <div className="absolute w-[1px] h-full bg-white/10"></div>
-              <div className="absolute w-full h-[1px] bg-white/10"></div>
-              <div className="text-center">
-                <div className="text-3xl text-gold-400 mb-2">☉</div>
-                <div className="text-xs uppercase tracking-widest text-white/50">Mərkəz</div>
-              </div>
-            </div>
-            
-            <div className="flex-1 space-y-6">
-              <h2 className="text-3xl font-semibold mb-6">Şəxsi Astro-Profiliniz</h2>
-              <div className="grid grid-cols-2 gap-4">
-                <ChartDataCard label="Günəş (Özək)" value="Qoç ♈" desc="Liderlik, enerji, başlanğıc" />
-                <ChartDataCard label="Ay (Emosiya)" value="Əqrəb ♏" desc="Dərinlik, intuitsiya, sirr" />
-                <ChartDataCard label="Yüksələn (Fasad)" value="Şir ♌" desc="Xarizma, diqqət mərkəzi" />
-                <ChartDataCard label="Dominant Element" value="Od 🔥" desc="Həvəs, yaradıcılıq, cəsarət" />
-              </div>
-              <button onClick={() => handleTransition('dash', false)} className="mt-4 text-sm text-blue-400 hover:text-white transition">
-                ← Panelə Qayıt
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* SÜNİ İNTELLEKT (Nyx AI) */}
-        {view === 'ai' && (
-          <div className="w-full max-w-3xl glass-panel h-[600px] flex flex-col">
-            <div className="p-6 border-b border-white/10 flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-lg">Nyx AI</h3>
-                <p className="text-xs text-white/50 font-light">Şəxsi Astroloji Bələdçiniz</p>
-              </div>
-              <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#32d74b] animate-pulse"></div>
-            </div>
-            
-            <div className="flex-1 p-6 overflow-y-auto space-y-6">
-              <div className="flex gap-4">
-                <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">✨</div>
-                <div className="bg-white/5 p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-white/90">
-                  Salam! Sizin doğum məlumatlarınızı analiz etdim. Karyera keçidləri, spesifik evlilik tarixləri və ya hazırki planetar tranzitlərinizlə bağlı nə öyrənmək istəyirsiniz?
-                </div>
-              </div>
-              {/* İstifadəçi mesajı nümunəsi */}
-              <div className="flex gap-4 flex-row-reverse">
-                <div className="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] text-sm leading-relaxed shadow-lg">
-                  Növbəti ay biznes qurmaq üçün yaxşı vaxtdır?
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 border-t border-white/10 bg-black/20">
-              <div className="relative">
-                <input type="text" placeholder="Sualınızı bura yazın..." className="w-full bg-black/40 border border-white/10 rounded-full py-4 pl-6 pr-16 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
-                <button className="absolute right-2 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 rounded-full flex items-center justify-center hover:scale-105 transition font-bold">
-                  ↑
+                <input type="text" id="auth-city" placeholder="Doğum Yeri" class="apple-input mt-4" />
+                
+                <button onclick="handleTransition('dash', true)" id="auth-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-2xl py-4 mt-2 transition shadow-[0_0_20px_rgba(10,132,255,0.3)]">
+                    Qeydiyyatdan Keç
                 </button>
-              </div>
             </div>
-          </div>
-        )}
+        </div>
 
-      </main>
-    </div>
-  );
-}
+        <div id="view-dash" class="view-section flex-col w-full">
+            <h2 id="dash-title" class="text-3xl font-semibold mb-12 text-center text-white/90">Salam, ulduz xəritəni araşdırmağa hazırsan?</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div onclick="handleTransition('synastry', false)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
+                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">✧</div>
+                    <h3 id="card-syn-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Münasibət Uyğunluğu</h3>
+                    <p id="card-syn-desc" class="text-white/50 font-light text-sm flex-1">Partnerinlə uyğunluğunu yoxla</p>
+                </div>
+                <div onclick="handleTransition('career', false)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
+                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">⚸</div>
+                    <h3 id="card-car-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Karyera & Sərvət</h3>
+                    <p id="card-car-desc" class="text-white/50 font-light text-sm flex-1">Pul və karyera yolunda səni nə gözləyir?</p>
+                </div>
+                <div onclick="handleTransition('chart', true)" class="glass-panel p-8 cursor-pointer group flex flex-col h-full">
+                    <div class="text-4xl text-blue-400 mb-6 group-hover:scale-110 transition duration-300 transform origin-left">⚷</div>
+                    <h3 id="card-chart-title" class="text-xl font-medium mb-3 group-hover:text-blue-400 transition">Doğum Xəritəsi</h3>
+                    <p id="card-chart-desc" class="text-white/50 font-light text-sm flex-1">Şəxsi astro-panelini kəşf et</p>
+                </div>
+            </div>
+        </div>
 
-// Kiçik Köməkçi Komponentlər (Kod təmizliyi üçün)
-const ProgressBar = ({ label, percent, color }) => (
-  <div>
-    <div className="flex justify-between text-sm mb-2 font-medium">
-      <span>{label}</span>
-      <span>{percent}%</span>
-    </div>
-    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-      <div className={`h-full ${color} rounded-full`} style={{ width: `${percent}%` }}></div>
-    </div>
-  </div>
-);
+        <div id="view-synastry" class="view-section flex-col items-center w-full max-w-4xl">
+            <div class="text-center mb-10">
+                <h2 id="syn-title" class="text-4xl font-semibold mb-3">Sinastri Analizi</h2>
+                <p id="syn-sub" class="text-white/50">İki xəritənin kəsişməsi</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6 mb-8 w-full">
+                <div class="glass-panel p-8 border-t-2 border-t-blue-500">
+                    <h3 id="syn-p1" class="text-sm uppercase tracking-widest text-blue-400 mb-6 font-semibold">Sizin Məlumatlar</h3>
+                    <input type="text" disabled value="Profil Data" class="apple-input opacity-50 cursor-not-allowed" />
+                </div>
+                <div class="glass-panel p-8 border-t-2 border-t-purple-500">
+                    <h3 id="syn-p2" class="text-sm uppercase tracking-widest text-purple-400 mb-6 font-semibold">Partnerin Məlumatları</h3>
+                    <input type="text" id="syn-p2-name" placeholder="Adı" class="apple-input" />
+                    <input type="date" class="apple-input text-white/70" />
+                    <input type="time" class="apple-input text-white/70" />
+                </div>
+            </div>
+            <button onclick="handleTransition('synastry-result', true)" id="syn-btn" class="bg-white text-black px-12 py-4 rounded-full font-semibold hover:scale-105 transition">
+                Uyğunluğu Hesabla
+            </button>
+        </div>
 
-const ChartDataCard = ({ label, value, desc }) => (
-  <div className="bg-black/40 p-4 rounded-xl border border-white/5">
-    <div className="text-xs text-white/50 uppercase tracking-widest mb-1">{label}</div>
-    <div className="text-lg font-semibold text-white mb-1">{value}</div>
-    <div className="text-xs text-white/40 font-light">{desc}</div>
-  </div>
-);
+        <div id="view-career" class="view-section flex-col items-center w-full max-w-2xl">
+            <div class="glass-panel p-10 w-full">
+                <div class="text-center mb-8">
+                    <h2 id="car-title" class="text-3xl font-semibold mb-3">Karyera və Sərvət Analizi</h2>
+                    <p id="car-sub" class="text-white/50">Potensialını kəşf et</p>
+                </div>
+                <input type="text" id="car-field" placeholder="Hazırki Sahəniz" class="apple-input" />
+                <input type="text" id="car-interest" placeholder="Maraqlandığınız Sahə" class="apple-input" />
+                <select class="apple-input appearance-none text-white/70 bg-black/50">
+                    <option id="car-risk-low" value="low">Aşağı (Stabil) Risk</option>
+                    <option id="car-risk-med" value="med">Orta (Hesablanmış) Risk</option>
+                    <option id="car-risk-high" value="high">Yüksək Risk</option>
+                </select>
+                <button onclick="handleTransition('dash', true)" id="car-btn" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-2xl py-4 mt-6 transition shadow-lg">
+                    Karyeranı Analiz Et
+                </button>
+            </div>
+        </div>
+
+        <div id="view-loading" class="view-section flex-col items-center justify-center w-full h-64">
+            <div class="orbit-spinner mb-12">
+                <div class="orbit-core"></div>
+                <div class="orbit-planet"></div>
+            </div>
+            <p id="loading-text" class="text-xl font-light text-white/80 animate-pulse tracking-wide text-center">
+                Doğum məlumatların analiz olunur...
+            </p>
+        </div>
+
+        <div id="view-synastry-result" class="view-section flex-col items-center w-full max-w-3xl">
+            <div class="glass-panel p-8 md:p-12 w-full">
+                <div class="text-center mb-12">
+                    <div class="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-blue-400 to-purple-600 mb-2">87%</div>
+                    <div id="res-total" class="text-xs text-white/50 uppercase tracking-widest">Ümumi Uyğunluq İndeksi</div>
+                </div>
+                
+                <div class="space-y-8 max-w-xl mx-auto w-full">
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span id="res-emo">Emosional Rezonans (Ay)</span><span>92%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-blue-500 rounded-full" style="width: 92%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span id="res-int">İntellektual Sinxronluq (Merkuri)</span><span>85%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-purple-500 rounded-full" style="width: 85%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-2 font-medium">
+                            <span id="res-long">Uzunmüddətli Öhdəlik (Saturn)</span><span>78%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/10 rounded-full overflow-hidden"><div class="h-full bg-green-500 rounded-full" style="width: 78%"></div></div>
+                    </div>
+                </div>
+
+                <div class="mt-12 p-6 bg-black/40 rounded-2xl border border-white/5 text-sm font-light leading-relaxed text-white/80">
+                    <span id="res-expert" class="font-semibold text-blue-400 block mb-2">Astroloq Rəyi:</span>
+                    <span id="res-desc">Göstəricilər bu münasibətin olduqca sağlam emosional təmələ dayandığını göstərir. Tərəflər arasında ünsiyyət axıcıdır. Lakin uzunmüddətli maddi və ya ailəvi öhdəliklərdə (Saturn aspekti) kompromisə getmək vacib olacaq.</span>
+                </div>
+
+                <div id="res-disc" class="mt-8 text-center text-xs text-white/30 px-10">
+                    Bu analiz əyləncə və şəxsi düşüncə məqsədi daşıyır.
+                </div>
+
+                <button onclick="handleTransition('dash', false)" class="mt-10 mx-auto block text-sm text-white/50 hover:text-white transition">← Panelə Qayıt</button>
+            </div>
+        </div>
+
+        <div id="view-chart" class="view-section flex-col md:flex-row items-center gap-10 w-full max-w-5xl glass-panel p-10">
+            <div class="w-64 h-64 md:w-80 md:h-80 rounded-full border border-white/20 bg-black/30 relative flex items-center justify-center shadow-[0_0_50px_rgba(10,132,255,0.1)]">
+                <div class="absolute w-full h-[1px] bg-white/10 rotate-45"></div>
+                <div class="absolute w-full h-[1px] bg-white/10 -rotate-45"></div>
+                <div class="absolute w-[1px] h-full bg-white/10"></div>
+                <div class="absolute w-full h-[1px] bg-white/10"></div>
+                <div class="text-center z-10">
+                    <div class="text-3xl text-yellow-500 mb-2">☉</div>
+                    <div class="text-xs uppercase tracking-widest text-white/50">Mərkəz</div>
+                </div>
+            </div>
+            
+            <div class="flex-1 space-y-6 w-full">
+                <h2 id="chart-title" class="text-3xl font-semibold mb-6">Şəxsi Astro-Profiliniz</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div id="ch-1-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Günəş (Özək)</div>
+                        <div class="text-lg font-semibold text-white mb-1">Qoç ♈</div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div id="ch-2-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Ay (Emosiya)</div>
+                        <div class="text-lg font-semibold text-white mb-1">Əqrəb ♏</div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div id="ch-3-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Yüksələn</div>
+                        <div class="text-lg font-semibold text-white mb-1">Şir ♌</div>
+                    </div>
+                    <div class="bg-black/40 p-4 rounded-xl border border-white/5">
+                        <div id="ch-4-title" class="text-xs text-white/50 uppercase tracking-widest mb-1">Element</div>
+                        <div class="text-lg font-semibold text-white mb-1">Od 🔥</div>
+                    </div>
+                </div>
+                <button onclick="handleTransition('dash', false)" class="mt-4 text-sm text-blue-400 hover:text-white transition">← Panelə Qayıt</button>
+            </div>
+        </div>
+
+        <div id="view-ai" class="view-section flex-col w-full max-w-3xl glass-panel h-[600px]">
+            <div class="p-6 border-b border-white/10 flex items-center justify-between">
+                <div>
+                    <h3 class="font-semibold text-lg">Nyx AI</h3>
+                    <p id="ai-sub" class="text-xs text-white/50 font-light">Şəxsi Astroloji Bələdçiniz</p>
+                </div>
+                <div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#32d74b] animate-pulse"></div>
+            </div>
+            
+            <div class="flex-1 p-6 overflow-y-auto space-y-6 flex flex-col" id="ai-chat-box">
+                <div class="flex gap-4">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">✨</div>
+                    <div id="ai-welcome" class="bg-white/5 p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-white/90">
+                        Salam! Sizin doğum məlumatlarınızı analiz etdim. Karyera keçidləri, spesifik evlilik tarixləri və ya hazırki planetar tranzitlərinizlə bağlı nə öyrənmək istəyirsiniz?
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 border-t border-white/10 bg-black/20">
+                <div class="relative">
+                    <input type="text" id="ai-input" placeholder="Sualınızı bura yazın..." class="w-full bg-black/40 border border-white/10 rounded-full py-4 pl-6 pr-16 text-sm text-white focus:outline-none focus:border-blue-500 transition" />
+                    <button onclick="sendAiMsg()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 rounded-full flex items-center justify-center hover:scale-105 transition font-bold">
+                        ↑
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Dil lüğəti
+        const dict = {
+            az: {
+                nav: { dash: "Panel", ai: "Nyx AI", login: "Daxil ol" },
+                hero: { title: "Ulduzların sənə nə demək istədiyini kəşf et.", sub: "Şəxsi doğum məlumatlarına əsaslanan sadə, aydın və vizual astroloji analiz platforması.", btn: "Analizə başla" },
+                auth: { title: "Kosmik sistemə qoşul", name: "Adınız", city: "Doğum Yeri", btn: "Qeydiyyatdan Keç" },
+                dash: { title: "Salam, ulduz xəritəni araşdırmağa hazırsan?" },
+                cards: {
+                    syn: { title: "Münasibət Uyğunluğu", desc: "Partnerinlə uyğunluğunu yoxla" },
+                    car: { title: "Karyera & Sərvət", desc: "Pul və karyera yolunda səni nə gözləyir?" },
+                    chart: { title: "Doğum Xəritəsi", desc: "Şəxsi astro-panelini kəşf et" }
+                },
+                syn: { title: "Sinastri Analizi", sub: "İki xəritənin kəsişməsi", p1: "Sizin Məlumatlar", p2: "Partnerin Məlumatları", p2Name: "Adı", btn: "Uyğunluğu Hesabla" },
+                car: { title: "Karyera və Sərvət Analizi", sub: "Potensialını kəşf et", field: "Hazırki Sahəniz", int: "Maraqlandığınız Sahə", low: "Aşağı (Stabil) Risk", med: "Orta (Hesablanmış) Risk", high: "Yüksək Risk", btn: "Karyeranı Analiz Et" },
+                res: { tot: "Ümumi Uyğunluq İndeksi", emo: "Emosional Rezonans (Ay)", int: "İntellektual Sinxronluq (Merkuri)", long: "Uzunmüddətli Öhdəlik (Saturn)", exp: "Astroloq Rəyi:", desc: "Göstəricilər bu münasibətin olduqca sağlam emosional təmələ dayandığını göstərir...", disc: "Bu analiz əyləncə və şəxsi düşüncə məqsədi daşıyır." },
+                chart: { title: "Şəxsi Astro-Profiliniz", ch1: "Günəş (Özək)", ch2: "Ay (Emosiya)", ch3: "Yüksələn", ch4: "Element" },
+                ai: { sub: "Şəxsi Astroloji Bələdçiniz", welcome: "Salam! Sizin doğum məlumatlarınızı analiz etdim...", placeholder: "Sualınızı bura yazın..." },
+                loading: ["Doğum məlumatların analiz olunur...", "Ulduz mövqeləri hesablanır...", "Nəticələr formalaşdırılır..."]
+            },
+            en: {
+                nav: { dash: "Dashboard", ai: "Nyx AI", login: "Sign In" },
+                hero: { title: "Discover what the stars are telling you.", sub: "A clear, simple, and visual astrological analysis platform based on your personal birth data.", btn: "Start Analysis" },
+                auth: { title: "Join the cosmic system", name: "Your Name", city: "Birth Place", btn: "Register" },
+                dash: { title: "Hello, ready to explore your star chart?" },
+                cards: {
+                    syn: { title: "Relationship Compatibility", desc: "Check compatibility with your partner" },
+                    car: { title: "Career & Wealth", desc: "What awaits you in your career path?" },
+                    chart: { title: "Birth Chart", desc: "Discover your personal astro-panel" }
+                },
+                syn: { title: "Synastry Analysis", sub: "Intersection of two charts", p1: "Your Data", p2: "Partner's Data", p2Name: "Name", btn: "Calculate Match" },
+                car: { title: "Career & Wealth", sub: "Discover your potential", field: "Current Field", int: "Interested Field", low: "Low (Stable) Risk", med: "Medium (Calculated) Risk", high: "High Risk", btn: "Analyze Career" },
+                res: { tot: "Overall Compatibility Index", emo: "Emotional Resonance (Moon)", int: "Intellectual Synchrony (Mercury)", long: "Long-term Commitment (Saturn)", exp: "Astrologer's Note:", desc: "Indicators show a very solid emotional foundation for this relationship...", disc: "This analysis is for entertainment and personal reflection." },
+                chart: { title: "Your Astro-Profile", ch1: "Sun (Core)", ch2: "Moon (Emotion)", ch3: "Ascendant", ch4: "Element" },
+                ai: { sub: "Your Personal Astrology Guide", welcome: "Hello! I've analyzed your birth data. What would you like to know?", placeholder: "Type your question here..." },
+                loading: ["Analyzing birth data...", "Calculating star positions...", "Generating results..."]
+            }
+        };
+
+        let currentLang = 'az';
+        const views = ['view-home', 'view-auth', 'view-dash', 'view-synastry', 'view-career', 'view-chart', 'view-ai', 'view-loading', 'view-synastry-result'];
+
+        // Səhifə Keçidləri (Loading simulyasiyası ilə)
+        function handleTransition(targetId, withLoading) {
+            views.forEach(v => document.getElementById(v).classList.remove('active'));
+            
+            if (!withLoading) {
+                document.getElementById('view-' + targetId).classList.add('active');
+                return;
+            }
+
+            // Loading simulyasiyası
+            document.getElementById('view-loading').classList.add('active');
+            let i = 0;
+            const texts = dict[currentLang].loading;
+            const loadTextEl = document.getElementById('loading-text');
+            loadTextEl.innerText = texts[0];
+
+            const interval = setInterval(() => {
+                i++;
+                if (i < texts.length) loadTextEl.innerText = texts[i];
+            }, 900);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                document.getElementById('view-loading').classList.remove('active');
+                document.getElementById('view-' + targetId).classList.add('active');
+            }, 3000);
+        }
+
+        // Dil Dəyişmə Sistemi
+        function setLang(lang) {
+            currentLang = lang;
+            const t = dict[lang];
+
+            // Düymə stilləri
+            document.getElementById('btn-lang-az').className = lang === 'az' ? 'px-3 py-1 rounded-full uppercase transition bg-white text-black' : 'px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white';
+            document.getElementById('btn-lang-en').className = lang === 'en' ? 'px-3 py-1 rounded-full uppercase transition bg-white text-black' : 'px-3 py-1 rounded-full uppercase transition text-white/50 hover:text-white';
+
+            // Text dəyişiklikləri
+            document.getElementById('nav-dash').innerText = t.nav.dash;
+            document.getElementById('nav-ai').innerText = t.nav.ai;
+            document.getElementById('nav-login').innerText = t.nav.login;
+            
+            document.getElementById('hero-title').innerText = t.hero.title;
+            document.getElementById('hero-sub').innerText = t.hero.sub;
+            document.getElementById('hero-btn').innerText = t.hero.btn;
+            
+            document.getElementById('auth-title').innerText = t.auth.title;
+            document.getElementById('auth-name').placeholder = t.auth.name;
+            document.getElementById('auth-city').placeholder = t.auth.city;
+            document.getElementById('auth-btn').innerText = t.auth.btn;
+
+            document.getElementById('dash-title').innerText = t.dash.title;
+            document.getElementById('card-syn-title').innerText = t.cards.syn.title;
+            document.getElementById('card-syn-desc').innerText = t.cards.syn.desc;
+            document.getElementById('card-car-title').innerText = t.cards.car.title;
+            document.getElementById('card-car-desc').innerText = t.cards.car.desc;
+            document.getElementById('card-chart-title').innerText = t.cards.chart.title;
+            document.getElementById('card-chart-desc').innerText = t.cards.chart.desc;
+
+            document.getElementById('syn-title').innerText = t.syn.title;
+            document.getElementById('syn-sub').innerText = t.syn.sub;
+            document.getElementById('syn-p1').innerText = t.syn.p1;
+            document.getElementById('syn-p2').innerText = t.syn.p2;
+            document.getElementById('syn-p2-name').placeholder = t.syn.p2Name;
+            document.getElementById('syn-btn').innerText = t.syn.btn;
+
+            document.getElementById('car-title').innerText = t.car.title;
+            document.getElementById('car-sub').innerText = t.car.sub;
+            document.getElementById('car-field').placeholder = t.car.field;
+            document.getElementById('car-interest').placeholder = t.car.int;
+            document.getElementById('car-risk-low').innerText = t.car.low;
+            document.getElementById('car-risk-med').innerText = t.car.med;
+            document.getElementById('car-risk-high').innerText = t.car.high;
+            document.getElementById('car-btn').innerText = t.car.btn;
+
+            document.getElementById('res-total').innerText = t.res.tot;
+            document.getElementById('res-emo').innerText = t.res.emo;
+            document.getElementById('res-int').innerText = t.res.int;
+            document.getElementById('res-long').innerText = t.res.long;
+            document.getElementById('res-expert').innerText = t.res.exp;
+            document.getElementById('res-desc').innerText = t.res.desc;
+            document.getElementById('res-disc').innerText = t.res.disc;
+
+            document.getElementById('chart-title').innerText = t.chart.title;
+            document.getElementById('ch-1-title').innerText = t.chart.ch1;
+            document.getElementById('ch-2-title').innerText = t.chart.ch2;
+            document.getElementById('ch-3-title').innerText = t.chart.ch3;
+            document.getElementById('ch-4-title').innerText = t.chart.ch4;
+
+            document.getElementById('ai-sub').innerText = t.ai.sub;
+            document.getElementById('ai-welcome').innerText = t.ai.welcome;
+            document.getElementById('ai-input').placeholder = t.ai.placeholder;
+        }
+
+        // Bəsit AI Chat simulyasiyası
+        function sendAiMsg() {
+            const inp = document.getElementById('ai-input');
+            const val = inp.value.trim();
+            if(!val) return;
+
+            const chatBox = document.getElementById('ai-chat-box');
+            chatBox.innerHTML += `<div class="flex gap-4 flex-row-reverse fade-up mt-4">
+                <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] text-sm leading-relaxed shadow-lg">${val}</div>
+            </div>`;
+            inp.value = '';
+            
+            setTimeout(() => {
+                chatBox.innerHTML += `<div class="flex gap-4 mt-4 fade-up">
+                    <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">✨</div>
+                    <div class="bg-white/5 p-4 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-white/90">
+                        Bu barədə detallı hesablama aparıram. Ulduzların hazırki mövqeyi bu qərarın sizin üçün uyğun olduğunu göstərir.
+                    </div>
+                </div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
+
+```
